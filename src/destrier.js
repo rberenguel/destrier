@@ -698,6 +698,7 @@ app.ticker.add((delta) => {
       }
       for (let b of spaceScene.bulletList) {
         b.e = -1;
+        b.moved = Infinity
       }
       offerPowerUpChoices = true;
       powerUpChosen = false;

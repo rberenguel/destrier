@@ -368,13 +368,6 @@ class SpaceScene extends Scene {
           gameHeight: this.app.renderer.height / this.viewframe.scale,
         });
       }
-      /*wrapPos(otherShip, {
-        wmin: 0,
-        wmax: this.app.renderer.width / this.viewframe.scale,
-        hmin: 0,
-        hmax: this.app.renderer.height / this.viewframe.scale,
-      });
-      otherShip.update(delta);*/
     }
 
     this.controller();
@@ -385,15 +378,6 @@ class SpaceScene extends Scene {
       hmin: 0,
       hmax: this.app.renderer.height / this.viewframe.scale,
     });
-    if (
-      this.player.invulnerable &&
-      this.player.invulnerable > performance.now() - 1000
-    ) {
-      this.player.presentations[0].tint = 0x00ff00;
-    } else {
-      this.player.invulnerable = null;
-      this.player.presentations[0].tint = null;
-    }
     this.player.update(delta);
     // Remove destroyed asteroids (in-place)
     let newAsteroids = [];
@@ -536,9 +520,6 @@ class SpaceScene extends Scene {
             }
             this.player.e = -1;
             this.flameList.push(...this.player.flameList);
-            //this.player.invulnerable = performance.now();
-            //this.player.e = 1000;
-            //livesDiv.textContent = this.player.lives;
           }
         }
 

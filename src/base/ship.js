@@ -439,7 +439,7 @@ class Ship extends Base1 {
     super.update(delta);
     super.move(delta.deltaTime);
     this.e += this.recoveryRate * delta.deltaTime;
-    this.e = Math.min(this.e, this.initialE);
+    this.e = Math.min(this.e, this.maxE ?? this.initialE);
     this.activeAbilityEnergy +=
       this.activeAbilityEnergyRecoveryRate * delta.deltaTime;
     this.activeAbilityEnergy = Math.min(
@@ -472,7 +472,7 @@ class Ship extends Base1 {
     }
 
     // TODO this is repeated EVERYWHERE
-    const ne = Math.max(0, Math.min(1, this.e / this.initialE));
+    const ne = Math.max(0, Math.min(1, this.e / (this.maxE ?? this.initialE)));
     const red = 255;
     const green = Math.floor(255 * ne);
     const blue = Math.floor(255 * ne);

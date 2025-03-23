@@ -82,6 +82,11 @@ const resetStats = (player) => {
         hitsAsteroid: 0,
         hitsShip: 0,
       },
+      kMissileLauncher: {
+        fired: 0,
+        hitsAsteroid: 0,
+        hitsShip: 0,
+      },
       kEmp: {
         fired: 0,
         hitsAsteroid: 0,

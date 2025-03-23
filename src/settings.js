@@ -9,11 +9,19 @@ const shake = (app, minShake = -2) => {
 };
 
 const isSecondary = (w) => {
-  return w.kind === "kPhotonTorpedoLauncher" || w.kind === "kGaussCannon";
+  return (
+    w.kind === "kPhotonTorpedoLauncher" ||
+    w.kind === "kGaussCannon" ||
+    w.kind === "kMissileLauncher"
+  );
 };
 
 const isKinetic = (w) => {
-  return w.kind === "kMassDriverGun" || w.kind === "kGaussCannon";
+  return (
+    w.kind === "kMassDriverGun" ||
+    w.kind === "kGaussCannon" ||
+    "kMissileLauncher"
+  );
 };
 
 const settings = {
@@ -31,7 +39,7 @@ const settings = {
       },
       flame: {
         scale: () => {
-          0.8 + Math.random() * 0.8;
+          0.8 + Math.random() * 1.2;
         },
       },
     },
@@ -41,7 +49,7 @@ const settings = {
       },
       flame: {
         scale: () => {
-          0.8 + Math.random() * 0.8;
+          0.8 + Math.random() * 1.2;
         },
       },
       hitFlame: {
@@ -51,7 +59,7 @@ const settings = {
     player: {
       flame: {
         scale: () => {
-          0.8 + Math.random() * 0.8;
+          0.8 + Math.random() * 1.2;
         },
       },
       hitFlame: {

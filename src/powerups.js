@@ -15,6 +15,7 @@ import {
   LaserGun,
   PhotonTorpedoLauncher,
   PlasmaGun,
+  MissileLauncher,
 } from "./weapons/weapons.js";
 
 const glass = document.getElementById("glass");
@@ -296,6 +297,34 @@ const allPowerUpChoices = (player) => [
         w.source = player._id;
       }
       setSecondaryWeaponPowerup(player, "kPhotonTorpedoLauncher");
+    },
+  },
+  {
+    id: "kMissileLauncher",
+    name: "Missile launcher",
+    description: () => {
+      const title = "<h2>Secondary weapon</h2>";
+      const htmlA = MissileLauncher.present();
+      const htmlB = player.secondaryWeapons[0].present();
+      return `${title} ${htmlA} ${replaces} ${htmlB}`;
+    },
+    glyph: "missiles.png",
+    lambda: () => {
+      const torpedo = new MissileLauncher({
+        pos: {
+          x: 0,
+          y: 0,
+        },
+      });
+      player.secondaryWeapons = [torpedo];
+      player.ammo[MissileLauncher.kind] = {};
+      player.ammo[MissileLauncher.kind].count = 2;
+      player.ammo[MissileLauncher.kind].max = 2;
+      for (let w of player.secondaryWeapons) {
+        w.source = player._id;
+      }
+      setSecondaryWeaponPowerup(player, "kMissileLauncher");
+      console.log(player.secondaryWeapons);
     },
   },
   {

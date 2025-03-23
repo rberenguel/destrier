@@ -445,6 +445,10 @@ class SpaceScene extends Scene {
             const ae = a.e;
             a.e = b.e > 0 ? a.e - b.e : a.e; // Strange situations
             b.e -= ae;
+            if (b.kind === "kMissile") {
+              b.e = -1;
+              b.explode();
+            }
             if (b.shooter?.human) {
               b.shooter.stats.shots[b.firedBy].hitsAsteroid++;
             }
@@ -563,6 +567,10 @@ class SpaceScene extends Scene {
               o.disabled = performance.now() + 3000;
             } else if (b.kind === "kBombBlast") {
               o.e -= b.e;
+            } else if (b.kind === "kMissile") {
+              o.e -= b.e;
+              b.e = -1;
+              b.explode();
             } else {
               o.e -= b.e;
               b.e -= oe;
@@ -745,7 +753,7 @@ function triggerTextEffect(kind, x_, y_, scale) {
     text = options[0];
   }
   if (kind === "kLastShip") {
-    const options = ["Booya", `Another one bites<br/>the dust`, "Bye"].sort(
+    const options = ["Bye", "Booya", `Another one bites<br/>the dust`].sort(
       () => Math.random() - 0.5,
     );
     text = options[0];

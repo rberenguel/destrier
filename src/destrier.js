@@ -95,6 +95,7 @@ const gameActions = {
     player.secondaryPrevshot = now;
     try {
       settings.shake.onSecondaryFire(app);
+      player.otherShips = spaceScene.otherShips;
       player.secondaryWeapons[0].fire(player, player.bulletList);
     } catch {}
   },

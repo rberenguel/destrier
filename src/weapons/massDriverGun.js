@@ -26,12 +26,7 @@ class MassDriverGun extends Gun {
   ammo = true;
   ammoMax = 99;
   static present = () => {
-    return `<p class='powerup-title'>Mass driver</p><hr/>`;
-    const stats = MassDriverGun.baseStats;
-    const range = ((stats.f / stats.decay) * stats.ACCEL).toFixed(0);
-    const mip = (stats.f * stats.mass * stats.ACCEL * stats.ACCEL).toFixed(0);
-    const html = `<p>Mass driver</p><hr/><p>Kinetic (needs ammo)</p><table><tr><td>Point blank dmg: </td><td>${mip}</td></tr><tr><td>Mass: </td><td>${stats.mass}</td></tr><tr><td>Speed: </td><td>${stats.ACCEL}</td></tr><td>Range: </td><td>${range}</td></tr></table>`;
-    return html;
+    return `<p class='powerup-title'>Mass driver</p><p class='powerup-description'>Short range, short damage.</p><hr/>`;
   };
   present() {
     return MassDriverGun.present();

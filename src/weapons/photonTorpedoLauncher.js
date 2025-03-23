@@ -24,12 +24,7 @@ class PhotonTorpedoLauncher extends Gun {
   };
 
   static present = () => {
-    return `<p class='powerup-title'>Photon torpedo</p><p class='powerup-description'>Basic secondary weapon. Make it so!</p<hr/>`;
-    const stats = PhotonTorpedoLauncher.baseStats;
-    const range = stats.minRange;
-    const mip = PhotonTorpedoLauncher.baseStats.baseE.toFixed(0);
-    const html = `<p>Photon torpedo</p><hr/><p>Kinetic/Energy (needs ammo)</p><table><tr><td>Point blank dmg: </td><td>${mip}</td></tr><tr><td>Speed: </td><td>${stats.ACCEL}</td></tr><td>Min range: </td><td>${range}</td></tr></table>`;
-    return html;
+    return `<p class='powerup-title'>Photon torpedo</p><p class='powerup-description'>Basic secondary weapon. Make it so!</p><hr/>`;
   };
   present() {
     return PhotonTorpedoLauncher.present();

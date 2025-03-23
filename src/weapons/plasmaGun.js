@@ -21,15 +21,7 @@ class PlasmaGun extends Gun {
   };
   ammo = false;
   static present = () => {
-    return `<p class='powerup-title'>Plasma gun</p><hr/>`;
-    const stats = PlasmaGun.baseStats;
-    const range = (
-      (stats.baseE / PlasmaGun.baseStats.decay) *
-      stats.ACCEL
-    ).toFixed(0);
-    const mip = PlasmaGun.baseStats.baseE.toFixed(0);
-    const html = `<p>Plasma gun</p><hr/><p>Energy (no ammo)</p><table><tr><td>Point blank dmg: </td><td>${mip}</td></tr><tr><td>Speed: </td><td>${stats.ACCEL}</td></tr><td>Range: </td><td>${range}</td></tr></table>`;
-    return html;
+    return `<p class='powerup-title'>Plasma gun</p><p class='powerup-description'>Medium range, medium damage.</p><hr/>`;
   };
   present() {
     return PlasmaGun.present();

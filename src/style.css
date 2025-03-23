@@ -232,14 +232,14 @@ canvas {
 }
 
 #current-powerups-hud > div {
-  width: 1.5rem;
+  width: 3rem;
   aspect-ratio: 1/1;
   border-radius: 0.1rem;
   border: 1px solid #ccc;
   display: flex;
   overflow: hidden;
   margin-left: 0.5rem;
-  transform: translate(0, round(nearest, -0.4rem, 1px));
+  transform: translate(0, round(nearest, -1rem, 1px));
 }
 
 #current-powerups-hud > div > img {

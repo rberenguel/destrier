@@ -22,12 +22,7 @@ class GaussCannon extends Gun {
   ammo = true;
   ammoMax = 2;
   static present = () => {
-    return `<p class='powerup-title'>Gauss cannon</p><p class='powerup-description'>Long range, huge damage bullet.</p<hr/>`;
-    const stats = GaussCannon.baseStats;
-    const range = ((stats.f / stats.decay) * stats.ACCEL).toFixed(0);
-    const mip = (stats.f * stats.mass * stats.ACCEL * stats.ACCEL).toFixed(0);
-    const html = `<p>Gauss cannon</p><hr/><p>Kinetic (needs ammo)</p><table><tr><td>Point blank dmg: </td><td>${mip}</td></tr><tr><td>Mass: </td><td>${stats.mass}</td></tr><tr><td>Speed: </td><td>${stats.ACCEL}</td></tr><td>Range: </td><td>${range}</td></tr></table>`;
-    return html;
+    return `<p class='powerup-title'>Gauss cannon</p><p class='powerup-description'>Long range, huge damage bullet.</p><hr/>`;
   };
   present() {
     return GaussCannon.present();

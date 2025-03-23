@@ -12,7 +12,7 @@ class MissileLauncher extends Gun {
   static kind = "kMissileLauncher"; // TODO make an object with these constants
   kind = MissileLauncher.kind;
   firerate = 1000; // It's not really a rate and it is annoying me
-  html = "Pt"; // Asterisk alignment
+  html = "Mi"; // Asterisk alignment
   ammo = true;
   ammoMax = 1;
   static baseStats = {
@@ -25,11 +25,6 @@ class MissileLauncher extends Gun {
 
   static present = () => {
     return `<p class='powerup-title'>Missile launcher</p><p class='powerup-description'>Tracks an enemy target if it ahead in range. Reduced ammunition.</p><hr/>`;
-    const stats = PhotonTorpedoLauncher.baseStats;
-    const range = stats.minRange;
-    const mip = PhotonTorpedoLauncher.baseStats.baseE.toFixed(0);
-    const html = `<p>Photon torpedo</p><hr/><p>Kinetic/Energy (needs ammo)</p><table><tr><td>Point blank dmg: </td><td>${mip}</td></tr><tr><td>Speed: </td><td>${stats.ACCEL}</td></tr><td>Min range: </td><td>${range}</td></tr></table>`;
-    return html;
   };
   present() {
     return MissileLauncher.present();

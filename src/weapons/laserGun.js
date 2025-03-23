@@ -22,15 +22,7 @@ class LaserGun extends Gun {
   ammoMax = 10;
   // Although it's an energy weapon, it uses a lot of energy. Let's treat it as ammo
   static present = () => {
-    return `<p class='powerup-title'>Laser gun</p><hr/>`;
-    const stats = LaserGun.baseStats;
-    const range = (
-      (stats.baseE / LaserGun.baseStats.decay) *
-      stats.ACCEL
-    ).toFixed(0);
-    const mip = LaserGun.baseStats.baseE.toFixed(0);
-    const html = `<p>Laser gun</p><hr/><p>Energy (recharging)</p><table><tr><td>Point blank dmg: </td><td>${mip}</td></tr><tr><td>Speed: </td><td>${stats.ACCEL}</td></tr><td>Range: </td><td>${range}</td></tr></table>`;
-    return html;
+    return `<p class='powerup-title'>Laser gun</p><p class='powerup-description'>Long range, low damage, classsic sci-fi.</p><hr/>`;
   };
   present() {
     return LaserGun.present();

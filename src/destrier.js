@@ -690,6 +690,15 @@ app.ticker.add((delta) => {
       for (let a of spaceScene.asteroids) {
         a.e = -1;
       }
+      for (let o of spaceScene.otherShips) {
+        o.e = -1;
+      }
+      for (let f of spaceScene.flameList) {
+        f.e = -1;
+      }
+      for (let b of spaceScene.bulletList) {
+        b.e = -1;
+      }
       offerPowerUpChoices = true;
       powerUpChosen = false;
     } else {

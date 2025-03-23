@@ -136,7 +136,7 @@ class SpaceScene extends Scene {
     const otherLaser = (other) => {
       other.ammo[LaserGun.kind] = {};
       other.ammo[LaserGun.kind].count = 10;
-      other.ammo[LaserGun.kind].max = 30;
+      other.ammo[LaserGun.kind].max = 40;
       const laserGun1 = new LaserGun({
         pos: {
           x: -30,
@@ -153,6 +153,10 @@ class SpaceScene extends Scene {
       });
       laserGun1.stats.baseE = LaserGun.baseStats.baseE * 1.7;
       laserGun2.stats.baseE = LaserGun.baseStats.baseE * 1.7; // 2 was way too much, 1.2 too little
+      laserGun1.stats.ammoRefreshRate =
+        LaserGun.baseStats.ammoRefreshRate * 1.3;
+      laserGun2.stats.ammoRefreshRate =
+        LaserGun.baseStats.ammoRefreshRate * 1.3;
       other.weapons = [laserGun1, laserGun2];
     };
     const otherPhoton = (other) => {

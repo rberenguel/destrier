@@ -14,7 +14,7 @@ class MissileLauncher extends Gun {
   firerate = 1000; // It's not really a rate and it is annoying me
   html = "Pt"; // Asterisk alignment
   ammo = true;
-  ammoMax = 2;
+  ammoMax = 1;
   static baseStats = {
     // Energy, no mass usage really
     minRange: 5000,
@@ -24,7 +24,7 @@ class MissileLauncher extends Gun {
   };
 
   static present = () => {
-    return `<p class='powerup-title'>Missile launcher</p><hr/>`;
+    return `<p class='powerup-title'>Missile launcher</p><p class='powerup-description'>Tracks an enemy target if it ahead in range. Reduced ammunition.</p><hr/>`;
     const stats = PhotonTorpedoLauncher.baseStats;
     const range = stats.minRange;
     const mip = PhotonTorpedoLauncher.baseStats.baseE.toFixed(0);

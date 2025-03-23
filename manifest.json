@@ -1,0 +1,35 @@
+{
+  "short_name": "Destrier",
+  "name": "Destrier",
+  "icons": [
+    {
+      "src": "src/media/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "src/media/icon-128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "screenshots": [
+    {
+      "src": "src/media/screenshot-square.png",
+      "type": "image/png",
+      "sizes": "1384x1324",
+      "label": "Intro screen for Destrier"
+    },
+    {
+      "src": "src/media/screenshot-wide.png",
+      "type": "image/png",
+      "sizes": "2558x1328",
+      "form_factor": "wide",
+      "label": "Intro screen for Destrier"
+    }
+  ]
+}

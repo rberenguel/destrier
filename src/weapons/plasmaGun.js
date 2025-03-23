@@ -1,0 +1,129 @@
+export { PlasmaGun };
+
+import { Gun } from "./weaponBase.js";
+import { rotate } from "../base/math.js";
+import { Base1 } from "../base/base.js";
+import { Mesh, Meshes } from "../base/mesh.js";
+import { seededRnd } from "../base/rnd.js";
+
+const rnd = seededRnd(performance.now());
+
+class PlasmaGun extends Gun {
+  static kind = "kPlasmaGun";
+  kind = "kPlasmaGun";
+  firerate = 50;
+  html = "Pg";
+  static baseStats = {
+    // Energy, no mass use really
+    baseE: 20,
+    decay: 0.5,
+    ACCEL: 40,
+  };
+  ammo = false;
+  static present = () => {
+    return `<p class='powerup-title'>Plasma gun</p><hr/>`;
+    const stats = PlasmaGun.baseStats;
+    const range = (
+      (stats.baseE / PlasmaGun.baseStats.decay) *
+      stats.ACCEL
+    ).toFixed(0);
+    const mip = PlasmaGun.baseStats.baseE.toFixed(0);
+    const html = `<p>Plasma gun</p><hr/><p>Energy (no ammo)</p><table><tr><td>Point blank dmg: </td><td>${mip}</td></tr><tr><td>Speed: </td><td>${stats.ACCEL}</td></tr><td>Range: </td><td>${range}</td></tr></table>`;
+    return html;
+  };
+  present() {
+    return PlasmaGun.present();
+  }
+  constructor(props) {
+    super({ ...props });
+    this.stats = { ...this.constructor.baseStats };
+    this.color = 0x00ffff;
+  }
+
+  fire(shooter, bulletList) {
+    super.fire(shooter, bulletList);
+    // Shooter is a reference to whoever is shooting, so we can take
+    // direction and velocity vector.
+    if (shooter.disabled > performance.now()) {
+      return;
+    }
+    const rf = rnd();
+    const spread = -0.01 + 0.02 * rf;
+    const ivx = Math.cos(shooter.r + spread);
+    const ivy = Math.sin(shooter.r + spread);
+    const vx = this.stats.ACCEL * ivx + shooter.vel.x;
+    const vy = this.stats.ACCEL * ivy + shooter.vel.y;
+    const [rpx, rpy] = rotate(this.pos.x, this.pos.y, shooter.r);
+    const b = new PlasmaBullet({
+      pos: {
+        x: shooter.pos.x + rpx,
+        y: shooter.pos.y + rpy,
+      },
+      vel: {
+        x: vx,
+        y: vy,
+      },
+      r: shooter.r,
+      e: this.stats.baseE,
+      decay: this.stats.decay,
+      scale: shooter.scale,
+      source: this.source,
+    });
+    b.shooter = shooter;
+    b.firedBy = "kPlasmaGun";
+    bulletList.push(b);
+    if (shooter.human) {
+      window.sampler("c0", 0.5); // Plasma, based on Ride1_OH_FF_1
+    }
+  }
+}
+
+class PlasmaBullet extends Base1 {
+  constructor(props) {
+    const mesh = new Mesh({
+      kind: Meshes.kPoly,
+      vertices: [
+        [12, 0],
+        [0, -7],
+        [-12, 0],
+        [0, 7],
+      ],
+      color: 0x00ffff,
+      fill: 0x00ffff,
+    });
+    super({ ...props, meshes: [mesh] });
+
+    this.e = props.e ?? 10;
+    this.initialE = this.e;
+    this.decay = props.decay ?? 0.15;
+    this.mass = props.mass ?? 1;
+    this.source = props.source ?? -1;
+  }
+
+  generate() {
+    super.generate();
+  }
+
+  update(delta) {
+    super.update(delta);
+    super.move(delta.deltaTime);
+    this.e -= 0.5 * (Math.random() * this.decay + this.decay);
+    const ne = Math.max(0, Math.min(1, this.e / this.initialE));
+    const red = Math.floor(255 * (1 - ne)); // Cools to red
+    const green = Math.floor(255 * ne);
+    const blue = Math.floor(255 * ne * ne);
+    const hexColor = (red << 16) | (green << 8) | blue;
+    for (let presentation of this.presentations) {
+      if (!presentation) {
+        this.presentation = { destroyed: true };
+        return;
+      }
+      if (presentation.destroyed) {
+        this.presentation = { destroyed: true };
+        return;
+      }
+      presentation.rotation = this.r;
+      presentation.tint = hexColor;
+    }
+  }
+}

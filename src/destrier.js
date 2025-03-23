@@ -180,6 +180,16 @@ const inMenuActions = {
       inMenuActions.debounce = performance.now() + 300;
       return;
     }
+    if (msgs.visible && msgs._div.querySelector(".control-list-go-back")) {
+      // Ignore presses here
+      return;
+    }
+    if (msgs.visible && msgs._div.querySelector("#about")) {
+      // About should be dismissed
+      msgs.hide();
+      inMenuActions.debounce = performance.now() + 300;
+      return;
+    }
     powerupControls("Accept");
     menuP.accept();
     inMenuActions.debounce = performance.now() + 300;

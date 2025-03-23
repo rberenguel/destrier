@@ -110,7 +110,6 @@ const presentKeyMap = (d, gameActions, msgs, menu) => {
         tdk.innerText = "???";
         const nk = await getDeviceInput("keyboard");
         tdk.innerText = nk;
-        //delete keyMap[oldkey]; TODO This is problematic AF
         keyMap[nk] = action;
         await set("keyMap", keyMap);
         setTimeout(() => (menu.ignoresKeys = false), 100);
@@ -119,7 +118,6 @@ const presentKeyMap = (d, gameActions, msgs, menu) => {
         tdb.innerText = "???";
         const nb = await getDeviceInput("gamepad");
         tdb.innerText = `b${nb}`;
-        //delete buttonMap[oldbutton]; TODO This is problematic AF
         buttonMap[`b${nb}`] = action;
         await set("buttonMap", buttonMap);
         setTimeout(() => (menu.ignoresKeys = false), 100);

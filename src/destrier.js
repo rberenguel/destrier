@@ -168,7 +168,11 @@ const inMenuActions = {
     powerupControls("GoLeft");
     inMenuActions.debounce = performance.now() + 300;
   },
-  shoot: () => {},
+  shoot: () => {if(!inGame && !gameOver){
+    console.log("Trying to skip")
+    countdown = performance.now()
+    return;
+  }},
   activeAbility: () => {},
   secondaryShoot: () => {
     if (inMenuActions.debounce > performance.now()) {
@@ -722,6 +726,7 @@ app.ticker.add((delta) => {
     }
   }
   if (!inGame && !gameOver) {
+    menuController()
     if (countdown === 0 && chosePowerup) {
       // We have chosen a powerup already
       countdown = performance.now() + 3000; // Start the 3-second countdown

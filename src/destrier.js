@@ -15,6 +15,7 @@ import { settings } from "./settings.js";
 import { getEncouragementMessage } from "./encouragement.js";
 import { enemiesPerLevel } from "./leveling.js";
 import { resetStats, presentStats, showHUDInfo } from "./stats.js";
+import { changelog } from "./changelog.js";
 
 import {
   offerChoices,
@@ -81,7 +82,7 @@ const gameActions = {
     }
     player.weapons[0].fire(player, player.bulletList);
     player.weapons[1].fire(player, player.bulletList);
-    settings.shake.onFire(app);
+    settings.shake.onFire(app, player.r);
   },
   secondaryShoot: () => {
     if (player.e < 10) {
@@ -93,8 +94,8 @@ const gameActions = {
       return;
     }
     player.secondaryPrevshot = now;
+    settings.shake.onSecondaryFire(app, player.r);
     try {
-      settings.shake.onSecondaryFire(app);
       player.otherShips = spaceScene.otherShips;
       player.secondaryWeapons[0].fire(player, player.bulletList);
     } catch {}
@@ -275,7 +276,7 @@ app.view.addEventListener(
   (e) => {
     e.preventDefault();
   },
-  { passive: false }
+  { passive: false },
 );
 
 app.view.addEventListener(
@@ -283,7 +284,7 @@ app.view.addEventListener(
   (e) => {
     e.preventDefault();
   },
-  { passive: false }
+  { passive: false },
 );
 
 app.view.addEventListener(
@@ -291,7 +292,7 @@ app.view.addEventListener(
   (e) => {
     e.preventDefault();
   },
-  { passive: false }
+  { passive: false },
 );
 app.stage.addEventListener("pointerdown", (e) => {
   //virtualPad.touchStart(e.global, e);
@@ -511,8 +512,16 @@ const mainMenuCommands = [
     lambda: () => {
       const about = document.getElementById("about");
       const clone = about.cloneNode(true);
+      clone.querySelector(".changelog-button").addEventListener("click", () => {
+        changelog(msgs);
+      });
       clone.style.display = "block";
-      clone.addEventListener("click", () => msgs.hide());
+      clone.addEventListener("click", (ev) => {
+        if (ev.target.classList.contains("changelog-button")) {
+          return;
+        }
+        msgs.hide();
+      });
       msgs.div(clone);
       msgs.show({ glass: 1001, msgs: 1002 });
     },
@@ -635,7 +644,7 @@ app.ticker.add((delta) => {
     } else {
       const choices = [
         ...allPowerUpChoices(player).concat(
-          shieldPowerups(player).concat(superPowerups(player))
+          shieldPowerups(player).concat(superPowerups(player)),
         ),
       ];
       choices.sort(() => Math.random() - 0.5);
@@ -654,7 +663,7 @@ app.ticker.add((delta) => {
   }
   if (!isLandscape() && !msgs.visible) {
     msgs.text(
-      "Please rotate your device, this can only be played in landscape mode"
+      "Please rotate your device, this can only be played in landscape mode",
     );
     msgs.show();
     app.canvas.style.display = "none";
@@ -662,7 +671,7 @@ app.ticker.add((delta) => {
   }
   if (needsStandalone() & !msgs.visible) {
     msgs.text(
-      "Please install as a standalone web app (Usually share -> Add to Home Screen)"
+      "Please install as a standalone web app (Usually share -> Add to Home Screen)",
     );
     msgs.show();
     app.canvas.style.display = "none";
@@ -724,11 +733,10 @@ app.ticker.add((delta) => {
       powerUpChosen = false;
     } else {
       const remainingTime = Math.ceil(
-        (finishCountdown - performance.now()) / 1000
+        (finishCountdown - performance.now()) / 1000,
       ).toFixed(0); // Calculate remaining seconds
-      document.getElementById(
-        "next-wave-countdown"
-      ).innerHTML = `Next wave in <span class="remaining-time">${remainingTime}</span> seconds`;
+      document.getElementById("next-wave-countdown").innerHTML =
+        `Next wave in <span class="remaining-time">${remainingTime}</span> seconds`;
     }
   }
   if (!inGame && !gameOver) {
@@ -771,7 +779,7 @@ app.ticker.add((delta) => {
         `Wave <span class="wave-num">${level}</span> in <span class="remaining-time">${remainingTime}</span> seconds<br\>You will face <span style="color: #c60;">${a} asteroids</span>` +
           extra +
           `<p>Press <span class="action-name">shoot</span> to skip</p>`,
-        { fontSize: "2rem" }
+        { fontSize: "2rem" },
       );
     }
   }
@@ -784,7 +792,7 @@ app.ticker.add((delta) => {
 
 function getLandscapeDimensions() {
   const rootFontSize = parseFloat(
-    getComputedStyle(document.documentElement).fontSize
+    getComputedStyle(document.documentElement).fontSize,
   );
   const marginInPixels = rootFontSize; // 1rem of additional margin
   const totalMarginWidth = marginInPixels * 2;
@@ -808,7 +816,7 @@ function resizeForLandscape() {
   let landscapeDimensions = getLandscapeDimensions();
   app.renderer.resize(landscapeDimensions.width, landscapeDimensions.height); // Using renamed variable
   console.log(
-    `Resized for Landscape: Width: ${landscapeDimensions.width}, Height: ${landscapeDimensions.height}`
+    `Resized for Landscape: Width: ${landscapeDimensions.width}, Height: ${landscapeDimensions.height}`,
   );
 }
 

@@ -1,11 +1,26 @@
 export { settings };
 
-const shake = (app, minShake = -2) => {
+const shake = (app, minShake = -2, angle = undefined) => {
+  console.log(angle);
   const maxShake = -minShake;
-  const span = maxShake - minShake;
-  const rx = minShake + Math.floor(Math.random() * span);
-  const ry = maxShake + Math.floor(Math.random() * span);
+  let rx = 0;
+  let ry = 0;
+
+  if (angle !== undefined) {
+    const shakeAmount = -minShake;
+    const ca = Math.cos(angle);
+    const sa = Math.sin(angle);
+
+    rx = Math.ceil(ca * Math.abs(shakeAmount));
+    ry = Math.ceil(sa * Math.abs(shakeAmount));
+  } else {
+    const span = maxShake - minShake;
+    rx = minShake + Math.floor(Math.random() * span);
+    ry = minShake + Math.floor(Math.random() * span);
+  }
+  console.log(`${rx}px ${ry}px`);
   app.canvas.style.translate = `${rx}px ${ry}px`;
+  console.log(app.canvas.style.translate);
 };
 
 const isSecondary = (w) => {
@@ -69,15 +84,15 @@ const settings = {
   },
   hitSleepMs: 15,
   shake: {
-    onHit: (app) => {
-      shake(app, -6);
+    onHit: (app, angle) => {
+      shake(app, -8, angle);
       document.body.style.backgroundColor = "#644";
     },
-    onFire: (app) => {
-      shake(app, -1);
+    onFire: (app, angle) => {
+      shake(app, -2, Math.PI + angle);
     },
-    onSecondaryFire: (app) => {
-      shake(app, -3);
+    onSecondaryFire: (app, angle) => {
+      shake(app, -6, Math.PI + angle);
     },
   },
   fire: {

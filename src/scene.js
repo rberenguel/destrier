@@ -295,7 +295,9 @@ class SpaceScene extends Scene {
 
   // TODO: will need a destructor for all the created objects
   update(delta) {
-    this.app.canvas.style.translate = `0px 0px`;
+    if (Math.random() < 0.5) {
+      this.app.canvas.style.translate = `0px 0px`;
+    }
     document.body.style.backgroundColor = "black";
     this.starfield.update(this.player.vel);
     this.viewframe.update();

@@ -46,7 +46,8 @@ canvas {
   color: #cc0;
 }
 
-.button-name { /* TODO: Use this in intro*/
+.button-name {
+  /* TODO: Use this in intro*/
   color: #cc0;
 }
 
@@ -450,4 +451,27 @@ canvas {
 
 #about code {
   color: #c60;
+}
+
+.changelog-button {
+  cursor: pointer;
+  color: #c06;
+}
+
+.changelog-content {
+  text-align: left;
+  cursor: pointer;
+}
+
+.changelog-content > h1 {
+  color: #cc0;
+}
+
+.changelog-content > li {
+  font-size: 1.25rem;
+}
+
+.changelog-content em {
+  color: #6c0;
+  font-style: normal;
 }

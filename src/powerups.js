@@ -288,6 +288,8 @@ const allPowerUpChoices = (player) => [
           x: 0,
           y: 0,
         },
+        color: 0x00ddff,
+        haloColor: 0x11ddff,
       });
       player.secondaryWeapons = [torpedo];
       player.ammo[PhotonTorpedoLauncher.kind] = {};

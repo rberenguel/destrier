@@ -691,14 +691,25 @@ app.ticker.add((delta) => {
         a.e = -1;
       }
       for (let o of spaceScene.otherShips) {
+        for (let b of o.bulletList) {
+          b.e = -1;
+          b.moved = Infinity;
+        }
+        for (let f of o.flameList) {
+          f.e = -1;
+        }
         o.e = -1;
       }
       for (let f of spaceScene.flameList) {
         f.e = -1;
       }
-      for (let b of spaceScene.bulletList) {
+      for (let f of player.flameList) {
+        f.e = -1;
+      }
+      for (let b of player.bulletList) {
         b.e = -1;
-        b.moved = Infinity
+        b.moved = Infinity;
+        console.log(b);
       }
       offerPowerUpChoices = true;
       powerUpChosen = false;

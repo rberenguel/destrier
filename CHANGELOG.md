@@ -1,5 +1,6 @@
 # 0.8.1
 
+- Fix z-positioning of ship hit signal
 - Improve screenshake (directional with shooting)
 - Add a changelog &#x1F937;
 

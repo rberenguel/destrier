@@ -511,8 +511,10 @@ class Ship extends Base1 {
         if (presentation.name == "hitMesh") {
           if (this.showHit > performance.now()) {
             presentation.alpha = 1;
+            presentation.tint = 0xffffff;
           } else {
             presentation.alpha = 0;
+            presentation.tint = 0x000000;
           }
         }
         if (presentation.name == "primaryWeapon") {
@@ -721,10 +723,10 @@ class Bobcat extends Ship {
     super({
       ...props,
       meshes: [
-        meshBelow,
         secondaryWeaponMesh,
         primaryWeaponMesh1,
         primaryWeaponMesh2,
+        meshBelow,
         meshAround,
       ],
       weapons: weapons,

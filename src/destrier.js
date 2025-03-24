@@ -748,6 +748,7 @@ app.ticker.add((delta) => {
       msgs.text("");
       msgs.show();
       level++;
+      console.log("Level increased", level);
     } else if (performance.now() >= countdown) {
       // 3 seconds have passed
       msgs.hide();

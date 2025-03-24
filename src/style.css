@@ -42,6 +42,14 @@ canvas {
   font-size: 7rem;
 }
 
+.action-name {
+  color: #cc0;
+}
+
+.button-name { /* TODO: Use this in intro*/
+  color: #cc0;
+}
+
 .game-title {
   background-image: linear-gradient(
     to right,

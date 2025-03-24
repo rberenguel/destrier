@@ -168,11 +168,16 @@ const inMenuActions = {
     powerupControls("GoLeft");
     inMenuActions.debounce = performance.now() + 300;
   },
-  shoot: () => {if(!inGame && !gameOver){
-    console.log("Trying to skip")
-    countdown = performance.now()
-    return;
-  }},
+  shoot: () => {
+    if (inMenuActions.debounce > performance.now()) {
+      return;
+    }
+    if (!inGame && !gameOver) {
+      countdown = performance.now();
+      inMenuActions.debounce = performance.now() + 300;
+      return;
+    }
+  },
   activeAbility: () => {},
   secondaryShoot: () => {
     if (inMenuActions.debounce > performance.now()) {
@@ -270,7 +275,7 @@ app.view.addEventListener(
   (e) => {
     e.preventDefault();
   },
-  { passive: false },
+  { passive: false }
 );
 
 app.view.addEventListener(
@@ -278,7 +283,7 @@ app.view.addEventListener(
   (e) => {
     e.preventDefault();
   },
-  { passive: false },
+  { passive: false }
 );
 
 app.view.addEventListener(
@@ -286,7 +291,7 @@ app.view.addEventListener(
   (e) => {
     e.preventDefault();
   },
-  { passive: false },
+  { passive: false }
 );
 app.stage.addEventListener("pointerdown", (e) => {
   //virtualPad.touchStart(e.global, e);
@@ -630,7 +635,7 @@ app.ticker.add((delta) => {
     } else {
       const choices = [
         ...allPowerUpChoices(player).concat(
-          shieldPowerups(player).concat(superPowerups(player)),
+          shieldPowerups(player).concat(superPowerups(player))
         ),
       ];
       choices.sort(() => Math.random() - 0.5);
@@ -649,7 +654,7 @@ app.ticker.add((delta) => {
   }
   if (!isLandscape() && !msgs.visible) {
     msgs.text(
-      "Please rotate your device, this can only be played in landscape mode",
+      "Please rotate your device, this can only be played in landscape mode"
     );
     msgs.show();
     app.canvas.style.display = "none";
@@ -657,7 +662,7 @@ app.ticker.add((delta) => {
   }
   if (needsStandalone() & !msgs.visible) {
     msgs.text(
-      "Please install as a standalone web app (Usually share -> Add to Home Screen)",
+      "Please install as a standalone web app (Usually share -> Add to Home Screen)"
     );
     msgs.show();
     app.canvas.style.display = "none";
@@ -719,14 +724,15 @@ app.ticker.add((delta) => {
       powerUpChosen = false;
     } else {
       const remainingTime = Math.ceil(
-        (finishCountdown - performance.now()) / 1000,
+        (finishCountdown - performance.now()) / 1000
       ).toFixed(0); // Calculate remaining seconds
-      document.getElementById("next-wave-countdown").innerHTML =
-        `Next wave in <span class="remaining-time">${remainingTime}</span> seconds`;
+      document.getElementById(
+        "next-wave-countdown"
+      ).innerHTML = `Next wave in <span class="remaining-time">${remainingTime}</span> seconds`;
     }
   }
   if (!inGame && !gameOver) {
-    menuController()
+    menuController();
     if (countdown === 0 && chosePowerup) {
       // We have chosen a powerup already
       countdown = performance.now() + 3000; // Start the 3-second countdown
@@ -763,8 +769,9 @@ app.ticker.add((delta) => {
       }
       msgs.html(
         `Wave <span class="wave-num">${level}</span> in <span class="remaining-time">${remainingTime}</span> seconds<br\>You will face <span style="color: #c60;">${a} asteroids</span>` +
-          extra,
-        { fontSize: "2rem" },
+          extra +
+          `<p>Press <span class="action-name">shoot</span> to skip</p>`,
+        { fontSize: "2rem" }
       );
     }
   }
@@ -777,7 +784,7 @@ app.ticker.add((delta) => {
 
 function getLandscapeDimensions() {
   const rootFontSize = parseFloat(
-    getComputedStyle(document.documentElement).fontSize,
+    getComputedStyle(document.documentElement).fontSize
   );
   const marginInPixels = rootFontSize; // 1rem of additional margin
   const totalMarginWidth = marginInPixels * 2;
@@ -801,7 +808,7 @@ function resizeForLandscape() {
   let landscapeDimensions = getLandscapeDimensions();
   app.renderer.resize(landscapeDimensions.width, landscapeDimensions.height); // Using renamed variable
   console.log(
-    `Resized for Landscape: Width: ${landscapeDimensions.width}, Height: ${landscapeDimensions.height}`,
+    `Resized for Landscape: Width: ${landscapeDimensions.width}, Height: ${landscapeDimensions.height}`
   );
 }
 

@@ -17,7 +17,7 @@ function loadMarkdownText(path, cb) {
 }
 
 const changelog = (msgs) => {
-  loadMarkdownText("changelog.md", (markdownText) => {
+  loadMarkdownText("CHANGELOG.md", (markdownText) => {
     const div = document.createElement("DIV");
     div.classList.add("changelog-content");
     for (let line of markdownText.split("\n")) {

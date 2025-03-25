@@ -13,6 +13,7 @@ import { dist, sqnorm, rotate, normalizeAngle } from "./math.js";
 import { Flame } from "./flame.js";
 import { seededRnd } from "./rnd.js";
 import { settings } from "../settings.js";
+import { Debris, kinds as debrisKinds } from "./debris.js";
 const rnd = seededRnd(performance.now());
 
 function shortestAngleDifference(angle1, angle2) {
@@ -34,6 +35,7 @@ class Ship extends Base1 {
 
   constructor(props) {
     super(props);
+    this.vertices = props.vertices // Required for debris
     this.e = props.e ?? 1000;
     this.initialE = this.e;
     //this.scale = props.scale ?? 1
@@ -59,6 +61,21 @@ class Ship extends Base1 {
     this.extraAmmo = 1;
     this._magicalCounter = 0;
     this.disabled = 0;
+  }
+
+  debris(){
+    const debris = new Debris({
+      pos: {
+        x: this.pos.x,
+        y: this.pos.y,
+      },
+      kind: debrisKinds.kShipDebris,
+      vertices: this.vertices,
+      width: this.width,
+      color: this.color
+    });
+    debris.generate()
+    return debris
   }
 
   action() {
@@ -93,6 +110,15 @@ class Ship extends Base1 {
       });
       this.flameList.push(fl);
     }
+    const debris = new Debris({
+      pos: {
+        x: this.pos.x,
+        y: this.pos.y,
+      },
+      kind: debrisKinds.kShipDebris,
+      vertices: this.vertices
+    });
+    return debris
   }
 
   collision(other) {
@@ -107,7 +133,7 @@ class Ship extends Base1 {
     if (this.energyShield > performance.now()) {
       const distToOther = Math.sqrt(
         Math.pow(other.pos.x - this.pos.x, 2) +
-          Math.pow(other.pos.y - this.pos.y, 2),
+          Math.pow(other.pos.y - this.pos.y, 2)
       );
       // Energy shields null all energy weapons
       if (distToOther <= 1.3 * shieldRadius + (other.radius || 0)) {
@@ -125,7 +151,7 @@ class Ship extends Base1 {
       const shieldRadius = 130;
       const distToOther = Math.sqrt(
         Math.pow(other.pos.x - this.pos.x, 2) +
-          Math.pow(other.pos.y - this.pos.y, 2),
+          Math.pow(other.pos.y - this.pos.y, 2)
       );
 
       if (distToOther <= 1.3 * shieldRadius + (other.radius || 0)) {
@@ -134,7 +160,7 @@ class Ship extends Base1 {
           y: other.pos.y - this.pos.y,
         };
         const collisionNormalMagnitude = Math.sqrt(
-          Math.pow(collisionVector.x, 2) + Math.pow(collisionVector.y, 2),
+          Math.pow(collisionVector.x, 2) + Math.pow(collisionVector.y, 2)
         );
         const collisionNormal = {
           x: collisionVector.x / collisionNormalMagnitude,
@@ -149,7 +175,7 @@ class Ship extends Base1 {
         if (dotProduct < 0) {
           const tangent = { x: -collisionNormal.y, y: collisionNormal.x };
           const tangentMagnitude = Math.sqrt(
-            Math.pow(tangent.x, 2) + Math.pow(tangent.y, 2),
+            Math.pow(tangent.x, 2) + Math.pow(tangent.y, 2)
           );
           const unitTangent = {
             x: tangent.x / tangentMagnitude,
@@ -187,7 +213,7 @@ class Ship extends Base1 {
           }
 
           const speed = Math.sqrt(
-            Math.pow(velocity.x, 2) + Math.pow(velocity.y, 2),
+            Math.pow(velocity.x, 2) + Math.pow(velocity.y, 2)
           );
           const pushFactor = Math.max(0.1, Math.abs(dotProduct) / speed);
           const pushVector = {
@@ -221,7 +247,7 @@ class Ship extends Base1 {
       }
       other.minDistance[this._id] = Math.min(
         other.minDistance[this._id] ?? Infinity,
-        d,
+        d
       );
     }
 
@@ -269,7 +295,7 @@ class Ship extends Base1 {
 
     const angleDifference = shortestAngleDifference(
       this.r,
-      oppositeVelocityAngle,
+      oppositeVelocityAngle
     );
 
     if (nv > 10 && Math.abs(angleDifference) < 0.5 && this.emergencyBrakes) {
@@ -444,7 +470,7 @@ class Ship extends Base1 {
       this.activeAbilityEnergyRecoveryRate * delta.deltaTime;
     this.activeAbilityEnergy = Math.min(
       this.activeAbilityEnergy,
-      this.maxActiveAbilityEnergy,
+      this.maxActiveAbilityEnergy
     );
     this.shieldEnergy += this.shieldEnergyRecoveryRate * delta.deltaTime;
     this.shieldEnergy = Math.min(this.shieldEnergy, this.maxShieldEnergy);
@@ -455,7 +481,7 @@ class Ship extends Base1 {
         this.ammo[w.kind].count += rr * delta.deltaTime;
         this.ammo[w.kind].count = Math.min(
           this.ammo[w.kind].max,
-          this.ammo[w.kind].count,
+          this.ammo[w.kind].count
         );
       }
     }
@@ -466,7 +492,7 @@ class Ship extends Base1 {
         this.ammo[w.kind].count += rr * delta.deltaTime;
         this.ammo[w.kind].count = Math.min(
           this.ammo[w.kind].max,
-          this.ammo[w.kind].count,
+          this.ammo[w.kind].count
         );
       }
     }
@@ -562,7 +588,7 @@ class Ship extends Base1 {
             this._magicalCounter = (this._magicalCounter + 1) % 100;
             presentation.gradienter(
               Math.cos((Math.PI * 2 * this._magicalCounter) / 100),
-              Math.cos((Math.PI * 2 * this._magicalCounter) / 100),
+              Math.cos((Math.PI * 2 * this._magicalCounter) / 100)
             );
             presentation.alpha = 0.8;
           } else {
@@ -583,18 +609,19 @@ class Lynx extends Ship {
       [-30, 0],
       [-70, 50],
     ];
+    const width = 10
     const mesh = new Mesh({
       kind: Meshes.kPoly,
       vertices: vertices,
       color: 0xffffff,
-      width: 10,
+      width: width,
       fill: 0x000000,
     });
     const secondaryWeaponMesh = new Mesh({
       name: "secondaryWeapon",
       kind: Meshes.kCircle,
       center: [0, 0],
-      radius: 10,
+      radius: width,
       color: 0xffffff,
       fill: 0xffffff,
     });
@@ -619,7 +646,7 @@ class Lynx extends Ship {
             -50 * s1,
             -50 * s2,
             50 * s1,
-            50 * s2,
+            50 * s2
           );
           colorStops.forEach((number, index) => {
             const ratio = index / colorStops.length;
@@ -654,53 +681,51 @@ class Lynx extends Ship {
       ],
       weapons: weapons,
       secondaryWeapons: secondaryWeapons,
+      vertices: vertices
     });
     this.mass = 7;
+    this.width = width;
   }
 }
 
 class Bobcat extends Ship {
   constructor(props) {
+    const width = 10
+    const vertices = [
+      [-70, 50],
+      [-50, 60],
+      [70, 0],
+      [-50, -60],
+      [-70, -50],
+      [-30, 0],
+      [-70, 50],
+    ]
+    const color = 0xffffff
     const meshBelow = new Mesh({
       name: "hitMesh",
       kind: Meshes.kPoly,
-      vertices: [
-        [-70, 50],
-        [-50, 60],
-        [70, 0],
-        [-50, -60],
-        [-70, -50],
-        [-30, 0],
-        [-70, 50],
-      ],
+      vertices: vertices,
       fill: 0xffffff,
     });
     const meshAround = new Mesh({
       kind: Meshes.kPoly,
-      vertices: [
-        [-70, 50],
-        [-50, 60],
-        [70, 0],
-        [-50, -60],
-        [-70, -50],
-        [-30, 0],
-        [-70, 50],
-      ],
-      color: 0xffffff,
-      width: 10,
+      vertices: vertices,
+      color: color,
+      width: width,
     });
+
     const secondaryWeaponMesh = new Mesh({
       name: "secondaryWeapon",
       kind: Meshes.kCircle,
       center: [0, 0],
       radius: 10,
-      color: 0xffffff,
+      color: color,
       fill: 0xffffff,
     });
     const primaryWeaponMesh1 = new Mesh({
       name: "primaryWeapon",
       kind: Meshes.kPoly,
-      vertices: [
+      vertices:  [
         [15, 35],
         [-50, 35],
         [-50, 25],
@@ -712,10 +737,10 @@ class Bobcat extends Ship {
       name: "primaryWeapon",
       kind: Meshes.kPoly,
       vertices: [
-        [15, -35],
-        [-50, -35],
-        [-50, -25],
-        [15, -25],
+        [15, 35],
+        [-50, 35],
+        [-50, 25],
+        [15, 25],
       ],
       fill: 0xffffff,
     });
@@ -730,20 +755,9 @@ class Bobcat extends Ship {
         meshAround,
       ],
       weapons: weapons,
+      vertices: vertices
     });
     try {
-      /*const plasmaGun1 = new PlasmaGun({
-        pos: {
-          x: -30,
-          y: 50,
-        },
-      });
-      const plasmaGun2 = new PlasmaGun({
-        pos: {
-          x: -30,
-          y: -50,
-        },
-      });*/
       const massDriverGun1 = new MassDriverGun({
         pos: {
           x: -30,
@@ -765,5 +779,7 @@ class Bobcat extends Ship {
     }
 
     this.mass = 10;
+    this.width = width
+    this.color = color
   }
 }

@@ -110,6 +110,7 @@ class SpaceScene extends Scene {
 
     this.bulletList = [];
     this.flameList = [];
+    this.debrisList = [];
     this.otherShips = [];
     this.asteroids = [];
 
@@ -262,6 +263,7 @@ class SpaceScene extends Scene {
       other.generate();
       other.attach(this.viewframe);
       this.otherShips.push(other);
+      console.log(other.debris())
     }
   }
 
@@ -437,6 +439,21 @@ class SpaceScene extends Scene {
         f.update(delta);
       }
 
+      for (let d of this.debrisList) {
+        if (!d.drawn) {
+          d.generate();
+          d.attach(this.viewframe);
+        }
+        wrapPos(d, {
+          wmin: 0,
+          wmax: this.app.renderer.width / this.viewframe.scale,
+          hmin: 0,
+          hmax: this.app.renderer.height / this.viewframe.scale,
+        });
+        d.update(delta);
+        console.log(d)
+      }
+
       for (let b of flammable.bulletList) {
         // Handle bullet collisions with asteroids now
         if (b.e <= 0.01) {
@@ -601,7 +618,9 @@ class SpaceScene extends Scene {
             }
             //o.transferMomentum(b); TODO momentum
             if (o.e < 0) {
-              o.explode({ e: -o.e });
+              const debris = o.explode({ e: -o.e });
+              this.debrisList.push(debris)
+              console.log(debris)
               if (this.otherShips.length === 1) {
                 // This was the last ship
                 triggerTextEffect("kLastShip", b.pos.x, b.pos.y, this.scale);

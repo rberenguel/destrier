@@ -135,7 +135,6 @@ class SpaceScene extends Scene {
   }
 
   addEnemies(n, loadouts = []) {
-    console.log(loadouts);
     let localLoadouts = [...loadouts];
     const otherLaser = (other) => {
       other.ammo[LaserGun.kind] = {};
@@ -228,7 +227,6 @@ class SpaceScene extends Scene {
 
       if (localLoadouts.length > 0) {
         const loadout = localLoadouts[0];
-        console.log(loadout);
         if (loadout?.weapon === "kLaserGun") {
           otherLaser(other);
         }
@@ -522,7 +520,16 @@ class SpaceScene extends Scene {
           }
           if (this.player.e < 0) {
             this.player.lives -= 1;
-            this.player.explode({ e: -this.player.e });
+            const bnv = sqnorm(b.vel.x, b.vel.y) + 0.01;
+            const pnv = sqnorm(this.player.vel.x, this.player.vel.y) + 0.01;
+            const debris = this.player.explode({
+              e: -this.player.e,
+              vel: {
+                x: (2 * b.vel.x) / bnv - (0.4 * this.player.vel.x) / pnv,
+                y: (2 * b.vel.y) / bnv - (0.4 * this.player.vel.y) / pnv,
+              },
+            });
+            this.debrisList.push(debris);
             if (Math.random() < 0.5) {
               window.sampler("e2", 0.5); // Based on crash
             } else {
@@ -599,6 +606,8 @@ class SpaceScene extends Scene {
               o.e -= b.e;
               b.e -= oe;
             }
+            const bnv = sqnorm(b.vel.x, b.vel.y) + 0.01;
+            const onv = sqnorm(o.vel.x, o.vel.y) + 0.01;
             for (let i = 0; i < settings.explosions.ships.hitFlame.count; i++) {
               const fl = new Flame({
                 pos: {
@@ -607,8 +616,8 @@ class SpaceScene extends Scene {
                 },
                 vel: {
                   // Bullets move too fast otherwise
-                  x: 0.1 * b.vel.x - o.vel.x * (o.mass ?? 0.1),
-                  y: 0.1 * b.vel.y - o.vel.y * (o.mass ?? 0.1),
+                  x: (2 * b.vel.x) / bnv - (0.3 * o.vel.x) / onv,
+                  y: (2 * b.vel.y) / bnv - (0.3 * o.vel.y) / onv,
                 },
                 fill: 0xff0000,
                 r: 0,
@@ -652,7 +661,15 @@ class SpaceScene extends Scene {
           window.sampler("e3", 0.5); // Based on crash
         }
         this.player.lives -= 1;
-        this.player.explode({ e: -this.player.e });
+        const pnv = sqnorm(this.player.vel.x, this.player.vel.y) + 0.01;
+        const debris = this.player.explode({
+          e: -this.player.e,
+          vel: {
+            x: (0.4 * this.player.vel.x) / pnv,
+            y: (0.4 * this.player.vel.y) / pnv,
+          },
+        });
+        this.debrisList.push(debris);
         this.player.e = -1;
         this.flameList.push(...this.player.flameList);
         newAsteroids.push(...a.split(this.player.vel));

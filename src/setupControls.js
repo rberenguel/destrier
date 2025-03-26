@@ -62,8 +62,6 @@ if (
   buttonMap = defaultPadControls;
 }
 
-console.log(keyMap);
-
 const rmap = (m) => {
   let reversed = {};
   for (let k in m) {

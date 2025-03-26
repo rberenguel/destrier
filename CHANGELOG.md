@@ -1,3 +1,9 @@
+# 0.8.2
+
+- Ship debris
+- Fix problem with muzzle fire from Gauss cannon
+- Introduce layering (will fix phase shield animation)
+
 # 0.8.1
 
 - Fix z-positioning of ship hit signal

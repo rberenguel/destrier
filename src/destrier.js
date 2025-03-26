@@ -185,7 +185,6 @@ const inMenuActions = {
       return;
     }
     if (intro.visible) {
-      console.log("Removing intro");
       showIntro = false;
       intro.destroy();
       inMenuActions.debounce = performance.now() + 300;
@@ -199,6 +198,10 @@ const inMenuActions = {
       // About should be dismissed
       msgs.hide();
       inMenuActions.debounce = performance.now() + 300;
+      return;
+    }
+    if (!inGame && !gameOver) {
+      // Avoid secondary fire to skip waits
       return;
     }
     powerupControls("Accept");
@@ -231,7 +234,6 @@ const needsStandalone = () => {
 };
 
 const landscapeDimensions = getLandscapeDimensions(); // Renamed variable
-console.log(landscapeDimensions);
 const app = new Application({
   autoResize: true,
   resolution: 1,
@@ -341,6 +343,9 @@ const fullRestart = () => {
   }
   for (let f of spaceScene.flameList) {
     f.e = -1;
+  }
+  for (let d of spaceScene.debrisList) {
+    d.e = -1;
   }
   for (let b of spaceScene.bulletList) {
     b.e = -1;
@@ -542,7 +547,6 @@ let inGame = false;
 let gameOver = false;
 
 let showIntro = true;
-console.log(inMenuActions);
 let intro = new Intro(app, inMenuActions);
 const pausemenuDiv = document.getElementById("pause-menu");
 app.ticker.add((delta) => {
@@ -727,7 +731,6 @@ app.ticker.add((delta) => {
       for (let b of player.bulletList) {
         b.e = -1;
         b.moved = Infinity;
-        console.log(b);
       }
       offerPowerUpChoices = true;
       powerUpChosen = false;
@@ -748,7 +751,7 @@ app.ticker.add((delta) => {
       msgs.text("");
       msgs.show();
       level++;
-      console.log("Level increased", level);
+      console.info("Level increased", level);
     } else if (performance.now() >= countdown) {
       // 3 seconds have passed
       msgs.hide();
@@ -816,7 +819,7 @@ function resizeForLandscape() {
   // Renamed function
   let landscapeDimensions = getLandscapeDimensions();
   app.renderer.resize(landscapeDimensions.width, landscapeDimensions.height); // Using renamed variable
-  console.log(
+  console.info(
     `Resized for Landscape: Width: ${landscapeDimensions.width}, Height: ${landscapeDimensions.height}`,
   );
 }

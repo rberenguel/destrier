@@ -326,7 +326,6 @@ const allPowerUpChoices = (player) => [
         w.source = player._id;
       }
       setSecondaryWeaponPowerup(player, "kMissileLauncher");
-      console.log(player.secondaryWeapons);
     },
   },
   {
@@ -384,7 +383,6 @@ const allPowerUpChoices = (player) => [
     glyph: "pointsight.png",
     lambda: () => {
       player.pointSight = true;
-      console.log(player);
     },
   },
   {

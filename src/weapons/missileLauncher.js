@@ -40,7 +40,6 @@ class MissileLauncher extends Gun {
     super.fire(shooter, bulletList);
     // Shooter is a reference to whoever is shooting, so we can take
     // direction and velocity vector.
-    console.log(shooter.ammo[MissileLauncher.kind].count);
     if ((shooter.ammo[MissileLauncher.kind].count ?? 0) < 1) {
       return;
     }
@@ -77,7 +76,6 @@ class MissileLauncher extends Gun {
     });
     if (shooter.otherShips) {
       const closestShip = targetShip(shooter, shooter.otherShips);
-      console.log(closestShip);
       b.target = closestShip;
     }
     b.shooter = shooter;

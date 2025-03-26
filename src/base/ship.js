@@ -97,10 +97,9 @@ class Ship extends Base1 {
     }
     let rotatedVertices = [];
     for (let v of this.vertices) {
-      const [rvx, rvy] = rotate(v[0], v[1], -this.r);
+      const [rvx, rvy] = rotate(v[0], v[1], this.r);
       rotatedVertices.push([rvx, rvy]);
     }
-    console.log(rotatedVertices);
     const debris = new Debris({
       pos: {
         x: this.pos.x,
@@ -114,6 +113,7 @@ class Ship extends Base1 {
       vertices: rotatedVertices,
       width: this.width,
       color: this.color,
+      r: this.r,
     });
     return debris;
   }
@@ -734,10 +734,10 @@ class Bobcat extends Ship {
       name: "primaryWeapon",
       kind: Meshes.kPoly,
       vertices: [
-        [15, 35],
-        [-50, 35],
-        [-50, 25],
-        [15, 25],
+        [15, -35],
+        [-50, -35],
+        [-50, -25],
+        [15, -25],
       ],
       fill: 0xffffff,
     });

@@ -119,8 +119,8 @@ class MassDriverBullet extends Base1 {
           y: 0.2 * this.vel.y,
         },
         fill: 0xcccccc,
-        r: 0,
-        e: 2,
+        r: this.r,
+        e: 3,
         scale: 0.9,
         decay: 0.2,
       });

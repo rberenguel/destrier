@@ -19,7 +19,6 @@ class Debris extends Base1 {
     this.decay = 0.01;
     this.width = props.width;
     this.color = props.color;
-    console.log(this.vertices);
   }
 
   static getMeshes(kind, vertices, width) {
@@ -46,7 +45,6 @@ class Debris extends Base1 {
     for (const mesh of this.meshes) {
       let p = new Graphics();
       if (mesh.kind === Meshes.kLine) {
-        console.log(mesh.vertices[0]);
         p.moveTo(...mesh.vertices[0]);
         p.lineTo(...mesh.vertices[1]);
         if (mesh.width) {
@@ -58,16 +56,15 @@ class Debris extends Base1 {
         }
         p.pivot.x = (mesh.vertices[1][0] + mesh.vertices[0][0]) / 2;
         p.pivot.y = (mesh.vertices[1][1] + mesh.vertices[0][1]) / 2;
-        console.log(p.pivot.x, p.pivot.y);
-        console.log(mesh.vertices);
+        p.rotation = this.r;
       }
       p.shiftX = 0;
       p.shiftY = 0;
       p.shiftR = 0;
       p.rSpeed = 0.01;
-      p.shiftSpeed = 0.5;
+      p.shiftSpeed = 0.1 + 0.5 * Math.random();
       p.shiftSpeedDecay = 0.001;
-      p.rSpeedDecay = 0.00001;
+      p.rSpeedDecay = 0.00005;
       this.presentations.push(p);
     }
     this.generated = true;
@@ -85,18 +82,19 @@ class Debris extends Base1 {
         presentation = null;
         this.generated = false;
       }
+      return;
     }
     // This will move locally
     const t = delta.deltaTime;
     for (let i = 0; i < this.presentations.length; i++) {
       let p = this.presentations[i];
       if (p != null && !p.destroyed) {
-        const a = (2 * Math.PI * i) / this.presentations.length;
+        const a = -this.r + (Math.PI * i) / this.presentations.length;
         p.shiftX += p.shiftSpeed * Math.cos(a) * t;
         p.shiftY += p.shiftSpeed * Math.sin(a) * t;
         p.shiftR += p.rSpeed * t;
         p.shiftSpeed = Math.max(0.001, p.shiftSpeed - p.shiftSpeedDecay * t);
-        p.rSpeed = Math.max(0.003, p.rSpeed - p.rSpeedDecay * t);
+        p.rSpeed = Math.max(0.0007, p.rSpeed - p.rSpeedDecay * t);
         p.x = this.pos.x - this.viewframe.pos.x + p.shiftX;
         p.y = this.pos.y - this.viewframe.pos.y + p.shiftY;
         p.rotation = p.shiftR;

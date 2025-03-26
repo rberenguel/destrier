@@ -35,7 +35,6 @@ class Intro {
     const acceptKey = rkeymap["secondaryShoot"];
     const acceptButton = rbuttonmap["secondaryShoot"];
     introInfo.innerHTML = `Press <span style="color: #cc0">${acceptKey}</span> or <span style="color: #cc0">${acceptButton}</span> to start`;
-    console.log(this.gameActions);
     intro.addEventListener("click", this.gameActions["secondaryShoot"]);
   }
   update(delta) {

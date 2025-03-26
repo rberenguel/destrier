@@ -1,7 +1,6 @@
 export { settings };
 
 const shake = (app, minShake = -2, angle = undefined) => {
-  console.log(angle);
   const maxShake = -minShake;
   let rx = 0;
   let ry = 0;
@@ -18,9 +17,7 @@ const shake = (app, minShake = -2, angle = undefined) => {
     rx = minShake + Math.floor(Math.random() * span);
     ry = minShake + Math.floor(Math.random() * span);
   }
-  console.log(`${rx}px ${ry}px`);
   app.canvas.style.translate = `${rx}px ${ry}px`;
-  console.log(app.canvas.style.translate);
 };
 
 const isSecondary = (w) => {

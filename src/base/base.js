@@ -59,7 +59,6 @@ class Base1 {
         }
       }
       if (mesh.kind === Meshes.kLine) {
-        console.log(mesh.vertices[0]);
         p.moveTo(...mesh.vertices[0]);
         p.lineTo(...mesh.vertices[1]);
         if (mesh.width) {

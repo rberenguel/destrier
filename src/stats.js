@@ -132,7 +132,7 @@ const showHUDInfo = (player, spaceScene) => () => {
     ammoP = `${(player.ammo[wa.kind].count ?? 0).toFixed(0)}`;
   }
   if (player.ammo[wc.kind]) {
-    ammoS = `${(player.ammo[wc.kind].count ?? 0).toFixed(0)}`;
+    ammoS = `${(player.ammo[wc.kind].count ?? 0).toFixed(1)}`;
   }
   const a = wa.html;
   const b = wb.html;

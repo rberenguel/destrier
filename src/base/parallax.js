@@ -162,16 +162,6 @@ class Starfield {
       dust.y = y;
       this.dust.push(dust);
     }
-    /*
-    for(const pt of this.dustfieldPts){
-      console.log(pt)
-      const {x, y, r, c} = pt
-      dustfield.circle(x, y, 4)
-      dustfield.fill(c)
-    }
-    this.starfield = starfield
-    this.dustfield=dustfield*/
-    // Generate textures from the Graphics objects
   }
 
   attach(app) {
@@ -212,14 +202,9 @@ class Starfield {
       const x = dust.x;
       const y = dust.y;
       wrap(dust, { wmin: 0, wmax: this.width, hmin: 0, hmax: this.height });
-      if (dust.x != x || dust.y != y) {
-        //console.log(dust)
-      }
       dust.skew.x = skew;
       dust.scale = 1 + skew;
       dust.rotation = angle;
     }
-    //this.starContainer.x += 0.01;
-    //this.starContainer.y = this.height / 4;
   }
 }

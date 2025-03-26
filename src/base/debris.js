@@ -11,30 +11,30 @@ const kinds = {
 
 class Debris extends Base1 {
   constructor(props = {}) {
-    super({ ...props });
+    const meshes = Debris.getMeshes(props.kind, props.vertices, props.width);
+    super({ ...props, meshes: meshes });
     this.kind = props.kind;
     this.vertices = props.vertices;
-    const mesh = this.getMesh();
-    this.meshes = mesh;
-    this.e = 1000;
+    this.e = 100;
     this.decay = 0.01;
-    this.width = props.width
-    this.color = props.color
+    this.width = props.width;
+    this.color = props.color;
+    console.log(this.vertices);
   }
 
-  getMesh() {
+  static getMeshes(kind, vertices, width) {
     let meshes = [];
-    if (this.kind === kinds.kShipDebris) {
-      for (let i = 1; i < this.vertices.length; i++) {
-        const v0 = this.vertices[i - 1];
-        const v1 = this.vertices[i];
+    if (kind === kinds.kShipDebris) {
+      for (let i = 1; i < vertices.length; i++) {
+        const v0 = vertices[i - 1];
+        const v1 = vertices[i];
         const mesh = new Mesh({
-          kind: Meshes.kPoly,
-          vertices: [[v0, v1]],
-          color: this.color ?? 0xffffff,
-          fill: this.fill,
-          width: this.width ?? 10,
+          kind: Meshes.kLine,
+          vertices: [v0, v1],
+          color: 0xffffff,
+          width: width ?? 10,
         });
+
         meshes.push(mesh);
       }
     }
@@ -45,30 +45,70 @@ class Debris extends Base1 {
     this.presentations = [];
     for (const mesh of this.meshes) {
       let p = new Graphics();
-      if (mesh.kind === Meshes.kPoly) {
-        p.poly(mesh.flatten());
-        if (mesh.fill !== undefined) {
-          p.fill(mesh.fill);
-        }
+      if (mesh.kind === Meshes.kLine) {
+        console.log(mesh.vertices[0]);
+        p.moveTo(...mesh.vertices[0]);
+        p.lineTo(...mesh.vertices[1]);
         if (mesh.width) {
           p.stroke({ color: mesh.color, width: mesh.width ?? 0 });
         }
+        if (mesh.gradienter) {
+          mesh.gradienter(mesh, p)();
+          p.gradienter = mesh.gradienter(mesh, p);
+        }
+        p.pivot.x = (mesh.vertices[1][0] + mesh.vertices[0][0]) / 2;
+        p.pivot.y = (mesh.vertices[1][1] + mesh.vertices[0][1]) / 2;
+        console.log(p.pivot.x, p.pivot.y);
+        console.log(mesh.vertices);
       }
-      console.log(p, mesh)
+      p.shiftX = 0;
+      p.shiftY = 0;
+      p.shiftR = 0;
+      p.rSpeed = 0.01;
+      p.shiftSpeed = 0.5;
+      p.shiftSpeedDecay = 0.001;
+      p.rSpeedDecay = 0.00001;
       this.presentations.push(p);
     }
     this.generated = true;
   }
 
   update(delta) {
-    super.update(delta);
-    super.move(delta.deltaTime);
-    this.e -= 0.5 * (Math.random() * this.decay + this.decay);
-    const ne = Math.max(0, Math.min(1, this.e / this.initialE));
-    const red = Math.floor(255 * (1 - ne)); // Cools to red
-    const green = Math.floor(255 * ne);
-    const blue = Math.floor(255 * ne * ne);
-    const hexColor = (red << 16) | (green << 8) | blue;
+    // Equivalent to update
+    if (this.e <= 0.1) {
+      this.e = -1;
+      for (let presentation of this.presentations) {
+        if (!presentation || presentation.destroyed) {
+          continue;
+        }
+        presentation.destroy();
+        presentation = null;
+        this.generated = false;
+      }
+    }
+    // This will move locally
+    const t = delta.deltaTime;
+    for (let i = 0; i < this.presentations.length; i++) {
+      let p = this.presentations[i];
+      if (p != null && !p.destroyed) {
+        const a = (2 * Math.PI * i) / this.presentations.length;
+        p.shiftX += p.shiftSpeed * Math.cos(a) * t;
+        p.shiftY += p.shiftSpeed * Math.sin(a) * t;
+        p.shiftR += p.rSpeed * t;
+        p.shiftSpeed = Math.max(0.001, p.shiftSpeed - p.shiftSpeedDecay * t);
+        p.rSpeed = Math.max(0.003, p.rSpeed - p.rSpeedDecay * t);
+        p.x = this.pos.x - this.viewframe.pos.x + p.shiftX;
+        p.y = this.pos.y - this.viewframe.pos.y + p.shiftY;
+        p.rotation = p.shiftR;
+      }
+    }
+    super.move(t); // This will move globally
+
+    this.e -= 0.5;
+    this.e = Math.max(1, this.e);
+    const ne = Math.max(0, Math.min(1, this.e / 100));
+    const g = 100 + 155 * ne;
+    const hexColor = (g << 16) | (g << 8) | g;
     for (let presentation of this.presentations) {
       if (!presentation) {
         this.presentation = { destroyed: true };
@@ -78,7 +118,7 @@ class Debris extends Base1 {
         this.presentation = { destroyed: true };
         return;
       }
-      presentation.rotation = this.r;
+      //presentation.rotation = this.r;
       presentation.tint = hexColor;
     }
   }

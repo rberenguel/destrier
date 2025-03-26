@@ -58,6 +58,18 @@ class Base1 {
           p.gradienter = mesh.gradienter(mesh, p);
         }
       }
+      if (mesh.kind === Meshes.kLine) {
+        console.log(mesh.vertices[0]);
+        p.moveTo(...mesh.vertices[0]);
+        p.lineTo(...mesh.vertices[1]);
+        if (mesh.width) {
+          p.stroke({ color: mesh.color, width: mesh.width ?? 0 });
+        }
+        if (mesh.gradienter) {
+          mesh.gradienter(mesh, p)();
+          p.gradienter = mesh.gradienter(mesh, p);
+        }
+      }
       p.name = mesh.name;
       this.presentations.push(p);
     }

@@ -1,6 +1,6 @@
 export { Scene, SpaceScene };
 
-import { Viewframe } from "./base/viewframe.js";
+import { Viewframe, Wrapper } from "./base/viewframe.js";
 import { Starfield } from "./base/parallax.js";
 //import { RenderedSystem } from "./tinker/renderedSystem.js";
 import { sqnorm, wrapPos, dist } from "./base/math.js";
@@ -108,6 +108,9 @@ class SpaceScene extends Scene {
 
     this.viewframe.vel = this.player.vel;
 
+    const debrisLayer = new Wrapper();
+    debrisLayer.attach(this.viewframe);
+    this.debrisLayer = debrisLayer;
     this.bulletList = [];
     this.flameList = [];
     this.debrisList = [];
@@ -263,7 +266,6 @@ class SpaceScene extends Scene {
       other.generate();
       other.attach(this.viewframe);
       this.otherShips.push(other);
-      console.log(other.debris())
     }
   }
 
@@ -424,6 +426,20 @@ class SpaceScene extends Scene {
         b.update(delta);
       }
 
+      for (let d of this.debrisList) {
+        if (!d.drawn) {
+          d.generate();
+          d.attach(this.debrisLayer);
+        }
+        wrapPos(d, {
+          wmin: 0,
+          wmax: this.app.renderer.width / this.viewframe.scale,
+          hmin: 0,
+          hmax: this.app.renderer.height / this.viewframe.scale,
+        });
+        d.update(delta);
+      }
+
       // Render and update flames
       for (let f of flammable.flameList) {
         if (!f.drawn) {
@@ -437,21 +453,6 @@ class SpaceScene extends Scene {
           hmax: this.app.renderer.height / this.viewframe.scale,
         });
         f.update(delta);
-      }
-
-      for (let d of this.debrisList) {
-        if (!d.drawn) {
-          d.generate();
-          d.attach(this.viewframe);
-        }
-        wrapPos(d, {
-          wmin: 0,
-          wmax: this.app.renderer.width / this.viewframe.scale,
-          hmin: 0,
-          hmax: this.app.renderer.height / this.viewframe.scale,
-        });
-        d.update(delta);
-        console.log(d)
       }
 
       for (let b of flammable.bulletList) {
@@ -618,9 +619,16 @@ class SpaceScene extends Scene {
             }
             //o.transferMomentum(b); TODO momentum
             if (o.e < 0) {
-              const debris = o.explode({ e: -o.e });
-              this.debrisList.push(debris)
-              console.log(debris)
+              const bnv = sqnorm(b.vel.x, b.vel.y) + 0.01;
+              const onv = sqnorm(o.vel.x, o.vel.y) + 0.01;
+              const debris = o.explode({
+                e: -o.e,
+                vel: {
+                  x: (2 * b.vel.x) / bnv - (0.4 * o.vel.x) / onv,
+                  y: (2 * b.vel.y) / bnv - (0.4 * o.vel.y) / onv,
+                },
+              });
+              this.debrisList.push(debris);
               if (this.otherShips.length === 1) {
                 // This was the last ship
                 triggerTextEffect("kLastShip", b.pos.x, b.pos.y, this.scale);
@@ -657,7 +665,8 @@ class SpaceScene extends Scene {
         if (a.collision(o)) {
           triggerTextEffect("kShipAsteroid", o.pos.x, o.pos.y, this.scale);
           a.e = -1;
-          o.explode({ e: -o.e });
+          const debris = o.explode({ e: -o.e });
+          this.debrisList.push(debris);
           o.e = -1;
           newAsteroids.push(...a.split(o.vel));
         }

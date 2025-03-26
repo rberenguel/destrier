@@ -1,4 +1,4 @@
-export { Viewframe };
+export { Viewframe, Wrapper };
 
 import { Base1 } from "./base.js";
 
@@ -18,5 +18,16 @@ class Viewframe extends Base1 {
   update() {
     //super.update()
     this.presentation.scale.set(this.scale);
+  }
+}
+
+class Wrapper extends Base1 {
+  constructor(props) {
+    super(props);
+  }
+  attach(viewframe) {
+    const container = new Container();
+    this.presentation = container;
+    viewframe.presentation.addChild(container);
   }
 }

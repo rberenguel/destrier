@@ -3,6 +3,7 @@ export { Meshes, Mesh };
 const Meshes = {
   kPoly: "kPoly",
   kCircle: "kCircle",
+  kLine: "kLine",
   kPlanet: "kPlanet",
 };
 

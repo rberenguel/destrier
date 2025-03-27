@@ -6,6 +6,7 @@ import { dist, sqnorm, rotate } from "./base/math.js";
 import { Flame } from "./base/flame.js";
 import { seededRnd } from "./base/rnd.js";
 import { settings } from "./settings.js";
+import { Debris, kinds as debrisKinds } from "./base/debris.js";
 
 const rnd = seededRnd(performance.now());
 
@@ -79,9 +80,27 @@ class Asteroid extends Base1 {
     this.vel.y += otherMomentumY / this.mass;
   }
 
-  split(vel) {
+  split(vel, debrisList = undefined) {
     // vel is the incoming vector (say, bullet)
     // We want them to separate fast, but not very fast
+    if (debrisList) {
+      const debris = new Debris({
+        pos: {
+          x: this.pos.x,
+          y: this.pos.y,
+        },
+        vel: {
+          x: 0,
+          y: 0,
+        }, // TODO
+        kind: debrisKinds.kAsteroidDebris,
+        vertices: [...this.vertices],
+        width: this.width,
+        color: this.color,
+        r: this.r,
+      });
+      debrisList.push(debris);
+    }
     const nv = sqnorm(vel.x, vel.y) + 0.1;
     if (this.size / 2 < 40) {
       for (let i = 0; i < settings.explosions.asteroids.destroy.count; i++) {

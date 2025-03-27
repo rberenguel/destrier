@@ -486,7 +486,7 @@ class SpaceScene extends Scene {
 
             if (a.e < 0 && b.source === this.player._id) {
               this.score += Math.round(a.size);
-              newAsteroids.push(...a.split(b.vel));
+              newAsteroids.push(...a.split(b.vel, this.debrisList));
             }
           }
         }
@@ -672,7 +672,7 @@ class SpaceScene extends Scene {
         this.debrisList.push(debris);
         this.player.e = -1;
         this.flameList.push(...this.player.flameList);
-        newAsteroids.push(...a.split(this.player.vel));
+        newAsteroids.push(...a.split(this.player.vel, this.debrisList));
       }
       for (let o of this.otherShips) {
         if (o.e < 0) {
@@ -685,7 +685,7 @@ class SpaceScene extends Scene {
           const debris = o.explode({ e: -o.e });
           this.debrisList.push(debris);
           o.e = -1;
-          newAsteroids.push(...a.split(o.vel));
+          newAsteroids.push(...a.split(o.vel, this.debrisList));
         }
       }
     }

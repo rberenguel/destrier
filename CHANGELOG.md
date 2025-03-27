@@ -3,6 +3,7 @@
 - Ship debris
 - Fix problem with muzzle fire from Gauss cannon
 - Introduce layering (will fix phase shield animation)
+- Asteroid debris
 
 # 0.8.1
 

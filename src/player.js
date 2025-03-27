@@ -36,7 +36,7 @@ const initPlayer = (app, scale) => {
   player.shieldEnergy = 1;
   player.shieldEnergyRecoveryRate = 0.0007;
   player.powerUps = {};
-  player.recoveryRate = 0.08;
+  player.recoveryRate = 0.0;
   player.emergencyBrakes = false;
   player.energyShield = 0;
   player.deflectorShield = 0;

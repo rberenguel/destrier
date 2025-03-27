@@ -485,7 +485,9 @@ class SpaceScene extends Scene {
             }
 
             if (a.e < 0 && b.source === this.player._id) {
-              this.score += Math.round(a.size);
+              console.log(this.player.e);
+              this.player.increaseEnergy(settings.hull.pctRecoveredPerAsteroid);
+              console.log(this.player.e);
               newAsteroids.push(...a.split(b.vel, this.debrisList));
             }
           }

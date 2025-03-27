@@ -9,6 +9,7 @@ export {
   currentPowerUpsHud,
 };
 
+import { states } from "./states.js";
 import {
   GaussCannon,
   MassDriverGun,
@@ -140,15 +141,16 @@ const offerChoices = (options = [], globals = {}) => {
       option.lambda();
       glass.style.display = "none";
       powerupContainer.style.display = "none";
-      globals.setPowerUpChosen(true);
+      //globals.setPowerUpChosen(true);
       console.info(`Setting ${option.id} to true`);
       globals.player.powerUps[option.id] = true;
       globals.player.stats.powerups.chosen++;
       currentPowerUpsHud.innerHTML = "";
       currentPowerupsToDiv(currentPowerUpsHud, globals.player);
+      globals.transition(states.kBetweenLevels);
     };
   }
-  const skipPowerup = document.getElementById("skip-powerup");
+  /*const skipPowerup = document.getElementById("skip-powerup");
   if (skipPowerup) {
     skipPowerup.textContent =
       "Skip the choice (very bad idea, and -2000 points)";
@@ -160,7 +162,7 @@ const offerChoices = (options = [], globals = {}) => {
       globals.showHUDInfo();
       globals.player.stats.powerups.skipped++;
     });
-  }
+  }*/
 };
 
 const setWeaponPowerup = (player, weapon) => {

@@ -63,6 +63,12 @@ class Ship extends Base1 {
     this.disabled = 0;
   }
 
+  increaseEnergy(pct) {
+    const inc = (this.maxE * pct) / 100;
+    this.e += inc;
+    this.e = Math.min(this.e, this.maxE);
+  }
+
   action() {
     return;
   }

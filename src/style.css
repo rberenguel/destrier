@@ -475,3 +475,11 @@ canvas {
   color: #6c0;
   font-style: normal;
 }
+
+#summary {
+  text-align: left;
+}
+
+#summary em {
+  color: #cc0;
+}

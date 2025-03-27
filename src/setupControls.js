@@ -3,6 +3,7 @@ export { rmap, presentKeyMap, keyMap, buttonMap };
 import { set, get } from "../libs/3rdparty/idb-keyval.js";
 
 import { getDeviceInput } from "../libs/controller/controlHandling.js";
+import { states } from "./states.js";
 
 let keyMap = await get("keyMap");
 
@@ -70,7 +71,7 @@ const rmap = (m) => {
   return reversed;
 };
 
-const presentKeyMap = (d, gameActions, msgs, menu) => {
+const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
   if (!d.querySelector(".control-list-go-back")) {
     const rkeymap = rmap(keyMap);
     const rbuttonmap = rmap(buttonMap);
@@ -131,6 +132,7 @@ const presentKeyMap = (d, gameActions, msgs, menu) => {
     back.classList.add("control-list-go-back");
     wrapper.appendChild(back);
     back.addEventListener("click", () => {
+      transition(states.kShowingMainMenu);
       msgs.hide();
     });
   }

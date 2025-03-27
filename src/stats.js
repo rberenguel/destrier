@@ -101,7 +101,7 @@ const resetStats = (player) => {
   };
 };
 
-const showHUDInfo = (player, spaceScene) => () => {
+const showHUDInfo = (player, spaceScene, level) => () => {
   const nextWaveCountdown = document.getElementById("next-wave-countdown");
   const scoreDiv = document.getElementById("score");
   const hull = document.getElementById("hull");
@@ -122,7 +122,7 @@ const showHUDInfo = (player, spaceScene) => () => {
     nextWaveCountdown.innerHTML = "";
     return;
   }
-  scoreDiv.textContent = spaceScene?.score.toFixed(0);
+  scoreDiv.textContent = `Wave ${level}`;
   const wa = player.weapons[0];
   const wb = player.weapons[1];
   const wc = player.secondaryWeapons[0];

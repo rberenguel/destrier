@@ -1,3 +1,5 @@
+import { states } from "./states.js";
+
 export { changelog };
 
 function loadMarkdownText(path, cb) {
@@ -16,7 +18,7 @@ function loadMarkdownText(path, cb) {
     });
 }
 
-const changelog = (msgs) => {
+const changelog = (msgs, transition) => {
   loadMarkdownText("CHANGELOG.md", (markdownText) => {
     const div = document.createElement("DIV");
     div.classList.add("changelog-content");
@@ -32,7 +34,10 @@ const changelog = (msgs) => {
         div.appendChild(li);
       }
     }
-    div.addEventListener("click", () => msgs.hide());
+    div.addEventListener("click", () => {
+      msgs.hide();
+      transition(states.kShowingMainMenu);
+    });
     msgs.div(div);
   });
 };

@@ -38,6 +38,7 @@ import {
   baseWeapons,
 } from "./player.js";
 import { Intro } from "./intro.js";
+import { states, transitions } from "./states.js";
 
 const globalCanvasScale = 0.95;
 
@@ -45,6 +46,31 @@ bindGamepadHandlers();
 bindKeyHandlers();
 
 let spaceScene;
+
+let currentState = states.kInit;
+let previousState = undefined; // Used to be able to go back from landscape violations
+
+const transition = (toState) => {
+  // Check if the toState is a valid state
+  if (!Object.values(states).includes(toState)) {
+    throw new Error(`Invalid target state: ${toState}`);
+  }
+
+  const possibleTransitions = transitions[currentState];
+
+  if (possibleTransitions) {
+    if (possibleTransitions.includes(toState)) {
+      console.log(`Transitioning from ${currentState} to ${toState}`);
+      currentState = toState;
+    } else {
+      throw new Error(`Invalid transition from ${currentState} to ${toState}`);
+    }
+  } else {
+    throw new Error(
+      `No transitions defined for current state: ${currentState}`,
+    );
+  }
+};
 
 const gameActions = {
   moveDown: (f = 1) => {
@@ -143,38 +169,52 @@ const inMenuActions = {
     if (inMenuActions.debounce > performance.now()) {
       return;
     }
-    powerupControls("GoDown");
-    menuP.goDown();
+    if (currentState === states.kWaitingPowerUpChoice) {
+      powerupControls("GoDown");
+    }
+    if (currentState === states.kShowingMainMenu) {
+      menuP.goDown();
+    }
     inMenuActions.debounce = performance.now() + 300;
   },
   moveUp: (f = 1) => {
     if (inMenuActions.debounce > performance.now()) {
       return;
     }
-    powerupControls("GoUp");
-    menuP.goUp();
+    if (currentState === states.kWaitingPowerUpChoice) {
+      powerupControls("GoUp");
+    }
+    if (currentState === states.kShowingMainMenu) {
+      menuP.goUp();
+    }
+
     inMenuActions.debounce = performance.now() + 300;
   },
   moveRight: (f = 1) => {
     if (inMenuActions.debounce > performance.now()) {
       return;
     }
-    powerupControls("GoRight");
+    if (currentState === states.kWaitingPowerUpChoice) {
+      powerupControls("GoRight");
+    }
     inMenuActions.debounce = performance.now() + 300;
   },
   moveLeft: (f = 1) => {
     if (inMenuActions.debounce > performance.now()) {
       return;
     }
-    powerupControls("GoLeft");
+    if (currentState === states.kWaitingPowerUpChoice) {
+      powerupControls("GoLeft");
+    }
     inMenuActions.debounce = performance.now() + 300;
   },
   shoot: () => {
     if (inMenuActions.debounce > performance.now()) {
       return;
     }
-    if (!inGame && !gameOver) {
+    if (currentState === states.kBetweenLevels) {
       countdown = performance.now();
+      // This does not transition, since this is handled further down
       inMenuActions.debounce = performance.now() + 300;
       return;
     }
@@ -184,28 +224,32 @@ const inMenuActions = {
     if (inMenuActions.debounce > performance.now()) {
       return;
     }
-    if (intro.visible) {
-      showIntro = false;
+    if (currentState === states.kShowingIntro) {
+      transition(states.kShowingMainMenu);
       intro.destroy();
       inMenuActions.debounce = performance.now() + 300;
       return;
     }
-    if (msgs.visible && msgs._div.querySelector(".control-list-go-back")) {
-      // Ignore presses here
+    if (currentState === states.kSettingsMenu) {
+      // Ignore any presses here
       return;
     }
-    if (msgs.visible && msgs._div.querySelector("#about")) {
+    if (currentState === states.kAboutMenu) {
       // About should be dismissed
       msgs.hide();
+      transition(states.kShowingMainMenu);
       inMenuActions.debounce = performance.now() + 300;
       return;
     }
-    if (!inGame && !gameOver) {
-      // Avoid secondary fire to skip waits
-      return;
+    if (currentState === states.kWaitingPowerUpChoice) {
+      powerupControls("Accept");
     }
-    powerupControls("Accept");
-    menuP.accept();
+    if (currentState === states.kShowingMainMenu) {
+      menuP.accept();
+    }
+    if (currentState === states.kGameOver) {
+      fullRestart(); // fullRestart already transitions
+    }
     inMenuActions.debounce = performance.now() + 300;
   },
   shield: () => {},
@@ -250,6 +294,7 @@ await app.init({
 }); // Ugh?
 
 document.body.appendChild(app.canvas);
+app.canvas.style.display = "none";
 
 // Enable interactivity
 app.stage.eventMode = "static";
@@ -335,6 +380,7 @@ const fullRestart = () => {
   msgs.hide();
   resetPlayerPVA(player, app, scale, spaceScene, true);
   resetKeys();
+  transition(states.kInGame);
   for (let a of spaceScene.asteroids) {
     a.e = -1;
   }
@@ -356,11 +402,8 @@ const fullRestart = () => {
   spaceScene.addEnemies(nextLevel.ships, nextLevel.shipLoadouts);
   spaceScene.score = 0;
   scoreDiv.textContent = 0;
-  powerUpChosen = true;
   finishCountdown = 0;
   countdown = 0;
-  inGame = true;
-  gameOver = false;
   resetStats(player);
   player.powerUps = undefined;
   player.powerUps = {};
@@ -454,7 +497,7 @@ const pauseMenu = () => {
   backToGame.style.cursor = "pointer";
   backToGame.addEventListener("click", () => {
     msgs.hide();
-    paused = false;
+    transition(states.kInGame);
   });
   backToGame.textContent = "Back to the game";
   backToGame.classList.add("pause-button");
@@ -462,8 +505,7 @@ const pauseMenu = () => {
   backToMainMenu.style.cursor = "pointer";
   backToMainMenu.addEventListener("click", () => {
     msgs.hide();
-    paused = false;
-    showMainMenu = true;
+    transition(states.kShowingMainMenu);
     fullRestart();
   });
   backToMainMenu.classList.add("pause-button");
@@ -472,7 +514,7 @@ const pauseMenu = () => {
   wrapper.appendChild(backToMainMenu);
   msgs.div(wrapper);
   msgs.show({ glass: 1000, msgs: 1001 });
-  paused = true;
+  transition(states.kPaused);
 };
 
 document.getElementById("debug-menu").addEventListener("click", (ev) => {
@@ -485,15 +527,14 @@ document.getElementById("pause-menu").addEventListener("click", (ev) => {
 
 const controlsChanger = () => {
   const div = document.createElement("DIV");
-  presentKeyMap(div, gameActions, msgs, menuP);
+  presentKeyMap(div, gameActions, msgs, menuP, transition);
   return div;
 };
 
-let showMainMenu = true;
 const menuP = new MetaP({ id: "main-menu" });
 
 const playLambda = () => {
-  showMainMenu = false;
+  transition(states.kBetweenLevels);
   finishCountdown = 0;
   countdown = 0;
   diffFinishCountdown = 0;
@@ -510,6 +551,7 @@ const mainMenuCommands = [
       menuP.ignoreKeys();
       msgs.div(controlsChanger());
       msgs.show({ glass: 1001, msgs: 1002 });
+      transition(states.kSettingsMenu);
     },
   },
   {
@@ -518,7 +560,7 @@ const mainMenuCommands = [
       const about = document.getElementById("about");
       const clone = about.cloneNode(true);
       clone.querySelector(".changelog-button").addEventListener("click", () => {
-        changelog(msgs);
+        changelog(msgs, transition);
       });
       clone.style.display = "block";
       clone.addEventListener("click", (ev) => {
@@ -526,9 +568,11 @@ const mainMenuCommands = [
           return;
         }
         msgs.hide();
+        transition(states.kShowingMainMenu);
       });
       msgs.div(clone);
       msgs.show({ glass: 1001, msgs: 1002 });
+      transition(states.kAboutMenu);
     },
   },
 ];
@@ -536,43 +580,41 @@ const mainMenuCommands = [
 menuP.bind(mainMenuCommands, { blur: 30 }, false);
 menuP.removeHandler();
 
-let powerUpChosen = true;
-let offerPowerUpChoices = false;
 let countdown = 0;
 let finishCountdown = 0;
 let diffFinishCountdown = 0;
 let level = 0;
-let chosePowerup = true;
-let inGame = false;
 let gameOver = false;
-
-let showIntro = true;
+//let showIntro = true;
 let intro = new Intro(app, inMenuActions);
 const pausemenuDiv = document.getElementById("pause-menu");
 app.ticker.add((delta) => {
   if (player.sleepUntil > performance.now()) {
     return;
   }
-  if (showIntro) {
-    if (!intro.visible) {
-      intro.init(app);
-    }
+  if (currentState === states.kInit) {
+    app.canvas.style.display = "none";
+    intro.init(app);
+    transition(states.kShowingIntro);
+    return;
+  }
+  if (currentState === states.kShowingIntro) {
     intro.update(delta);
     menuController();
+    app.canvas.style.display = "block";
     return;
-  } else {
-    if (spaceScene === undefined) {
-      app.canvas.style.display = "none";
-      spaceScene = new SpaceScene({
-        app: app,
-        player: player,
-        controller: controller,
-        scale: scale,
-        id: 0,
-      });
-    }
   }
-  if (showMainMenu) {
+  if (spaceScene === undefined) {
+    app.canvas.style.display = "none";
+    spaceScene = new SpaceScene({
+      app: app,
+      player: player,
+      controller: controller,
+      scale: scale,
+      id: 0,
+    });
+  }
+  if (currentState === states.kShowingMainMenu) {
     if (!menuP.visible()) {
       console.debug("Showing main menu");
       menuP.metaP();
@@ -582,51 +624,50 @@ app.ticker.add((delta) => {
     menuController();
     return;
   }
-  if (inGame) {
+  if (currentState === states.kInGame) {
     if (pausemenuDiv.textContent === "") {
       pausemenuDiv.textContent = "☰";
     }
     if (app.canvas.style.display != "block") {
       app.canvas.style.display = "block";
     }
-  } else {
+  } /* else {
     pausemenuDiv.textContent = "";
     app.canvas.style.display = "none";
-  }
+  }*/
 
-  if (paused) {
+  if (currentState === states.kPaused) {
     if (diffFinishCountdown == 0) {
       const now = performance.now();
       diffFinishCountdown = finishCountdown - now;
     }
     return;
-  } else {
+  }
+
+  if (currentState === states.kInGame) {
     if (diffFinishCountdown > 0) {
       finishCountdown = performance.now() + diffFinishCountdown;
       diffFinishCountdown = 0;
     }
   }
 
-  if (offerPowerUpChoices && !powerUpChosen) {
-    // Offer powerup choices
-    powerUpChosen = false;
-    offerPowerUpChoices = false;
-    inGame = false;
-    finishCountdown = 0; // Why here? Well, overall this works so I won't touch it
+  if (currentState === states.kOfferPowerups) {
+    transition(states.kWaitingPowerUpChoice);
     const choices = [...allPowerUpChoices(player)];
     choices.sort(() => Math.random() - 0.5);
 
     const globals = {
-      powerUpChosen: powerUpChosen,
-      setPowerUpChosen: (value) => {
-        powerUpChosen = value;
-      },
-      offerPowerUpChoices: offerPowerUpChoices,
-      setOfferPowerUpChoices: (value) => {
-        offerPowerUpChoices = value;
-      },
+      //powerUpChosen: powerUpChosen,
+      //setPowerUpChosen: (value) => {
+      //  powerUpChosen = value;
+      //},
+      //offerPowerUpChoices: offerPowerUpChoices,
+      //setOfferPowerUpChoices: (value) => {
+      //  offerPowerUpChoices = value;
+      //},
+      transition: transition,
       spaceScene: spaceScene,
-      showHUDInfo: showHUDInfo(player, spaceScene),
+      showHUDInfo: showHUDInfo(player, spaceScene, level),
       player: player,
     };
     // Level is increased before being here
@@ -656,24 +697,43 @@ app.ticker.add((delta) => {
       return;
     }
     // Leaving the unused return while I sort out the options above better.
-
     return;
   }
-  if (!powerUpChosen) {
+
+  if (currentState === states.kWaitingPowerUpChoice) {
     // This needs to be after setting up the chooser above
     // It is the wait loop in the powerup screen
     menuController();
     return;
   }
-  if (!isLandscape() && !msgs.visible) {
+  /*if (offerPowerUpChoices && !powerUpChosen) {
+    // Offer powerup choices
+    powerUpChosen = false;
+    offerPowerUpChoices = false;
+    inGame = false;
+    finishCountdown = 0; // Why here? Well, overall this works so I won't touch it
+    
+  }*/
+  /*if (!powerUpChosen) {
+    
+    
+  }*/
+  if (!isLandscape()) {
     msgs.text(
       "Please rotate your device, this can only be played in landscape mode",
     );
     msgs.show();
     app.canvas.style.display = "none";
+    previousState = currentState;
+    transition(states.kNonLandscape);
     return;
+  } else {
+    if (previousState !== undefined) {
+      transition(previousState);
+      previousState = undefined;
+    }
   }
-  if (needsStandalone() & !msgs.visible) {
+  if (needsStandalone() && currentState === states.kShowingIntro) {
     msgs.text(
       "Please install as a standalone web app (Usually share -> Add to Home Screen)",
     );
@@ -681,14 +741,15 @@ app.ticker.add((delta) => {
     app.canvas.style.display = "none";
     return;
   }
-  if (player.lives <= 0 && !msgs.visible) {
+  if (player.lives <= 0 && currentState === states.kInGame) {
+    transition(states.kGameOver);
     const div = document.createElement("DIV");
     const message = getEncouragementMessage(player);
     const encouragement = document.createElement("DIV");
     encouragement.classList.add("encouragement");
     encouragement.innerHTML = message;
     const clicky = document.createElement("DIV");
-    clicky.innerHTML = `Click here to play again`;
+    clicky.innerHTML = `Click here to play again<br/>(or use <span class="action-name">secondary weapon</span>)`;
     div.addEventListener("click", fullRestart);
     div.style.cursor = "pointer";
     div.appendChild(encouragement);
@@ -698,13 +759,15 @@ app.ticker.add((delta) => {
     msgs.div(div);
     msgs.showSmall();
     player.explode();
-    gameOver = true;
     for (let o of spaceScene.otherShips) {
       o.action = () => "kIdle";
     }
     return;
   }
-  if (spaceScene.otherShips.length === 0 && inGame && !gameOver) {
+  if (currentState === states.kGameOver) {
+    menuController();
+  }
+  if (spaceScene.otherShips.length === 0 && currentState === states.kInGame) {
     if (finishCountdown === 0) {
       finishCountdown = performance.now() + 10000;
     } else if (performance.now() >= finishCountdown) {
@@ -732,8 +795,7 @@ app.ticker.add((delta) => {
         b.e = -1;
         b.moved = Infinity;
       }
-      offerPowerUpChoices = true;
-      powerUpChosen = false;
+      transition(states.kOfferPowerups);
     } else {
       const remainingTime = Math.ceil(
         (finishCountdown - performance.now()) / 1000,
@@ -742,11 +804,15 @@ app.ticker.add((delta) => {
         `Next wave in <span class="remaining-time">${remainingTime}</span> seconds`;
     }
   }
-  if (!inGame && !gameOver) {
+  if (currentState === states.kBetweenLevels) {
+    console.log(countdown);
     menuController();
-    if (countdown === 0 && chosePowerup) {
+    if (countdown === 0) {
       // We have chosen a powerup already
       countdown = performance.now() + 3000; // Start the 3-second countdown
+      if (level === 0) {
+        countdown = performance.now() + 15000;
+      }
       document.getElementById("next-wave-countdown").innerText = "";
       msgs.text("");
       msgs.show();
@@ -761,8 +827,8 @@ app.ticker.add((delta) => {
       spaceScene.addAsteroids(nextLevel.asteroids);
       spaceScene.addEnemies(nextLevel.ships, nextLevel.shipLoadouts);
       countdown = 0;
-      finishCountdown === 0;
-      inGame = true;
+      finishCountdown = 0;
+      transition(states.kInGame);
     } else {
       // Update the countdown display
       const remainingTime = Math.ceil((countdown - performance.now()) / 1000); // Calculate remaining seconds
@@ -779,8 +845,13 @@ app.ticker.add((delta) => {
       if (s >= 4) {
         extra = `<br/><hr/><span style='color: red'>&#9888;<em> You will face ${s} ships </em>&#9888;</span>`;
       }
+      let intro = "";
+      if (level === 1) {
+        intro = `<ul id='summary'><li><em>Survive</em> as long as you can</li><li>💥 asteroids → <em>+${settings.hull.pctRecoveredPerAsteroid}% hull</em></li><li>Beware enemies</li><li>Good luck</li></ul><hr style='color: white;'/>`;
+      }
       msgs.html(
-        `Wave <span class="wave-num">${level}</span> in <span class="remaining-time">${remainingTime}</span> seconds<br\>You will face <span style="color: #c60;">${a} asteroids</span>` +
+        intro +
+          `Wave <span class="wave-num">${level}</span> in <span class="remaining-time">${remainingTime}</span> seconds<br\>You will face <span style="color: #c60;">${a} asteroids</span>` +
           extra +
           `<p>Press <span class="action-name">shoot</span> to skip</p>`,
         { fontSize: "2rem" },
@@ -791,7 +862,7 @@ app.ticker.add((delta) => {
     return;
   }
   spaceScene.update(delta);
-  showHUDInfo(player, spaceScene)();
+  showHUDInfo(player, spaceScene, level)();
 });
 
 function getLandscapeDimensions() {

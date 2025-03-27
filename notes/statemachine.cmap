@@ -1,0 +1,53 @@
+# Destrier state machine
+
+// zoom: 0.3815479874610901 pan: -259.03761173480274 -293.16260737062663
+
+
+
+- dark
+
+
+Init -> ShowingIntro;
+Init -> NonLandscape;
+
+ShowingIntro -> ShowingMainMenu;
+ShowingIntro -> NonLandscape;
+
+ShowingMainMenu -> BetweenLevels;
+ShowingMainMenu -> SettingsMenu;
+ShowingMainMenu -> AboutMenu;
+ShowingMainMenu -> NonLandscape;
+
+SettingsMenu -> ShowingMainMenu;
+SettingsMenu -> NonLandscape;
+
+AboutMenu -> ShowingMainMenu;
+AboutMenu -> NonLandscape;
+
+BetweenLevels -> InGame;
+BetweenLevels -> NonLandscape;
+
+InGame -> GameOver;
+InGame -> Paused;
+InGame -> OfferPowerups;
+InGame -> NonLandscape;
+
+OfferPowerups -> WaitingPowerUpChoice;
+OfferPowerups -> kNonLandscape;
+
+WaitingPowerUpChoice -> BetweenLevels;
+WaitingPowerUpChoice -> NonLandscape;
+
+Paused -> InGame;
+Paused -> ShowingMainMenu;
+Paused -> NonLandscape;
+
+GameOver -> InGame;
+GameOver -> NonLandscape;
+
+NonLandscape -> Init;
+NonLandscape -> ShowingIntro;
+NonLandscape -> ShowingMainMenu;
+NonLandscape -> InGame;
+NonLandscape -> GameOver;
+NonLandscape -> Paused;

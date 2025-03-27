@@ -37,6 +37,9 @@ const isKinetic = (w) => {
 };
 
 const settings = {
+  hull: {
+    pctRecoveredPerAsteroid: 5,
+  },
   explosions: {
     asteroids: {
       split: {

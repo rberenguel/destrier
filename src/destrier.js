@@ -243,12 +243,14 @@ const inMenuActions = {
     }
     if (currentState === states.kWaitingPowerUpChoice) {
       powerupControls("Accept");
+      player.secondaryPrevshot = performance.now(); // Prevent fire across menus
     }
     if (currentState === states.kShowingMainMenu) {
       menuP.accept();
     }
     if (currentState === states.kGameOver) {
       fullRestart(); // fullRestart already transitions
+      player.secondaryPrevshot = performance.now(); // Prevent fire across menus
     }
     inMenuActions.debounce = performance.now() + 300;
   },

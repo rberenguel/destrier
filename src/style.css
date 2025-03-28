@@ -483,3 +483,12 @@ canvas {
 #summary em {
   color: #cc0;
 }
+
+.last-level {
+  font-size: 110%;
+  margin-bottom: 1rem;
+}
+
+.game-over {
+  width: 70rem;
+}

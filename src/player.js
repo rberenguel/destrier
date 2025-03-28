@@ -43,10 +43,8 @@ const initPlayer = (app, scale) => {
   player.pointSight = false;
 
   player.emp = true;
-  //player.shield = "kPhaseShield"
   player.phaseShield = 0;
   if (location.href.startsWith("http")) {
-    //player.shield = "kEnergyShield"
     //player.emp = true
   }
 
@@ -70,7 +68,6 @@ const resetPlayerPVA = (player, app, scale, spaceScene, regenerate = false) => {
   player.shieldEnergy = 1;
   player.activeAbilityEnergy = 1;
   spaceScene.player = player;
-  player.e = player.maxE;
   if (regenerate) {
     player.generate(true);
     spaceScene.bindPlayer(); // This might not be needed, but won't hurt

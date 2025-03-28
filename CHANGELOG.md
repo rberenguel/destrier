@@ -2,6 +2,7 @@
 
 - Remove auto-repair
 - Add a proper state machine (might be _buggy_)
+- Minor UI changes
 
 # 0.8.2
 

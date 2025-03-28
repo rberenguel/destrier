@@ -746,6 +746,10 @@ app.ticker.add((delta) => {
   if (player.lives <= 0 && currentState === states.kInGame) {
     transition(states.kGameOver);
     const div = document.createElement("DIV");
+    div.classList.add("game-over");
+    const lastLevel = document.createElement("DIV");
+    lastLevel.classList.add("last-level");
+    lastLevel.innerHTML = `You lasted until wave ${level}`;
     const message = getEncouragementMessage(player);
     const encouragement = document.createElement("DIV");
     encouragement.classList.add("encouragement");
@@ -754,6 +758,7 @@ app.ticker.add((delta) => {
     clicky.innerHTML = `Click here to play again<br/>(or use <span class="action-name">secondary weapon</span>)`;
     div.addEventListener("click", fullRestart);
     div.style.cursor = "pointer";
+    div.appendChild(lastLevel);
     div.appendChild(encouragement);
     div.appendChild(clicky);
     const statsTable = presentStats(player);
@@ -873,7 +878,7 @@ function getLandscapeDimensions() {
   );
   const marginInPixels = rootFontSize; // 1rem of additional margin
   const totalMarginWidth = marginInPixels * 2;
-  const totalMarginHeight = marginInPixels * 2;
+  const totalMarginHeight = marginInPixels * 5;
 
   const availableScreenWidth = window.innerWidth - totalMarginWidth;
   const availableScreenHeight = window.innerHeight - totalMarginHeight;

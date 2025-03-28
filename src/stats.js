@@ -1,5 +1,16 @@
 export { presentStats, resetStats, showHUDInfo };
 
+const gunTypeToName = {
+  kPlasmaGun: "Plasma",
+  kLaserGun: "Laser",
+  kMassDriverGun: "Mass Driver",
+  kGaussCannon: "Gauss cannon",
+  kPhotonTorpedoLauncher: "Torpedo",
+  kMissileLauncher: "Missile",
+  kEmp: "EMP",
+  kBomb: "Bomb",
+};
+
 const presentStats = (player) => {
   const stats = player.stats.shots;
   const table = document.createElement("table");
@@ -8,13 +19,7 @@ const presentStats = (player) => {
 
   // Create table header
   const headerRow = table.insertRow();
-  const headers = [
-    "Gun type",
-    "Shots fired",
-    "Asteroid hits",
-    "Ship hits",
-    "Hit %",
-  ];
+  const headers = ["Weapon", "Fired", "Asteroid hits", "Ship hits", "Hit %"];
   for (const headerText of headers) {
     const th = document.createElement("th");
     th.textContent = headerText;
@@ -27,7 +32,8 @@ const presentStats = (player) => {
     const gunData = stats[gunType];
 
     const gunTypeCell = row.insertCell();
-    gunTypeCell.textContent = gunType.substring(1); // Remove the "k" prefix
+    const gunName = gunTypeToName[gunType];
+    gunTypeCell.textContent = gunName;
     gunTypeCell.classList.add("player-stats-title");
 
     const shotsFiredCell = row.insertCell();

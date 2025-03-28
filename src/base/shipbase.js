@@ -1,6 +1,5 @@
 export { Ship };
 
-
 import { Base1 } from "./base.js";
 
 import { dist, sqnorm, rotate, normalizeAngle } from "./math.js";
@@ -55,6 +54,7 @@ class Ship extends Base1 {
     this.extraAmmo = 1;
     this._magicalCounter = 0;
     this.disabled = 0;
+    this.radius = props.radius;
   }
 
   increaseEnergy(pct) {
@@ -251,11 +251,11 @@ class Ship extends Base1 {
     if (d < 50) {
       return 1;
     }
-    if (d < (other.radius ?? 0) + 50) {
+    if (d < (other.radius ?? 0) + (this.radius ?? 50)) {
       return 1;
     }
 
-    if (d < (other.size ?? 0) + 50) {
+    if (d < (other.size ?? 0) + (this.radius ?? 50)) {
       return 1;
     }
     return 0;
@@ -472,6 +472,17 @@ class Ship extends Base1 {
     this.shieldEnergy += this.shieldEnergyRecoveryRate * delta.deltaTime;
     this.shieldEnergy = Math.min(this.shieldEnergy, this.maxShieldEnergy);
     let w = this.weapons[0];
+    if (w && w.kind) {
+      const rr = w.stats.ammoRefreshRate;
+      if (rr && this.ammo[w.kind]) {
+        this.ammo[w.kind].count += rr * delta.deltaTime;
+        this.ammo[w.kind].count = Math.min(
+          this.ammo[w.kind].max,
+          this.ammo[w.kind].count,
+        );
+      }
+    }
+    w = this.weapons[2];
     if (w && w.kind) {
       const rr = w.stats.ammoRefreshRate;
       if (rr && this.ammo[w.kind]) {

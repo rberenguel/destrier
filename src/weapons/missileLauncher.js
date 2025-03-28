@@ -18,7 +18,7 @@ class MissileLauncher extends Gun {
   static baseStats = {
     // Energy, no mass usage really
     minRange: 5000,
-    baseE: 2000,
+    baseE: 1010,
     ACCEL: 10, // Will speed up
     ammoRefreshRate: 0.001,
   };

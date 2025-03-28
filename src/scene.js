@@ -19,6 +19,7 @@ import {
   GaussCannon,
 } from "./weapons/weapons.js";
 import { settings } from "./settings.js";
+import { Panther } from "./base/panther.js";
 const rnd = seededRnd(performance.now());
 
 class Scene {
@@ -104,7 +105,7 @@ class SpaceScene extends Scene {
     this.viewframe.attach(this.app);
     this.viewframe.scale = this.scale;
 
-    this.starfield.viewframe = this.viewframe; // TODO Trying to see if I can shift with this
+    //this.starfield.viewframe = this.viewframe; // TODO Trying to see if I can shift with this
 
     this.viewframe.vel = this.player.vel;
 
@@ -136,6 +137,7 @@ class SpaceScene extends Scene {
 
   addEnemies(n, loadouts = []) {
     let localLoadouts = [...loadouts];
+    console.log(localLoadouts);
     const otherLaser = (other) => {
       other.ammo[LaserGun.kind] = {};
       other.ammo[LaserGun.kind].count = 10;
@@ -213,13 +215,43 @@ class SpaceScene extends Scene {
         --i;
         continue;
       }
-      const other = new Bobcat({
+      let other = new Bobcat({
         pos: {
           x: x,
           y: y,
         },
         r: -a,
       });
+
+      if (loadouts && loadouts[0] === "kPanther") {
+        other = new Panther({
+          pos: {
+            x: x,
+            y: y,
+          },
+          r: -a,
+        });
+        // The Panther can't be as bad as the others, otherwise it is impossible to kill
+        other.ammo[LaserGun.kind] = {};
+        other.ammo[LaserGun.kind].count = 10;
+        other.ammo[LaserGun.kind].max = 40;
+        other.ammo[MassDriverGun.kind] = {};
+        other.ammo[MassDriverGun.kind].count = 20;
+        other.ammo[MassDriverGun.kind].max = 40;
+        other.weapons[0].stats.ammoRefreshRate =
+          MassDriverGun.baseStats.ammoRefreshRate * 1.2;
+        other.weapons[2].stats.ammoRefreshRate =
+          LaserGun.baseStats.ammoRefreshRate * 0.8;
+        other.weapons[3].stats.ammoRefreshRate =
+          LaserGun.baseStats.ammoRefreshRate * 0.8;
+        other.prevShot = -1;
+        other.disabled = performance.now() + 500;
+        other.action = () => "kChase";
+        other.generate();
+        other.attach(this.viewframe);
+        this.otherShips.push(other);
+        return;
+      }
 
       other.prevShot = -1;
       other.disabled = performance.now() + 500;

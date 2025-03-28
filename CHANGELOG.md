@@ -1,8 +1,15 @@
+# 0.9.0
+
+- Added a miniboss in level 10. It is _hard_
+- Also its hitbox might be wrong
+- Nerfed Gauss Cannon / Mass driver, max hit now is 1500
+
 # 0.8.3
 
 - Remove auto-repair
 - Add a proper state machine (might be _buggy_)
 - Minor UI changes
+- Shinier explosions
 
 # 0.8.2
 

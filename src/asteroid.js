@@ -34,7 +34,7 @@ class Asteroid extends Base1 {
       color: 0xffffff,
       width: 8,
       fill: 0xffffff,
-      name: "whiteLayer"
+      name: "whiteLayer",
     });
 
     super({ ...props, meshes: [mesh, whiteLayer] });

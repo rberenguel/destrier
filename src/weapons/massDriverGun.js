@@ -54,14 +54,15 @@ class MassDriverGun extends Gun {
     const vx = this.stats.ACCEL * ivx + shooter.vel.x;
     const vy = this.stats.ACCEL * ivy + shooter.vel.y;
     const [rpx, rpy] = rotate(this.pos.x, this.pos.y, shooter.r);
+    const [rvx, rvy] = rotate(vx, vy, this.angleShift);
     const b = new MassDriverBullet({
       pos: {
         x: shooter.pos.x + rpx,
         y: shooter.pos.y + rpy,
       },
       vel: {
-        x: vx,
-        y: vy,
+        x: rvx,
+        y: rvy,
       },
       r: shooter.r,
       e: this.stats.e,
@@ -131,7 +132,10 @@ class MassDriverBullet extends Base1 {
     this.moved +=
       Math.abs(this.vel.x * delta.deltaTime) +
       Math.abs(this.vel.y * delta.deltaTime);
-    this.e = this.f * sqnorm(this.vel.x, this.vel.y) * this.mass;
+    this.e = Math.min(
+      1500,
+      this.f * sqnorm(this.vel.x, this.vel.y) * this.mass,
+    );
     this.f -= this.decay;
     const ne = Math.max(0, Math.min(1, this.e / this._initial_e));
     const gray = Math.floor(200 + 55 * ne); // Cools to black

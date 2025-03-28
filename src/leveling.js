@@ -86,6 +86,14 @@ const enemiesPerLevel = (level) => {
       shipLoadouts: choices.slice(0, 2),
     };
   }
+  if (level === 10) {
+    return {
+      level: 0,
+      asteroids: 0,
+      ships: 1,
+      shipLoadouts: ["kPanther"],
+    };
+  }
   if (level < 15) {
     const choices = [
       laser,

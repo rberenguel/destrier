@@ -13,6 +13,7 @@ class Gun {
     };
     this.source = props.source ?? -1;
     this.color = props.color ?? 0xffcc00;
+    this.angleShift = props.angleShift ?? 0;
   }
 
   fire(shooter, bulletList) {
@@ -20,7 +21,11 @@ class Gun {
       shooter.stats.shots[this.kind].fired++;
     }
     // Muzzle fire
-    const [rpx, rpy] = rotate(this.pos.x, this.pos.y, shooter.r);
+    const [rpx, rpy] = rotate(
+      this.pos.x,
+      this.pos.y,
+      shooter.r + this.angleShift,
+    );
     for (let i = 0; i < settings.fire.muzzle.minCount(this); i++) {
       const m = 0.1 * Math.random();
       const a = Math.random() * 2 * Math.PI;

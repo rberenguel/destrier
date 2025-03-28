@@ -468,7 +468,7 @@ const commands = [
         f.e = -1;
       }
       try {
-        transition(states.kOfferPowerups)
+        transition(states.kOfferPowerups);
       } catch {}
     },
   },
@@ -851,6 +851,9 @@ app.ticker.add((delta) => {
       }
       if (s >= 4) {
         extra = `<br/><hr/><span style='color: red'>&#9888;<em> You will face ${s} ships </em>&#9888;</span>`;
+      }
+      if (level == 10) {
+        extra = `<br/><hr/><span style='color: white'>&#9888;<em> You will face a tough ship </em>&#9888;</span>`;
       }
       let intro = "";
       if (level === 1) {

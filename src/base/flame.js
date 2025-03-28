@@ -42,9 +42,9 @@ class Flame extends Base1 {
       const scaledB = Math.floor(b * ne);
       hexColor = (scaledR << 16) | (scaledG << 8) | scaledB;
     } else {
-      const red = Math.floor(255 * ne); // Red decreases from 255 to 0
-      const green = Math.floor(255 * ne * ne); // Green decreases faster
-      const blue = 0;
+      const red = Math.floor(255 * Math.sqrt(ne)); // Red decreases from 255 to 0
+      const green = Math.floor(255 * ne); // Green decreases faster
+      const blue = Math.floor(255 * ne);
       hexColor = (red << 16) | (green << 8) | blue;
     }
 

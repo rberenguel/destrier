@@ -287,7 +287,6 @@ const app = new Application({
   height: landscapeDimensions.height,
 });
 
-//const app = new Application({ autoResize: true, resolution: devicePixelRatio });
 await app.init({
   id: "destrier",
   width: landscapeDimensions.width,
@@ -468,8 +467,9 @@ const commands = [
       for (let f of spaceScene.flameList) {
         f.e = -1;
       }
-      offerPowerUpChoices = true;
-      powerUpChosen = false;
+      try {
+        transition(states.kOfferPowerups)
+      } catch {}
     },
   },
   ...debugCommands(player),

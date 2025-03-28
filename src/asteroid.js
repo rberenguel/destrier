@@ -28,7 +28,16 @@ class Asteroid extends Base1 {
       fill: 0x111111,
     });
 
-    super({ ...props, meshes: [mesh] });
+    const whiteLayer = new Mesh({
+      kind: Meshes.kPoly,
+      vertices: vertices,
+      color: 0xffffff,
+      width: 8,
+      fill: 0xffffff,
+      name: "whiteLayer"
+    });
+
+    super({ ...props, meshes: [mesh, whiteLayer] });
     this.vel = props.vel;
     this.vertices = vertices;
     this.size = props.size;
@@ -148,8 +157,6 @@ class Asteroid extends Base1 {
   }
 
   update(delta) {
-    super.update(delta);
-    super.move(delta.deltaTime);
     if (isNaN(this.vel.x) || isNaN(this.vel.y)) {
       this.presentation = { destroyed: true };
       return;
@@ -169,8 +176,17 @@ class Asteroid extends Base1 {
         this.presentation = { destroyed: true };
         return;
       }
+      if (presentation.name === "whiteLayer") {
+        if (this.e < 0) {
+          presentation.alpha = 1;
+        } else {
+          presentation.alpha = 0;
+        }
+      }
       presentation.rotation = this.r;
     }
+    super.update(delta);
+    super.move(delta.deltaTime);
   }
 
   explode() {

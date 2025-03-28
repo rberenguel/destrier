@@ -60,11 +60,11 @@ const settings = {
     },
     ships: {
       explode: {
-        baseCount: 20,
+        baseCount: 30,
       },
       flame: {
         scale: () => {
-          0.8 + Math.random() * 1.2;
+          0.8 + Math.random() * 1.4;
         },
       },
       hitFlame: {

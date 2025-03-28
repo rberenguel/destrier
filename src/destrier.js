@@ -421,6 +421,7 @@ const fullRestart = () => {
   player.deflectorShield = 0;
   player.phaseShield = 0;
   player.maxE = 1500;
+  player.e = player.maxE
   const { weapons, secondaryWeapons } = baseWeapons();
   player.weapons = weapons;
   player.secondaryWeapons = secondaryWeapons;

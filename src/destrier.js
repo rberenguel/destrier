@@ -1,3 +1,5 @@
+const DEBUG = false;
+
 import { Msgs } from "../libs/msgs/msgs.js";
 import { Application } from "../libs/3rdparty/pixi.mjs";
 
@@ -6,6 +8,7 @@ import {
   bindKeyHandlers,
   handleControls,
   resetKeys,
+  touchZoneHandler,
 } from "../libs/controller/controlHandling.js";
 
 import { presentKeyMap, keyMap, buttonMap } from "./setupControls.js";
@@ -48,6 +51,7 @@ bindKeyHandlers();
 let spaceScene;
 
 let currentState = states.kInit;
+let clickSetUp = false;
 let previousState = undefined; // Used to be able to go back from landscape violations
 
 const transition = (toState) => {
@@ -421,7 +425,7 @@ const fullRestart = () => {
   player.deflectorShield = 0;
   player.phaseShield = 0;
   player.maxE = 1500;
-  player.e = player.maxE
+  player.e = player.maxE;
   const { weapons, secondaryWeapons } = baseWeapons();
   player.weapons = weapons;
   player.secondaryWeapons = secondaryWeapons;
@@ -595,6 +599,29 @@ app.ticker.add((delta) => {
   if (player.sleepUntil > performance.now()) {
     return;
   }
+  if (!isLandscape()) {
+    msgs.text(
+      "Please rotate your device, this can only be played in landscape mode",
+    );
+    msgs.show();
+    app.canvas.style.display = "none";
+    previousState = currentState;
+    transition(states.kNonLandscape);
+    return;
+  } else {
+    if (previousState !== undefined) {
+      transition(previousState);
+      previousState = undefined;
+    }
+  }
+  if (needsStandalone() && currentState === states.kShowingIntro) {
+    msgs.text(
+      "Please install as a standalone web app (Usually share -> Add to Home Screen)",
+    );
+    msgs.show();
+    app.canvas.style.display = "none";
+    return;
+  }
   if (currentState === states.kInit) {
     app.canvas.style.display = "none";
     intro.init(app);
@@ -709,41 +736,6 @@ app.ticker.add((delta) => {
     menuController();
     return;
   }
-  /*if (offerPowerUpChoices && !powerUpChosen) {
-    // Offer powerup choices
-    powerUpChosen = false;
-    offerPowerUpChoices = false;
-    inGame = false;
-    finishCountdown = 0; // Why here? Well, overall this works so I won't touch it
-    
-  }*/
-  /*if (!powerUpChosen) {
-    
-    
-  }*/
-  if (!isLandscape()) {
-    msgs.text(
-      "Please rotate your device, this can only be played in landscape mode",
-    );
-    msgs.show();
-    app.canvas.style.display = "none";
-    previousState = currentState;
-    transition(states.kNonLandscape);
-    return;
-  } else {
-    if (previousState !== undefined) {
-      transition(previousState);
-      previousState = undefined;
-    }
-  }
-  if (needsStandalone() && currentState === states.kShowingIntro) {
-    msgs.text(
-      "Please install as a standalone web app (Usually share -> Add to Home Screen)",
-    );
-    msgs.show();
-    app.canvas.style.display = "none";
-    return;
-  }
   if (player.lives <= 0 && currentState === states.kInGame) {
     transition(states.kGameOver);
     const div = document.createElement("DIV");
@@ -813,33 +805,19 @@ app.ticker.add((delta) => {
     }
   }
   if (currentState === states.kBetweenLevels) {
-    console.log(countdown);
     menuController();
     if (countdown === 0) {
+      level++;
+      console.info("Level increased", level);
       // We have chosen a powerup already
       countdown = performance.now() + 3000; // Start the 3-second countdown
       if (level === 0) {
         countdown = performance.now() + 15000;
       }
       document.getElementById("next-wave-countdown").innerText = "";
-      msgs.text("");
-      msgs.show();
-      level++;
-      console.info("Level increased", level);
-    } else if (performance.now() >= countdown) {
-      // 3 seconds have passed
-      msgs.hide();
-      const nextLevel = enemiesPerLevel(level);
-      resetPlayerPVA(player, app, scale, spaceScene, false);
-      resetKeys();
-      spaceScene.addAsteroids(nextLevel.asteroids);
-      spaceScene.addEnemies(nextLevel.ships, nextLevel.shipLoadouts);
-      countdown = 0;
-      finishCountdown = 0;
-      transition(states.kInGame);
-    } else {
-      // Update the countdown display
-      const remainingTime = Math.ceil((countdown - performance.now()) / 1000); // Calculate remaining seconds
+      const div = document.createElement("DIV");
+      const remainingTime = Math.ceil((countdown - performance.now()) / 1000);
+
       const nextLevel = enemiesPerLevel(level);
       const a = nextLevel.asteroids;
       const s = nextLevel.ships;
@@ -860,13 +838,46 @@ app.ticker.add((delta) => {
       if (level === 1) {
         intro = `<ul id='summary'><li><em>Survive</em> as long as you can</li><li>💥 asteroids → <em>+${settings.hull.pctRecoveredPerAsteroid}% hull</em></li><li>Beware enemies</li><li>Good luck</li></ul><hr style='color: white;'/>`;
       }
-      msgs.html(
+      const html =
         intro +
-          `Wave <span class="wave-num">${level}</span> in <span class="remaining-time">${remainingTime}</span> seconds<br\>You will face <span style="color: #c60;">${a} asteroids</span>` +
-          extra +
-          `<p>Press <span class="action-name">shoot</span> to skip</p>`,
-        { fontSize: "2rem" },
-      );
+        `Wave <span class="wave-num">${level}</span> in <span class="remaining-time">${remainingTime}</span> seconds<br\>You will face <span style="color: #c60;">${a} asteroids</span>` +
+        extra +
+        `<p>Press <span class="action-name">shoot</span> to skip</p>`;
+      //
+
+      //
+      div.innerHTML = html;
+      div.style = "font-size: 2rem;";
+
+      div.addEventListener("click", (e) => {
+        console.log("clicked");
+        if (currentState === states.kBetweenLevels) {
+          countdown = performance.now();
+          // This does not transition, since this is handled further down
+        }
+      });
+      console.log(div);
+      msgs.div(div);
+      msgs.show();
+    } else if (performance.now() >= countdown) {
+      // 3 seconds have passed
+      msgs.hide();
+      const nextLevel = enemiesPerLevel(level);
+      resetPlayerPVA(player, app, scale, spaceScene, false);
+      resetKeys();
+      spaceScene.addAsteroids(nextLevel.asteroids);
+      spaceScene.addEnemies(nextLevel.ships, nextLevel.shipLoadouts);
+      countdown = 0;
+      finishCountdown = 0;
+      transition(states.kInGame);
+      clickSetUp = false;
+    } else {
+      // Update the countdown display
+      const remainingTime = Math.ceil((countdown - performance.now()) / 1000);
+      const rt = msgs._div.querySelector(".remaining-time");
+      if (rt) {
+        rt.innerHTML = remainingTime;
+      }
     }
   }
   if (msgs.visible && player.lives > 0) {
@@ -920,3 +931,51 @@ function handleOrientationChange() {
 
 window.addEventListener("orientationchange", handleOrientationChange);
 handleOrientationChange(); // Call once on load
+
+/* Mobile controls */
+
+const setupTouchZones = () => {
+  if (isMobile() || DEBUG) {
+    // TODO: might only really be needed in menus
+    document.getElementById("gamepad-dpad").style.display = "flex";
+    document.getElementById("action-buttons").style.display = "flex";
+  }
+  const up = document.querySelector("#gamepad-dpad .up");
+  const down = document.querySelector("#gamepad-dpad .down");
+  const left = document.querySelector("#gamepad-dpad .left");
+  const right = document.querySelector("#gamepad-dpad .right");
+
+  const upLeft = document.querySelector("#gamepad-dpad .up-left");
+  const upRight = document.querySelector("#gamepad-dpad .up-right");
+  const downLeft = document.querySelector("#gamepad-dpad .down-left");
+  const downRight = document.querySelector("#gamepad-dpad .down-right");
+
+  const buttonA = document.querySelector("#action-buttons .a");
+  const buttonB = document.querySelector("#action-buttons .b");
+  const buttonX = document.querySelector("#action-buttons .x");
+  const buttonY = document.querySelector("#action-buttons .y");
+
+  touchZoneHandler(up, "ArrowUp");
+  touchZoneHandler(down, "ArrowDown");
+  touchZoneHandler(left, "ArrowLeft");
+  touchZoneHandler(right, "ArrowRight");
+
+  touchZoneHandler(upLeft, "ArrowUp");
+  touchZoneHandler(upLeft, "ArrowLeft");
+
+  touchZoneHandler(upRight, "ArrowUp");
+  touchZoneHandler(upRight, "ArrowRight");
+
+  touchZoneHandler(downLeft, "ArrowDown");
+  touchZoneHandler(downLeft, "ArrowLeft");
+
+  touchZoneHandler(downRight, "ArrowDown");
+  touchZoneHandler(downRight, "ArrowRight");
+
+  touchZoneHandler(buttonA, "Space");
+  touchZoneHandler(buttonB, "KeyZ");
+  touchZoneHandler(buttonX, "KeyX");
+  touchZoneHandler(buttonY, "Enter");
+};
+
+setupTouchZones();

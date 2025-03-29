@@ -11,12 +11,15 @@ class Intro {
     this.viewframe = new Viewframe();
     this.viewframe.attach(this.app);
     this.viewframe.scale = 1;
+    if (this.app.renderer.width < 1000) {
+      this.viewframe.scale = 0.5; // This is roughly the mobile scale level
+    }
     this.gameActions = gameActions;
     this.ship = new Lynx({
       pos: {
         // Note that this initial positioning sets up the viewframe center too
-        x: 0.5 * app.renderer.width,
-        y: 0.6 * app.renderer.height,
+        x: (0.5 * app.renderer.width) / this.viewframe.scale,
+        y: (0.6 * app.renderer.height) / this.viewframe.scale,
       },
     });
     this.ship.r = -Math.PI / 4;
@@ -38,6 +41,7 @@ class Intro {
     intro.addEventListener("click", this.gameActions["secondaryShoot"]);
   }
   update(delta) {
+    this.viewframe.update();
     this.ship._backThrust({ pvx: -2, pvy: 2 });
     // Remove destroyed flames (in-place)
     for (let i = this.ship.flameList.length - 1; i >= 0; i--) {

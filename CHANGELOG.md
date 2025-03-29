@@ -1,3 +1,6 @@
+# 0.9.1
+- Mobile controls and CSS (_BETA_)
+
 # 0.9.0
 
 - Added a miniboss in level 10. It is _hard_

@@ -592,6 +592,7 @@ canvas {
 }
 
 #gamepad-dpad {
+  opacity: 0.3;
   position: absolute;
   left: 0.1rem;
   bottom: 0.1rem;
@@ -654,6 +655,7 @@ canvas {
 }
 
 #action-buttons {
+  opacity: 0.3;
   position: absolute;
   right: 0.1rem;
   bottom: 0.1rem;

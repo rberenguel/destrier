@@ -704,7 +704,7 @@ canvas {
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 1002;
+  z-index: 10002;
   --diagonal-offset: 8%;
   --straight-offset: 15%;
 }
@@ -768,7 +768,7 @@ canvas {
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 1002;
+  z-index: 10002;
   --diagonal-offset: 8%;
   --straight-offset: 15%;
 }

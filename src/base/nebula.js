@@ -62,12 +62,15 @@ class NebulaGenerator {
       };
 
       p.setup = () => {
-        let renderer = p.createCanvas(this.width, this.height);
+        const density = window.devicePixelRatio;
+        let renderer = p.createCanvas(
+          density * this.width,
+          density * this.height,
+        );
         renderer.hide();
         p.colorMode(p.HSL);
         p.noFill();
         p.noLoop();
-        const density = window.devicePixelRatio;
         console.log("Device Pixel Ratio:", density);
 
         // You can set pixelDensity based on the device's density

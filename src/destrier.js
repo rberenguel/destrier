@@ -284,12 +284,16 @@ const needsStandalone = () => {
 };
 
 const landscapeDimensions = getLandscapeDimensions(); // Renamed variable
+const resolution = window.devicePixelRatio || 1;
+
 const app = new Application({
   autoResize: true,
-  resolution: 1,
+  resolution: resolution,
   width: landscapeDimensions.width,
   height: landscapeDimensions.height,
 });
+
+console.log(resolution);
 
 await app.init({
   id: "destrier",
@@ -300,6 +304,8 @@ await app.init({
 
 document.body.appendChild(app.canvas);
 app.canvas.style.display = "none";
+
+console.log(app.canvas);
 
 // Enable interactivity
 app.stage.eventMode = "static";
@@ -369,7 +375,7 @@ const menuController = handleControls(inMenuActions, keyMap, buttonMap);
 const scale = (() => {
   const { width, height } = getLandscapeDimensions();
   if (isMobile()) {
-    return 0.14;
+    return 0.16;
   }
   return SpaceScene.MAXSCALE;
   //return Math.max(0.12, (SpaceScene.MAXSCALE * width * height) / 2200000);
@@ -382,43 +388,61 @@ console.log(
 // TODO: This will need to be moved somewhere else
 window.settings = settings;
 
-window.settings.weaponProps.decay.plasmaGun = settings.mobile.iscaling(
-  settings.weaponProps.baseDecay.plasmaGun,
-  Math.min(app.renderer.width / scale, app.renderer.height / scale),
-);
+window.settings.weaponProps.decay.plasmaGun =
+  0.9 *
+  settings.mobile.iscaling(
+    settings.weaponProps.baseDecay.plasmaGun,
+    Math.min(app.renderer.width / scale, app.renderer.height / scale),
+  );
 
-window.settings.weaponProps.maxRange.photonTorpedo = settings.mobile.dscaling(
-  settings.weaponProps.baseMaxRange.photonTorpedo,
-  Math.min(app.renderer.width / scale, app.renderer.height / scale),
-);
+window.settings.weaponProps.maxRange.photonTorpedo =
+  0.9 *
+  settings.mobile.dscaling(
+    settings.weaponProps.baseMaxRange.photonTorpedo,
+    Math.min(app.renderer.width / scale, app.renderer.height / scale),
+  );
 
-window.settings.weaponProps.decay.massDriver = settings.mobile.iscaling(
-  settings.weaponProps.baseDecay.massDriver,
-  Math.min(app.renderer.width / scale, app.renderer.height / scale),
-);
+window.settings.weaponProps.decay.massDriver =
+  0.9 *
+  settings.mobile.iscaling(
+    settings.weaponProps.baseDecay.massDriver,
+    Math.min(app.renderer.width / scale, app.renderer.height / scale),
+  );
 
-window.settings.weaponProps.decay.gaussCannon = settings.mobile.iscaling(
-  settings.weaponProps.baseDecay.gaussCannon,
-  Math.min(app.renderer.width / scale, app.renderer.height / scale),
-);
+window.settings.weaponProps.decay.gaussCannon =
+  0.9 *
+  settings.mobile.iscaling(
+    settings.weaponProps.baseDecay.gaussCannon,
+    Math.min(app.renderer.width / scale, app.renderer.height / scale),
+  );
 
-window.settings.weaponProps.decay.laserGun = settings.mobile.iscaling(
-  settings.weaponProps.baseDecay.laserGun,
-  Math.min(app.renderer.width / scale, app.renderer.height / scale),
-);
-window.settings.weaponProps.maxRange.laserGun = settings.mobile.dscaling(
-  settings.weaponProps.baseMaxRange.laserGun,
-  Math.min(app.renderer.width / scale, app.renderer.height / scale),
-);
+window.settings.weaponProps.decay.laserGun =
+  0.9 *
+  settings.mobile.iscaling(
+    settings.weaponProps.baseDecay.laserGun,
+    Math.min(app.renderer.width / scale, app.renderer.height / scale),
+  );
+window.settings.weaponProps.maxRange.laserGun =
+  1.2 *
+  settings.mobile.dscaling(
+    settings.weaponProps.baseMaxRange.laserGun,
+    Math.min(app.renderer.width / scale, app.renderer.height / scale),
+  );
 
-window.settings.weaponProps.maxRange.missileLauncher = settings.mobile.dscaling(
-  settings.weaponProps.baseMaxRange.missileLauncher,
-  Math.min(app.renderer.width / scale, app.renderer.height / scale),
-);
+window.settings.weaponProps.maxRange.missileLauncher =
+  1.2 *
+  settings.mobile.dscaling(
+    settings.weaponProps.baseMaxRange.missileLauncher,
+    Math.min(app.renderer.width / scale, app.renderer.height / scale),
+  );
 
-window.settings.shipProps.accel = settings.mobile.dscaling(
-  settings.shipProps.baseAccel,
-  Math.min(app.renderer.width / scale, app.renderer.height / scale),
+// Too low of a ship speed is a bit shitty
+window.settings.shipProps.accel = Math.max(
+  0.08,
+  settings.mobile.dscaling(
+    settings.shipProps.baseAccel,
+    Math.min(app.renderer.width / scale, app.renderer.height / scale),
+  ),
 );
 
 window.settings.asteroidProps.v = settings.mobile.dscaling(

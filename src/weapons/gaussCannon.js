@@ -65,7 +65,7 @@ class GaussCannon extends Gun {
       },
       r: shooter.r,
       f: this.stats.f,
-      decay: window.weaponProps.decay.gaussCannon,
+      decay: window.settings.weaponProps.decay.gaussCannon,
       e: 1,
       scale: shooter.scale,
       source: this.source,

@@ -139,11 +139,11 @@ const settings = {
       photonTorpedo: 0,
     },
     baseMaxRange: {
-      laserGun: 3500,
+      laserGun: 3000,
       massDriver: 0,
       gaussCannon: 0,
-      photonTorpedo: 1500,
-      missileLauncher: 5000,
+      photonTorpedo: 1200,
+      missileLauncher: 4500,
     },
     decay: {
       plasmaGun: undefined,

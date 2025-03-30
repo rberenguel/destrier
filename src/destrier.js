@@ -283,11 +283,13 @@ const isMobile = () => {
 };
 
 const needsStandalone = () => {
-  const standalone = window.navigator.standalone === true;
+  const standaloneiOS = window.navigator.standalone === true;
+  const standaloneAndroid = window.matchMedia('(display-mode: standalone)').matches;
   const devel =
     window.location.hostname.startsWith("192") ||
-    window.location.hostname.startsWith("127");
-  return isMobile() && !standalone && !devel;
+    window.location.hostname.startsWith("127") ||
+    window.location.hostname === 'localhost'; // Added localhost check for completeness
+  return isMobile() && !devel && !standaloneiOS && !standaloneAndroid && !DEBUG;
 };
 
 const landscapeDimensions = getLandscapeDimensions(); // Renamed variable

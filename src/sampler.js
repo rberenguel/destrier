@@ -16,10 +16,13 @@ const sampler = new Tone.Sampler({
     g0: "mass_driver.mp3", //
     a3: "laser_gun.mp3", // Was china1Choke_OH_F_1, perfect
     a4: "impact.mp3", // Was Cowbell, perfect
+    a5: "asteroid_explosion.mp3",
+    a6: "self_explosion.mp3",
+    a7: "other_ship_explosion.mp3",
   },
   baseUrl: "src/audio/",
   curve: "exponential",
-  release: 0.9,
+  release: 1.9,
   volume: -30,
   onload: () => {},
 }).toDestination();
@@ -29,6 +32,7 @@ window.sampler = (note, duration = 0.5) => {
     return;
   }
   try {
+    console.log(note);
     sampler.triggerAttackRelease(note, duration);
   } catch (err) {
     console.error(err);

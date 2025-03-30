@@ -181,7 +181,7 @@ const inMenuActions = {
       return;
     }
     if (currentState === states.kWaitingPowerUpChoice) {
-      powerupControls("GoDown");
+      powerupControls("GoUp");
     }
     if (currentState === states.kShowingMainMenu) {
       menuP.goDown();
@@ -193,7 +193,7 @@ const inMenuActions = {
       return;
     }
     if (currentState === states.kWaitingPowerUpChoice) {
-      powerupControls("GoUp");
+      powerupControls("GoDown");
     }
     if (currentState === states.kShowingMainMenu) {
       menuP.goUp();

@@ -4,6 +4,7 @@
 - Mobile tweaks for range, decay, speed… Still tweaking
 - Only icons in the HUD
 - Mobile sizing adjustments. Many.
+- Explosion sounds
 
 # 0.9.0
 

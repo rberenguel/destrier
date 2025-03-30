@@ -64,7 +64,7 @@ class Bomb extends Base1 {
     mesh.name = "bomb";
     meshes.push(mesh);
     super({ ...props, meshes: meshes });
-    this.e = 5000;
+    this.e = 2000;
     this.f = props.f ?? 0.2; // Multiplying factor for energy
     this.decay = props.decay ?? 0.2;
     this.source = props.source ?? -1;

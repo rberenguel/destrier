@@ -519,10 +519,10 @@ class SpaceScene extends Scene {
             }
 
             if (a.e < 0 && b.source === this.player._id) {
-              console.log(this.player.e);
               this.player.increaseEnergy(settings.hull.pctRecoveredPerAsteroid);
               console.log(this.player.e);
               newAsteroids.push(...a.split(b.vel, this.debrisList));
+              window.sampler("a5", 1.9);
             }
           }
         }
@@ -566,11 +566,7 @@ class SpaceScene extends Scene {
               },
             });
             this.debrisList.push(debris);
-            if (Math.random() < 0.5) {
-              window.sampler("e2", 0.5); // Based on crash
-            } else {
-              window.sampler("e3", 0.5); // Based on crash
-            }
+            window.sampler("a6", 1.9); // Self explosion
             if (
               b.kind === "kPhotonTorpedo" ||
               b.kind === "kGaussCannonBullet"
@@ -673,6 +669,7 @@ class SpaceScene extends Scene {
                   y: (2 * b.vel.y) / bnv - (0.4 * o.vel.y) / onv,
                 },
               });
+              window.sampler("a7", 1.9); // Other explosion
               this.debrisList.push(debris);
               if (this.otherShips.length === 1) {
                 // This was the last ship
@@ -691,11 +688,8 @@ class SpaceScene extends Scene {
       if (this.player.e > 0 && this.player.collision(a)) {
         a.e = -1;
         this.player.killedBy = { id: "kAsteroid" };
-        if (Math.random() < 0.5) {
-          window.sampler("e2", 0.5); // Based on crash
-        } else {
-          window.sampler("e3", 0.5); // Based on crash
-        }
+        window.sampler("a6", 1.9); // Self explosion
+
         this.player.lives -= 1;
         const pnv = sqnorm(this.player.vel.x, this.player.vel.y) + 0.01;
         const debris = this.player.explode({
@@ -708,6 +702,7 @@ class SpaceScene extends Scene {
         this.debrisList.push(debris);
         this.player.e = -1;
         this.flameList.push(...this.player.flameList);
+        window.sampler("a5", 1.9); // Asteroid explosion
         newAsteroids.push(...a.split(this.player.vel, this.debrisList));
       }
       for (let o of this.otherShips) {
@@ -722,6 +717,8 @@ class SpaceScene extends Scene {
           this.debrisList.push(debris);
           o.e = -1;
           newAsteroids.push(...a.split(o.vel, this.debrisList));
+          window.sampler("a5", 1.9); // Asteroid explosion
+          window.sampler("a7", 1.9); // Other explosion
         }
       }
     }

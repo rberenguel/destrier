@@ -41,7 +41,5 @@ const transitions = {
     states.kNonLandscape,
   ],
   [states.kGameOver]: [states.kInGame, states.kNonLandscape],
-  [states.kNonLandscape]: Object.keys(states).filter(
-    (state) => state !== states.kNonLandscape,
-  ), // Landscape is a terminal and initial state
+  [states.kNonLandscape]: Object.keys(states), // Landscape is a terminal and initial state. It seems it can go to itself, yes, in practice
 };

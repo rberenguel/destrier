@@ -51,7 +51,7 @@ class NebulaGenerator {
 
             // Exaggerated vertical stretch
             const y = rad * pg.sin(ang) * 3; // Stretch vertically
-            const x = (rad - 0.8 * y) * Math.cos(ang) * Math.cos(ang);
+            const x = 2 + (rad - 0.8 * y) * Math.cos(ang) * Math.cos(ang);
 
             pg.curveVertex(x, y);
           }
@@ -67,6 +67,15 @@ class NebulaGenerator {
         p.colorMode(p.HSL);
         p.noFill();
         p.noLoop();
+        const density = window.devicePixelRatio;
+        console.log("Device Pixel Ratio:", density);
+
+        // You can set pixelDensity based on the device's density
+        if (density > 1) {
+          p.pixelDensity(density); // Set pixel density to match the device
+        } else {
+          p.pixelDensity(1); // Default pixel density
+        }
 
         // Draw nebula to the p5 canvas
         nebula(p, 0.25 * this.width);

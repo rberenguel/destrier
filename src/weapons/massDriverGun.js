@@ -20,7 +20,6 @@ class MassDriverGun extends Gun {
     mass: 0.4,
     ACCEL: 50,
     f: 0.2,
-    decay: 0.01,
     ammoRefreshRate: 0.009,
   };
   ammo = true;
@@ -67,7 +66,7 @@ class MassDriverGun extends Gun {
       r: shooter.r,
       e: this.stats.e,
       f: this.stats.f,
-      decay: this.stats.decay,
+      decay: window.settings.weaponProps.decay.massDriver,
       mass: this.stats.mass,
       scale: shooter.scale,
       source: this.source,

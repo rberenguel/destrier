@@ -17,7 +17,6 @@ class PhotonTorpedoLauncher extends Gun {
   ammoMax = 2;
   static baseStats = {
     // Energy, no mass usage really
-    minRange: 1500,
     baseE: 1000,
     ACCEL: 50,
     ammoRefreshRate: 0.001,
@@ -68,7 +67,7 @@ class PhotonTorpedoLauncher extends Gun {
       },
       r: shooter.r,
       e: this.stats.baseE,
-      minRange: this.stats.minRange,
+      maxRange: window.settings.weaponProps.maxRange.photonTorpedo,
       color: this.color,
       haloColor: this.haloColor,
       scale: shooter.scale,
@@ -111,7 +110,7 @@ class PhotonTorpedo extends Base1 {
     this.color = props.color ?? 0xff0000;
     this.e = props.e ?? 10;
     this.mass = props.mass ?? 3;
-    this.minRange = props.minRange ?? 1000;
+    this.maxRange = props.maxRange ?? 1000;
     this.moved = 0;
     this.source = props.source ?? -1;
     this.flameList = props.flameList;
@@ -166,7 +165,7 @@ class PhotonTorpedo extends Base1 {
     this.moved +=
       Math.abs(this.vel.x * delta.deltaTime) +
       Math.abs(this.vel.y * delta.deltaTime);
-    if (this.moved > this.minRange) {
+    if (this.moved > this.maxRange) {
       this.e -= 10;
     }
 

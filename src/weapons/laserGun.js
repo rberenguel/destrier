@@ -12,7 +12,6 @@ class LaserGun extends Gun {
   html = "Lg";
   static baseStats = {
     // Energy, no mass use really
-    minRange: 3500,
     baseE: 20,
     decay: 0.3,
     ACCEL: 100,
@@ -60,7 +59,7 @@ class LaserGun extends Gun {
       },
       r: shooter.r,
       e: this.stats.baseE,
-      minRange: this.stats.minRange,
+      maxRange: window.settings.weaponProps.maxRange.laserGun,
       decay: this.stats.decay,
       scale: shooter.scale,
       color: this.color,
@@ -96,7 +95,7 @@ class LaserGunShot extends Base1 {
     this.decay = props.decay ?? 0.15;
     this.mass = props.mass ?? 0.0001;
     this.source = props.source ?? -1;
-    this.minRange = props.minRange ?? 2000;
+    this.max = props.max ?? 2000;
     this.moved = 0;
     this.kind = "kLaserGunShot";
   }
@@ -110,7 +109,7 @@ class LaserGunShot extends Base1 {
     super.move(delta.deltaTime);
     this.e -= 0.5;
     this.moved += Math.abs(this.vel.x) + Math.abs(this.vel.y);
-    if (this.moved > this.minRange) {
+    if (this.moved > this.maxRange) {
       this.e -= 1000;
     }
 

@@ -129,5 +129,43 @@ const settings = {
       },
     },
   },
-  showHitMs: 15, // ms to show a blank frame
+  showHitMs: 15, // ms to show a light frame on hit
+  weaponProps: {
+    baseDecay: {
+      plasmaGun: 0.5,
+      massDriver: 0.01,
+      gaussCannon: 0.01,
+      laserGun: 0.3,
+      photonTorpedo: 0,
+    },
+    baseMaxRange: {
+      laserGun: 3500,
+      massDriver: 0,
+      gaussCannon: 0,
+      photonTorpedo: 1500,
+      missileLauncher: 5000,
+    },
+    decay: {
+      plasmaGun: undefined,
+      massDriver: undefined,
+      gaussCannon: undefined,
+      laserGun: undefined,
+      photonTorpedo: undefined,
+    },
+    maxRange: {
+      laserGun: undefined,
+      massDriver: undefined,
+      gaussCannon: undefined,
+      missileLauncher: undefined,
+    },
+  },
+  mobile: {
+    iscaling: (base, minSide) => {
+      // Inverse scaling, for things that increase when size decreases
+      return (base * 6000) / minSide; // This magic number is the universe size on desktop
+    },
+    dscaling: (base, minSide) => {
+      return (minSide * base) / 6000; // This magic number is the universe size on desktop
+    },
+  },
 };

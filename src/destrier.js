@@ -375,6 +375,51 @@ const scale = (() => {
   //return Math.max(0.12, (SpaceScene.MAXSCALE * width * height) / 2200000);
 })();
 
+console.log(
+  `Universe size: ${app.renderer.width / scale}, ${app.renderer.height / scale}`,
+);
+
+// TODO: This will need to be moved somewhere else
+window.settings = settings;
+
+window.settings.weaponProps.decay.plasmaGun = settings.mobile.iscaling(
+  settings.weaponProps.baseDecay.plasmaGun,
+  Math.min(app.renderer.width / scale, app.renderer.height / scale),
+);
+
+window.settings.weaponProps.maxRange.photonTorpedo = settings.mobile.dscaling(
+  settings.weaponProps.baseMaxRange.photonTorpedo,
+  Math.min(app.renderer.width / scale, app.renderer.height / scale),
+);
+
+window.settings.weaponProps.decay.massDriver = settings.mobile.iscaling(
+  settings.weaponProps.baseDecay.massDriver,
+  Math.min(app.renderer.width / scale, app.renderer.height / scale),
+);
+
+window.settings.weaponProps.decay.gaussCannon = settings.mobile.iscaling(
+  settings.weaponProps.baseDecay.gaussCannon,
+  Math.min(app.renderer.width / scale, app.renderer.height / scale),
+);
+
+window.settings.weaponProps.decay.laserGun = settings.mobile.iscaling(
+  settings.weaponProps.baseDecay.laserGun,
+  Math.min(app.renderer.width / scale, app.renderer.height / scale),
+);
+window.settings.weaponProps.maxRange.laserGun = settings.mobile.dscaling(
+  settings.weaponProps.baseMaxRange.laserGun,
+  Math.min(app.renderer.width / scale, app.renderer.height / scale),
+);
+
+window.settings.weaponProps.maxRange.missileLauncher = settings.mobile.dscaling(
+  settings.weaponProps.baseMaxRange.missileLauncher,
+  Math.min(app.renderer.width / scale, app.renderer.height / scale),
+);
+
+console.log(window.settings.weaponProps);
+
+//
+
 const player = initPlayer(app, scale);
 
 console.info("Scene constructed");

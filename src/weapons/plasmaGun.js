@@ -5,6 +5,7 @@ import { rotate } from "../base/math.js";
 import { Base1 } from "../base/base.js";
 import { Mesh, Meshes } from "../base/mesh.js";
 import { seededRnd } from "../base/rnd.js";
+import { settings } from "../settings.js";
 
 const rnd = seededRnd(performance.now());
 
@@ -16,7 +17,6 @@ class PlasmaGun extends Gun {
   static baseStats = {
     // Energy, no mass use really
     baseE: 20,
-    decay: 0.5,
     ACCEL: 40,
   };
   ammo = false;
@@ -57,7 +57,7 @@ class PlasmaGun extends Gun {
       },
       r: shooter.r,
       e: this.stats.baseE,
-      decay: this.stats.decay,
+      decay: window.settings.weaponProps.decay.plasmaGun,
       scale: shooter.scale,
       source: this.source,
     });

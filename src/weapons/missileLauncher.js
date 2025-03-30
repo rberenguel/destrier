@@ -17,7 +17,6 @@ class MissileLauncher extends Gun {
   ammoMax = 1;
   static baseStats = {
     // Energy, no mass usage really
-    minRange: 5000,
     baseE: 1010,
     ACCEL: 10, // Will speed up
     ammoRefreshRate: 0.001,
@@ -67,7 +66,7 @@ class MissileLauncher extends Gun {
       },
       r: shooter.r,
       e: this.stats.baseE,
-      minRange: this.stats.minRange,
+      maxRange: window.settings.weaponProps.maxRange.missileLauncher,
       color: this.color,
       haloColor: this.haloColor,
       scale: shooter.scale,
@@ -165,7 +164,7 @@ class Missile extends Base1 {
     this.color = props.color ?? 0xffffff;
     this.e = props.e ?? 10;
     this.mass = props.mass ?? 3;
-    this.minRange = props.minRange ?? 5000;
+    this.maxRange = props.maxRange ?? 5000;
     this.moved = 0;
     this.source = props.source ?? -1;
     this.flameList = props.flameList;
@@ -233,7 +232,7 @@ class Missile extends Base1 {
     this.moved +=
       Math.abs(this.vel.x * delta.deltaTime) +
       Math.abs(this.vel.y * delta.deltaTime);
-    if (this.moved > this.minRange) {
+    if (this.moved > this.maxRange) {
       this.e -= 10;
     }
 

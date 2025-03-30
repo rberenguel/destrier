@@ -16,7 +16,6 @@ class GaussCannon extends Gun {
     mass: 5,
     ACCEL: 80,
     f: 1,
-    decay: 0.01,
     ammoRefreshRate: 0.0005,
   };
   ammo = true;
@@ -66,7 +65,7 @@ class GaussCannon extends Gun {
       },
       r: shooter.r,
       f: this.stats.f,
-      decay: this.stats.decay,
+      decay: window.weaponProps.decay.gaussCannon,
       e: 1,
       scale: shooter.scale,
       source: this.source,

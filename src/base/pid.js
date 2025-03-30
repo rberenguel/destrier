@@ -298,7 +298,7 @@ const otherControl = (props = {}) => {
 
     if (
       Math.abs(normalizeAngle(shootingAngle - other.r + Math.PI)) < 0.3 &&
-      sdist < 0.8 * (other.weapons[0]?.stats?.minRange ?? 1500)
+      sdist < 0.8 * (other.weapons[0]?.stats?.maxRange ?? 1500)
     ) {
       const now = performance.now();
       if (now - other.prevshot < (other.weapons[0]?.fireRate ?? 100)) {
@@ -321,7 +321,7 @@ const otherControl = (props = {}) => {
     // TODO: crude assumption about forward and backward weapons
     if (
       Math.abs(normalizeAngle(shootingAngle - other.r + Math.PI)) < 0.3 &&
-      sdist < 0.8 * (other.weapons[2]?.stats?.minRange ?? 1500)
+      sdist < 0.8 * (other.weapons[2]?.stats?.maxRange ?? 1500)
     ) {
       const now = performance.now();
       if (now - other.prevshot < (other.weapons[2]?.fireRate ?? 100)) {
@@ -337,7 +337,7 @@ const otherControl = (props = {}) => {
     }
     if (
       Math.abs(normalizeAngle(shootingAngle - other.r)) < 0.3 &&
-      sdist < 0.8 * (other.weapons[4]?.stats?.minRange ?? 1500)
+      sdist < 0.8 * (other.weapons[4]?.stats?.maxRange ?? 1500)
     ) {
       const now = performance.now();
       if (now - other.prevshot < (other.weapons[4]?.fireRate ?? 100)) {

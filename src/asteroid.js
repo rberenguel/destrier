@@ -24,7 +24,7 @@ class Asteroid extends Base1 {
       kind: Meshes.kPoly,
       vertices: vertices,
       color: 0xffffff,
-      width: 8,
+      width: 12,
       fill: 0x111111,
     });
 
@@ -32,7 +32,7 @@ class Asteroid extends Base1 {
       kind: Meshes.kPoly,
       vertices: vertices,
       color: 0xffffff,
-      width: 8,
+      width: 12,
       fill: 0xffffff,
       name: "whiteLayer",
     });

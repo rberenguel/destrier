@@ -375,7 +375,7 @@ const menuController = handleControls(inMenuActions, keyMap, buttonMap);
 const scale = (() => {
   const { width, height } = getLandscapeDimensions();
   if (isMobile()) {
-    return 0.16;
+    return 0.1;
   }
   return SpaceScene.MAXSCALE;
   //return Math.max(0.12, (SpaceScene.MAXSCALE * width * height) / 2200000);
@@ -385,69 +385,65 @@ console.log(
   `Universe size: ${app.renderer.width / scale}, ${app.renderer.height / scale}`,
 );
 
+window.gameScale = scale;
+
 // TODO: This will need to be moved somewhere else
 window.settings = settings;
+
+const scalingFactor = app.renderer.width / scale + app.renderer.height / scale;
 
 window.settings.weaponProps.decay.plasmaGun =
   0.9 *
   settings.mobile.iscaling(
     settings.weaponProps.baseDecay.plasmaGun,
-    Math.min(app.renderer.width / scale, app.renderer.height / scale),
+    scalingFactor,
   );
 
 window.settings.weaponProps.maxRange.photonTorpedo =
   0.9 *
   settings.mobile.dscaling(
     settings.weaponProps.baseMaxRange.photonTorpedo,
-    Math.min(app.renderer.width / scale, app.renderer.height / scale),
+    scalingFactor,
   );
 
 window.settings.weaponProps.decay.massDriver =
   0.9 *
   settings.mobile.iscaling(
     settings.weaponProps.baseDecay.massDriver,
-    Math.min(app.renderer.width / scale, app.renderer.height / scale),
+    scalingFactor,
   );
 
 window.settings.weaponProps.decay.gaussCannon =
   0.9 *
   settings.mobile.iscaling(
     settings.weaponProps.baseDecay.gaussCannon,
-    Math.min(app.renderer.width / scale, app.renderer.height / scale),
+    scalingFactor,
   );
 
 window.settings.weaponProps.decay.laserGun =
   0.9 *
   settings.mobile.iscaling(
     settings.weaponProps.baseDecay.laserGun,
-    Math.min(app.renderer.width / scale, app.renderer.height / scale),
+    scalingFactor,
   );
-window.settings.weaponProps.maxRange.laserGun =
-  1.2 *
-  settings.mobile.dscaling(
-    settings.weaponProps.baseMaxRange.laserGun,
-    Math.min(app.renderer.width / scale, app.renderer.height / scale),
-  );
+window.settings.weaponProps.maxRange.laserGun = scalingFactor * 0.25;
 
-window.settings.weaponProps.maxRange.missileLauncher =
-  1.2 *
-  settings.mobile.dscaling(
-    settings.weaponProps.baseMaxRange.missileLauncher,
-    Math.min(app.renderer.width / scale, app.renderer.height / scale),
-  );
+window.settings.weaponProps.maxRange.missileLauncher = scalingFactor * 0.3;
 
 // Too low of a ship speed is a bit shitty
+
+console.log(
+  settings.mobile.dscaling(settings.shipProps.baseAccel, scalingFactor),
+);
+
 window.settings.shipProps.accel = Math.max(
   0.08,
-  settings.mobile.dscaling(
-    settings.shipProps.baseAccel,
-    Math.min(app.renderer.width / scale, app.renderer.height / scale),
-  ),
+  settings.mobile.dscaling(settings.shipProps.baseAccel, scalingFactor),
 );
 
 window.settings.asteroidProps.v = settings.mobile.dscaling(
   settings.asteroidProps.baseV,
-  Math.min(app.renderer.width / scale, app.renderer.height / scale),
+  scalingFactor,
 );
 
 console.log(
@@ -686,9 +682,13 @@ app.ticker.add((delta) => {
     msgs.text(
       "Please rotate your device, this can only be played in landscape mode",
     );
-    msgs.show();
+    msgs.show({
+      glass: 1005,
+      msgs: 1006,
+    });
     app.canvas.style.display = "none";
-    if(currentState != states.kNonLandscape){
+
+    if (currentState != states.kNonLandscape) {
       previousState = currentState;
     }
     transition(states.kNonLandscape);

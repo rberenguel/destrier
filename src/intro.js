@@ -12,7 +12,7 @@ class Intro {
     this.viewframe.attach(this.app);
     this.viewframe.scale = 1;
     if (this.app.renderer.width < 1000) {
-      this.viewframe.scale = 0.5; // This is roughly the mobile scale level
+      this.viewframe.scale = 0.3; // This is roughly the mobile scale level
     }
     this.gameActions = gameActions;
     this.ship = new Lynx({

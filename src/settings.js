@@ -168,12 +168,12 @@ const settings = {
     v: undefined,
   },
   mobile: {
-    iscaling: (base, minSide) => {
+    iscaling: (base, factor) => {
       // Inverse scaling, for things that increase when size decreases
-      return (base * 6000) / minSide; // This magic number is the universe size on desktop
+      return (base * 15000) / factor; // This magic number is the universe size on desktop
     },
     dscaling: (base, minSide) => {
-      return (minSide * base) / 6000; // This magic number is the universe size on desktop
+      return (minSide * base) / 15000; // This magic number is the universe size on desktop
     },
   },
 };

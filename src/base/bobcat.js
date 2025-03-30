@@ -6,7 +6,7 @@ import { MassDriverGun } from "../weapons/weapons.js";
 
 class Bobcat extends Ship {
   constructor(props) {
-    const width = 10;
+    const width = 14;
     const vertices = [
       [-70, 50],
       [-50, 60],

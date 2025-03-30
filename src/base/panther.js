@@ -9,7 +9,7 @@ import { rotate } from "./math.js";
 
 class Panther extends Ship {
   constructor(props) {
-    const width = 10;
+    const width = 14;
     const verticesBase = [
       [110, 40], // ship front
       [110, -40], // ship front

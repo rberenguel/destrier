@@ -688,7 +688,9 @@ app.ticker.add((delta) => {
     );
     msgs.show();
     app.canvas.style.display = "none";
-    previousState = currentState;
+    if(currentState != states.kNonLandscape){
+      previousState = currentState;
+    }
     transition(states.kNonLandscape);
     return;
   } else {

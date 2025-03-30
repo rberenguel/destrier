@@ -25,6 +25,7 @@ class NebulaGenerator {
     this.p5Instance = new p5((p) => {
       // Your nebula drawing logic (adapted for instance mode)
       const nebula = (pg, width = 100) => {
+        const density = window.devicePixelRatio || 1;
         let t = 0;
         pg.translate(0.5 * width, -0.25 * width);
         pg.noiseSeed(this.seed);
@@ -57,7 +58,7 @@ class NebulaGenerator {
           }
           pg.endShape();
 
-          t += 1;
+          t += density;
         }
       };
 

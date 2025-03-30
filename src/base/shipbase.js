@@ -35,7 +35,6 @@ class Ship extends Base1 {
     this.weapons = props.weapons ?? [];
     this.secondaryWeapons = props.secondaryWeapons ?? [];
     this.ammo = {};
-    this.actions = [];
     this.flameList = []; // TODO: careful with this as a dangling reference
     this.bulletList = [];
     this.recoveryRate = props.recoveryRate ?? 0;
@@ -284,7 +283,6 @@ class Ship extends Base1 {
     if (this.disabled > performance.now()) {
       return;
     }
-    this.actions.push("backThrust");
     const nv = sqnorm(this.vel.x, this.vel.y);
     const velocityAngle = Math.atan2(this.vel.y, this.vel.x);
 
@@ -360,7 +358,6 @@ class Ship extends Base1 {
     if (this.disabled > performance.now()) {
       return;
     }
-    this.actions.push("forwardThrust");
     const nv = sqnorm(this.vel.x, this.vel.y);
     const velocityAngle = Math.atan2(this.vel.y, this.vel.x);
     //const angleDifference = normalizeAngle(this.r - velocityAngle);
@@ -458,7 +455,6 @@ class Ship extends Base1 {
   /* pos would be universe coordinates, then here I need to use screen coordinates */
 
   update(delta) {
-    this.actions = this.actions.slice(-2);
     super.update(delta);
     super.move(delta.deltaTime);
     this.e += this.recoveryRate * delta.deltaTime;

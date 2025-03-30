@@ -106,6 +106,7 @@ canvas {
   left: 0;
   z-index: 5;
   backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
 }
 
 #main-menu {

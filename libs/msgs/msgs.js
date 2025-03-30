@@ -12,6 +12,7 @@ class Msgs {
     this._sepia = props.sepia ?? 0;
     this._zIndex = props.zIndex ?? 3;
     this._glass.style.backdropFilter = `blur(${this._blur}px) sepia(${this._sepia}%)`;
+    this._glass.style.webkitBackdropFilter = `blur(${this._blur}px) sepia(${this._sepia}%)`;
     this._glass.style.zIndex = this._zIndex;
   }
 

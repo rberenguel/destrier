@@ -79,7 +79,7 @@ class PhotonTorpedoLauncher extends Gun {
     b.firedBy = "kPhotonTorpedoLauncher";
     bulletList.push(b);
     if (shooter.human) {
-      window.sampler("b0", 0.5); // Torpedo, based on Hihat foot stomp
+      window.sampler("b0", 0.9); // Torpedo, based on Hihat foot stomp
     }
     shooter.ammo[PhotonTorpedoLauncher.kind].count--;
   }

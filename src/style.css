@@ -121,11 +121,11 @@ canvas {
 }
 
 #pause-menu {
-  font-size: 1rem;
+  font-size: 2rem;
   flex-shrink: 0;
   margin-right: auto; /* Remove this to allow centering or specific placement */
   margin-left: auto; /* This will center it if there's space */
-  padding: 0.5rem;
+  padding: 1rem;
   cursor: default;
   width: fit-content;
 }
@@ -651,6 +651,34 @@ canvas {
     border-collapse: separate;
     border-spacing: 1rem;
     font-size: 1.5rem;
+  }
+  #info {
+    top: 0em;
+    left: 0em;
+  }
+  #primary-weapon-types {
+    width: 2rem;
+  }
+  #secondary-weapon-types {
+    width: 2rem;
+  }
+  #shield-types {
+    width: 2rem;
+  }
+  #secondary-types {
+    width: 2rem;
+  }
+  #about {
+    font-size: 1.2rem;
+    color: #6c0;
+    text-align: left;
+    line-height: 1.4;
+    overflow: scroll;
+    height: 50vh;
+  }
+  .changelog-content {
+    height: 50vh;
+    overflow: scroll;
   }
 }
 

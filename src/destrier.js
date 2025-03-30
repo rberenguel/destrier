@@ -18,7 +18,7 @@ import { settings } from "./settings.js";
 import { getEncouragementMessage } from "./encouragement.js";
 import { enemiesPerLevel } from "./leveling.js";
 import { resetStats, presentStats, showHUDInfo } from "./stats.js";
-import { changelog } from "./changelog.js";
+import { changelog } from "./renderChangelog.js";
 
 import {
   offerChoices,

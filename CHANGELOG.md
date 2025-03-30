@@ -1,6 +1,7 @@
 # 0.9.1
 
 - Mobile controls and CSS (_BETA_)
+- Mobile tweaks for range, decay, speed… WIP
 
 # 0.9.0
 

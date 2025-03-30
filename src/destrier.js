@@ -416,7 +416,21 @@ window.settings.weaponProps.maxRange.missileLauncher = settings.mobile.dscaling(
   Math.min(app.renderer.width / scale, app.renderer.height / scale),
 );
 
-console.log(window.settings.weaponProps);
+window.settings.shipProps.accel = settings.mobile.dscaling(
+  settings.shipProps.baseAccel,
+  Math.min(app.renderer.width / scale, app.renderer.height / scale),
+);
+
+window.settings.asteroidProps.v = settings.mobile.dscaling(
+  settings.asteroidProps.baseV,
+  Math.min(app.renderer.width / scale, app.renderer.height / scale),
+);
+
+console.log(
+  window.settings.weaponProps,
+  window.settings.shipProps,
+  window.settings.asteroidProps,
+);
 
 //
 

@@ -50,7 +50,7 @@ class Ship extends Base1 {
     this.prevShot = -1;
     this.secondaryPrevShot = -1;
     this.yawRate = props.yawRate ?? 0.03;
-    this.accel = props.accel ?? 0.1;
+    this.accel = props.accel ?? window.settings.shipProps.accel;
     this.extraAmmo = 1;
     this._magicalCounter = 0;
     this.disabled = 0;

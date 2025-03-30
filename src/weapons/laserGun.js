@@ -60,7 +60,7 @@ class LaserGun extends Gun {
       r: shooter.r,
       e: this.stats.baseE,
       maxRange: window.settings.weaponProps.maxRange.laserGun,
-      decay: this.stats.decay,
+      decay: window.settings.weaponProps.decay.laserGun,
       scale: shooter.scale,
       color: this.color,
       source: this.source,

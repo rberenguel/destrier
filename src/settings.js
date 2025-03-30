@@ -159,6 +159,14 @@ const settings = {
       missileLauncher: undefined,
     },
   },
+  shipProps: {
+    baseAccel: 0.1,
+    accel: undefined,
+  },
+  asteroidProps: {
+    baseV: 4,
+    v: undefined,
+  },
   mobile: {
     iscaling: (base, minSide) => {
       // Inverse scaling, for things that increase when size decreases

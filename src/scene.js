@@ -300,11 +300,12 @@ class SpaceScene extends Scene {
   }
 
   addAsteroids(n) {
+    const av = window.settings.asteroidProps.v;
     for (let i = 0; i < n; i++) {
       const x = (rnd() * this.app.renderer.width) / this.scale,
         y = (rnd() * this.app.renderer.height) / this.scale;
-      const vx = 4 - 8 * rnd(),
-        vy = 4 - 8 * rnd();
+      const vx = av - 2 * av * rnd(),
+        vy = av - 2 * av * rnd();
       const sides = Math.floor(15 + rnd() * 6);
       const factor = Math.sqrt(
         Math.min(this.app.renderer.width, this.app.renderer.height),

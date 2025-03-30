@@ -640,6 +640,18 @@ canvas {
     margin-block-end: 0.5rem;
     font-size: 90%;
   }
+
+  .control-list-wrapper {
+    width: 100rem;
+  }
+
+  .control-list-wrapper > table {
+    color: white;
+    margin: 0.5em;
+    border-collapse: separate;
+    border-spacing: 1rem;
+    font-size: 1.5rem;
+  }
 }
 
 /* Mobile pad */

@@ -245,7 +245,8 @@ class SpaceScene extends Scene {
         other.weapons[3].stats.ammoRefreshRate =
           LaserGun.baseStats.ammoRefreshRate * 0.8;
         other.prevShot = -1;
-        other.disabled = performance.now() + 500;
+        other.disabled =
+          performance.now() + window.settings.shipProps.disabledDelay;
         other.action = () => "kChase";
         other.generate();
         other.attach(this.viewframe);

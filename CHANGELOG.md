@@ -3,7 +3,7 @@
 - Mobile controls and CSS
 - Mobile tweaks for range, decay, speed… Still tweaking
 - Only icons in the HUD
-- Mobile sizing adjustments
+- Mobile sizing adjustments. Many.
 
 # 0.9.0
 

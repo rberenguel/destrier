@@ -78,33 +78,33 @@ const transition = (toState) => {
 
 const gameActions = {
   moveDown: (f = 1) => {
-    if(currentState != states.kInGame){
-      return
+    if (currentState != states.kInGame) {
+      return;
     }
     player.backThrust(1, 500);
   },
   moveUp: (f = 1) => {
-    if(currentState != states.kInGame){
-      return
+    if (currentState != states.kInGame) {
+      return;
     }
 
     player.forwardThrust(1, 500);
   },
   moveRight: (f = 1) => {
-    if(currentState != states.kInGame){
-      return
+    if (currentState != states.kInGame) {
+      return;
     }
     player.yawRight(f);
   },
   moveLeft: (f = 1) => {
-    if(currentState != states.kInGame){
-      return
+    if (currentState != states.kInGame) {
+      return;
     }
     player.yawLeft(f);
   },
   shoot: () => {
-    if(currentState != states.kInGame){
-      return
+    if (currentState != states.kInGame) {
+      return;
     }
     const now = performance.now();
     const firerate = player.weapons[0].firerate;
@@ -120,8 +120,8 @@ const gameActions = {
     settings.shake.onFire(app, player.r);
   },
   secondaryShoot: () => {
-    if(currentState != states.kInGame){
-      return
+    if (currentState != states.kInGame) {
+      return;
     }
     const firerate = player.secondaryWeapons[0].firerate;
     const now = performance.now();
@@ -136,8 +136,8 @@ const gameActions = {
     } catch {}
   },
   shield: () => {
-    if(currentState != states.kInGame){
-      return
+    if (currentState != states.kInGame) {
+      return;
     }
     if (player.shield && player.shieldEnergy >= 1) {
       const now = performance.now();
@@ -156,8 +156,8 @@ const gameActions = {
     }
   },
   activeAbility: () => {
-    if(currentState != states.kInGame){
-      return
+    if (currentState != states.kInGame) {
+      return;
     }
     if (player.activeAbility && player.activeAbilityEnergy >= 1) {
       if (player.activeAbility === "kEmp") {
@@ -284,11 +284,13 @@ const isMobile = () => {
 
 const needsStandalone = () => {
   const standaloneiOS = window.navigator.standalone === true;
-  const standaloneAndroid = window.matchMedia('(display-mode: standalone)').matches;
+  const standaloneAndroid = window.matchMedia(
+    "(display-mode: standalone)",
+  ).matches;
   const devel =
     window.location.hostname.startsWith("192") ||
     window.location.hostname.startsWith("127") ||
-    window.location.hostname === 'localhost'; // Added localhost check for completeness
+    window.location.hostname === "localhost"; // Added localhost check for completeness
   return isMobile() && !devel && !standaloneiOS && !standaloneAndroid && !DEBUG;
 };
 
@@ -446,9 +448,11 @@ console.log(
 );
 
 window.settings.shipProps.accel = Math.max(
-  0.08,
+  0.1, // This is doing nothing for now, tweaking
   settings.mobile.dscaling(settings.shipProps.baseAccel, scalingFactor),
 );
+
+window.settings.shipProps.disabledDelay = isMobile() ? 750 : 500;
 
 window.settings.asteroidProps.v = settings.mobile.dscaling(
   settings.asteroidProps.baseV,

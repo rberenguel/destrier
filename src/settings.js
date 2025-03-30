@@ -162,6 +162,7 @@ const settings = {
   shipProps: {
     baseAccel: 0.1,
     accel: undefined,
+    disabdledDelay: undefined,
   },
   asteroidProps: {
     baseV: 4,

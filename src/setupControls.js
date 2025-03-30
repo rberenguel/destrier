@@ -35,6 +35,8 @@ const defaultKeyboardControls = {
   KeyQ: "menu",
 };
 
+console.log(keyMap);
+
 if (
   keyMap === undefined ||
   Object.keys(keyMap).length != Object.keys(defaultKeyboardControls).length

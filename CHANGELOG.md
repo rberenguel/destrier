@@ -1,8 +1,9 @@
 # 0.9.1
 
-- Mobile controls and CSS (_BETA_)
+- Mobile controls and CSS
 - Mobile tweaks for range, decay, speed… Still tweaking
 - Only icons in the HUD
+- Mobile sizing adjustments
 
 # 0.9.0
 

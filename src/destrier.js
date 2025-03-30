@@ -78,28 +78,33 @@ const transition = (toState) => {
 
 const gameActions = {
   moveDown: (f = 1) => {
-    if (player.e < 10) {
-      return;
+    if(currentState != states.kInGame){
+      return
     }
-
     player.backThrust(1, 500);
   },
   moveUp: (f = 1) => {
-    if (player.e < 10) {
-      return;
+    if(currentState != states.kInGame){
+      return
     }
 
     player.forwardThrust(1, 500);
   },
   moveRight: (f = 1) => {
+    if(currentState != states.kInGame){
+      return
+    }
     player.yawRight(f);
   },
   moveLeft: (f = 1) => {
+    if(currentState != states.kInGame){
+      return
+    }
     player.yawLeft(f);
   },
   shoot: () => {
-    if (player.e < 10) {
-      return;
+    if(currentState != states.kInGame){
+      return
     }
     const now = performance.now();
     const firerate = player.weapons[0].firerate;
@@ -115,8 +120,8 @@ const gameActions = {
     settings.shake.onFire(app, player.r);
   },
   secondaryShoot: () => {
-    if (player.e < 10) {
-      return;
+    if(currentState != states.kInGame){
+      return
     }
     const firerate = player.secondaryWeapons[0].firerate;
     const now = performance.now();
@@ -131,9 +136,8 @@ const gameActions = {
     } catch {}
   },
   shield: () => {
-    if (gameOver) {
-      fullRestart();
-      return;
+    if(currentState != states.kInGame){
+      return
     }
     if (player.shield && player.shieldEnergy >= 1) {
       const now = performance.now();
@@ -152,6 +156,9 @@ const gameActions = {
     }
   },
   activeAbility: () => {
+    if(currentState != states.kInGame){
+      return
+    }
     if (player.activeAbility && player.activeAbilityEnergy >= 1) {
       if (player.activeAbility === "kEmp") {
         dropEmp(player, player.bulletList);
@@ -670,8 +677,6 @@ let countdown = 0;
 let finishCountdown = 0;
 let diffFinishCountdown = 0;
 let level = 0;
-let gameOver = false;
-//let showIntro = true;
 let intro = new Intro(app, inMenuActions);
 const pausemenuDiv = document.getElementById("pause-menu");
 app.ticker.add((delta) => {
@@ -772,14 +777,6 @@ app.ticker.add((delta) => {
     choices.sort(() => Math.random() - 0.5);
 
     const globals = {
-      //powerUpChosen: powerUpChosen,
-      //setPowerUpChosen: (value) => {
-      //  powerUpChosen = value;
-      //},
-      //offerPowerUpChoices: offerPowerUpChoices,
-      //setOfferPowerUpChoices: (value) => {
-      //  offerPowerUpChoices = value;
-      //},
       transition: transition,
       spaceScene: spaceScene,
       showHUDInfo: showHUDInfo(player, spaceScene, level),

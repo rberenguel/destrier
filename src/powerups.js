@@ -421,7 +421,7 @@ const allPowerUpChoices = (player) => [
     },
     glyph: "speedup.png",
     lambda: () => {
-      player.accel = 0.2;
+      player.accel = window.settings.shipProps.accel * 2;
     },
   },
   {

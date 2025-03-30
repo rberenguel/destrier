@@ -24,8 +24,7 @@ class NebulaGenerator {
     // Create a new p5 instance in instance mode
     this.p5Instance = new p5((p) => {
       // Your nebula drawing logic (adapted for instance mode)
-      const nebula = (pg, width = 100) => {
-        const density = window.devicePixelRatio || 1;
+      const nebula = (pg, width = 100, density) => {
         let t = 0;
         pg.translate(0.5 * width, -0.25 * width);
         pg.noiseSeed(this.seed);
@@ -63,7 +62,7 @@ class NebulaGenerator {
       };
 
       p.setup = () => {
-        const density = window.devicePixelRatio;
+        const density = Math.min(2, window.devicePixelRatio || 1);
         let renderer = p.createCanvas(
           density * this.width,
           density * this.height,
@@ -82,7 +81,7 @@ class NebulaGenerator {
         }
 
         // Draw nebula to the p5 canvas
-        nebula(p, 0.25 * this.width);
+        nebula(p, 0.25 * this.width, density);
 
         //nebula(p, 100);
         // Create a PixiJS texture from the p5 canvas

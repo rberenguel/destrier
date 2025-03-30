@@ -21,7 +21,7 @@ import {
 
 const glass = document.getElementById("glass");
 
-const currentPowerupsToDiv = (div, player) => {
+const currentPowerupsToDiv = (div, player, kind) => {
   const allChoices = allPowerUpChoices(player)
     .concat(shieldPowerups(player))
     .concat(superPowerups(player));
@@ -30,11 +30,14 @@ const currentPowerupsToDiv = (div, player) => {
     if (!player.powerUps[pup]) {
       continue;
     }
-    added++;
     const props = allChoices.filter((p) => p.id === pup);
     if (!props) {
       continue;
     }
+    if (kind && props[0].kind != kind) {
+      continue;
+    }
+    added++;
     const d = document.createElement("DIV");
     const i = document.createElement("IMG");
     i.src = "src/media/glyphs/" + props[0].glyph;
@@ -146,7 +149,7 @@ const offerChoices = (options = [], globals = {}) => {
       globals.player.powerUps[option.id] = true;
       globals.player.stats.powerups.chosen++;
       currentPowerUpsHud.innerHTML = "";
-      currentPowerupsToDiv(currentPowerUpsHud, globals.player);
+      currentPowerupsToDiv(currentPowerUpsHud, globals.player, "passive");
       globals.transition(states.kBetweenLevels);
     };
   }
@@ -184,6 +187,7 @@ const allPowerUpChoices = (player) => [
   {
     id: "kMassDriverGun",
     name: "Mass Driver",
+    kind: "primary",
     description: () => {
       const title = "<h2>Primary weapon</h2>";
       const htmlA = MassDriverGun.present();
@@ -218,6 +222,7 @@ const allPowerUpChoices = (player) => [
   {
     id: "kPlasmaGun",
     name: "Plasma gun",
+    kind: "primary",
     description: () => {
       const title = "<h2>Primary weapon</h2>";
       const htmlA = PlasmaGun.present();
@@ -250,6 +255,7 @@ const allPowerUpChoices = (player) => [
   {
     id: "kGaussCannon",
     name: "Gauss Cannon",
+    kind: "secondary",
     description: () => {
       const title = "<h2>Secondary weapon</h2>";
       const htmlA = GaussCannon.present();
@@ -277,6 +283,7 @@ const allPowerUpChoices = (player) => [
   {
     id: "kPhotonTorpedoLauncher",
     name: "Photon torpedo launcher",
+    kind: "secondary",
     description: () => {
       const title = "<h2>Secondary weapon</h2>";
       const htmlA = PhotonTorpedoLauncher.present();
@@ -306,6 +313,7 @@ const allPowerUpChoices = (player) => [
   {
     id: "kMissileLauncher",
     name: "Missile launcher",
+    kind: "secondary",
     description: () => {
       const title = "<h2>Secondary weapon</h2>";
       const htmlA = MissileLauncher.present();
@@ -333,6 +341,7 @@ const allPowerUpChoices = (player) => [
   {
     id: "kLaserGun",
     name: "Laser Gun",
+    kind: "primary",
     description: () => {
       const title = "<h2>Primary weapon</h2>";
       const htmlA = LaserGun.present();
@@ -366,6 +375,7 @@ const allPowerUpChoices = (player) => [
   {
     id: "kEmergencyBrakes",
     name: "Emergency brakes",
+    kind: "passive",
     description: () => {
       const title = "<h2>Passive utility</h2>";
       return `${title}<p class='powerup-title'>Emergency brakes</p> Accelerate in the opposite direction of your travel to brake immediately.`;
@@ -378,6 +388,7 @@ const allPowerUpChoices = (player) => [
   {
     id: "kPointSight",
     name: "Point sight",
+    kind: "passive",
     description: () => {
       const title = "<h2>Passive utility</h2>";
       return `${title}<p class='powerup-title'>Point sight</p> Show an overlay of where you are aiming at. Particularly useful for long range weapons`;
@@ -390,6 +401,7 @@ const allPowerUpChoices = (player) => [
   {
     id: "kFasterRotation",
     name: "Faster rotation",
+    kind: "passive",
     description: () => {
       const title = "<h2>Passive ability</h2>";
       return `${title}<p class='powerup-title'>Faster rotation</p>Rotate faster. Does not accumulate.`;
@@ -402,6 +414,7 @@ const allPowerUpChoices = (player) => [
   {
     id: "kFasterAcceleration",
     name: "Faster acceleration",
+    kind: "passive",
     description: () => {
       const title = "<h2>Passive ability</h2>";
       return `${title}<p class='powerup-title'>Faster acceleration</p>Accelerate faster. Does not accumulate.`;
@@ -414,6 +427,7 @@ const allPowerUpChoices = (player) => [
   {
     id: "kExtraAmmo",
     name: "Additional ammunition/energy",
+    kind: "passive",
     description: () => {
       const title = "<h2>Passive ability</h2>";
       return `${title}<p class='powerup-title'>Additional ammunition/energy</p>x1.5 your storage. Does not accumulate.`;
@@ -426,6 +440,7 @@ const allPowerUpChoices = (player) => [
   {
     id: "kExtraHull",
     name: "10% more hull",
+    kind: "passive",
     description: () => {
       const title = "<h2>Passive ability</h2>";
       return `${title}<p class='powerup-title'>More hull</p>10% more hull. Does not accumulate.`;
@@ -442,6 +457,7 @@ const shieldPowerups = (player) => [
   {
     id: "kDeflectorShield",
     name: "Deflector shield",
+    kind: "shield",
     description: () => {
       const title = "<h2>Shield</h2>";
       let html = `${title}${shieldDescs["kDeflectorShield"]}`;
@@ -459,8 +475,9 @@ const shieldPowerups = (player) => [
     },
   },
   {
-    id: "kEnergy shield",
+    id: "kEnergyShield",
     name: "Energy shield",
+    kind: "shield",
     description: () => {
       const title = "<h2>Shield</h2>";
       let html = `${title}${shieldDescs["kEnergyShield"]}`;
@@ -483,6 +500,7 @@ const superPowerups = (player) => [
   {
     id: "kPhaseShield",
     name: "Phase shield",
+    kind: "shield",
     description: () => {
       const title = "<h2>Shield</h2>";
       let html = `${title}${shieldDescs["kPhaseShield"]}`;
@@ -502,6 +520,7 @@ const superPowerups = (player) => [
   {
     id: "kEmp",
     name: "EMP pulse",
+    kind: "active",
     description: () => {
       const title = "<h2>Active ability</h2>";
       let html = `${title}${activeAbilityDescs["kEmp"]}`;
@@ -521,6 +540,7 @@ const superPowerups = (player) => [
   {
     id: "kBomb",
     name: "Bomb",
+    kind: "active",
     description: () => {
       const title = "<h2>Active ability</h2>";
       let html = `${title}${activeAbilityDescs["kBomb"]}`;

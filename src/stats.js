@@ -113,15 +113,22 @@ const showHUDInfo = (player, spaceScene, level) => () => {
   const hull = document.getElementById("hull");
   const shieldEnergy = document.getElementById("shield-energy");
   const secondaryEnergy = document.getElementById("secondary-energy");
-  const containerPrimary = document.getElementById("primary-weapon-types");
-  const containerSecondary = document.getElementById("secondary-weapon-types");
+  const containerPrimary = document
+    .getElementById("primary-weapon-types")
+    .querySelector("IMG");
+  const containerSecondary = document
+    .getElementById("secondary-weapon-types")
+    .querySelector("IMG");
+  const containerShield = document
+    .getElementById("shield-types")
+    .querySelector("IMG");
+  const containerActive = document
+    .getElementById("secondary-types")
+    .querySelector("IMG");
   const ammoPContainer = document.getElementById("primary-weapon-ammo");
   const ammoSContainer = document.getElementById("secondary-weapon-ammo");
   if (player.e < 0) {
     hull.innerHTML = "";
-    shieldEnergy.innerHTML = "";
-    containerPrimary.innerHTML = "";
-    containerSecondary.innerHTML = "";
     ammoPContainer.innerHTML = "";
     ammoSContainer.innerHTML = "";
     scoreDiv.innerHTML = "";
@@ -130,7 +137,6 @@ const showHUDInfo = (player, spaceScene, level) => () => {
   }
   scoreDiv.textContent = `Wave ${level}`;
   const wa = player.weapons[0];
-  const wb = player.weapons[1];
   const wc = player.secondaryWeapons[0];
   let ammoP = undefined;
   let ammoS = undefined;
@@ -140,48 +146,48 @@ const showHUDInfo = (player, spaceScene, level) => () => {
   if (player.ammo[wc.kind]) {
     ammoS = `${(player.ammo[wc.kind].count ?? 0).toFixed(1)}`;
   }
-  const a = wa.html;
-  const b = wb.html;
-  const c = wc.html;
+  const primaryGlyph = wa.glyph;
+  const secondaryGlyph = wc.glyph;
 
   hull.innerHTML = `H:${((player.e / player.maxE) * 100).toFixed(0)}%`;
-  let S = "";
   if (player.shield === "kDeflectorShield") {
-    S = "(d):";
+    containerShield.src = "src/media/glyphs/deflectorshield.png";
   }
   if (player.shield === "kEnergyShield") {
-    S = "(e):";
+    containerShield.src = "src/media/glyphs/energyshield.png";
   }
   if (player.shield === "kPhaseShield") {
-    S = "(p):";
+    containerShield.src = "src/media/glyphs/phaseshield.png";
   }
-  shieldEnergy.innerHTML = `${S}${player.shieldEnergy.toFixed(2)}`;
-  if (S === "") {
-    shieldEnergy.innerHTML = "";
+  if (player.shield) {
+    shieldEnergy.innerHTML = `${player.shieldEnergy.toFixed(2)}`;
   }
-  let A = "";
+  if (!player.shield) {
+    containerShield.src = "src/media/glyphs/none.png";
+  }
   if (player.activeAbility === "kEmp") {
-    A = "(m):";
+    containerActive.src = "src/media/glyphs/emp.png";
   }
   if (player.activeAbility === "kBomb") {
-    A = "(b):";
+    containerActive.src = "src/media/glyphs/bomb.png";
   }
-
-  secondaryEnergy.innerHTML = `${A}${player.activeAbilityEnergy.toFixed(2)}`;
-  if (A === "") {
-    secondaryEnergy.innerHTML = "";
+  if (player.activeAbility) {
+    secondaryEnergy.innerHTML = `${player.activeAbilityEnergy.toFixed(2)}`;
   }
-  containerPrimary.innerHTML = `W1: ${a}${b}`;
+  if (!player.activeAbility) {
+    containerActive.src = "src/media/glyphs/none.png";
+  }
+  containerPrimary.src = `src/media/glyphs/${primaryGlyph}`;
 
-  containerSecondary.innerHTML = `W2: ${c}`;
+  containerSecondary.src = `src/media/glyphs/${secondaryGlyph}`;
 
   if (ammoP) {
-    ammoPContainer.textContent = `(${ammoP})`;
+    ammoPContainer.textContent = `[${ammoP}]`;
   } else {
     ammoPContainer.textContent = "";
   }
   if (ammoS) {
-    ammoSContainer.textContent = `(${ammoS})`;
+    ammoSContainer.textContent = `[${ammoS}]`;
   } else {
     ammoSContainer.textContent = "";
   }

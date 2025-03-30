@@ -8,17 +8,18 @@ import { Mesh, Meshes } from "../base/mesh.js";
 class LaserGun extends Gun {
   static kind = "kLaserGun";
   kind = "kLaserGun";
+  glyph = "lasergun.png";
   firerate = 50;
   html = "Lg";
   static baseStats = {
     // Energy, no mass use really
-    baseE: 20,
+    baseE: 30,
     decay: 0.3,
     ACCEL: 100,
     ammoRefreshRate: 0.05,
   };
   ammo = true;
-  ammoMax = 10;
+  ammoMax = 50;
   // Although it's an energy weapon, it uses a lot of energy. Let's treat it as ammo
   static present = () => {
     return `<p class='powerup-title'>Laser gun</p><p class='powerup-description'>Long range, low damage, classsic sci-fi.</p><hr/>`;
@@ -95,7 +96,7 @@ class LaserGunShot extends Base1 {
     this.decay = props.decay ?? 0.15;
     this.mass = props.mass ?? 0.0001;
     this.source = props.source ?? -1;
-    this.max = props.max ?? 2000;
+    this.maxRange = props.maxRange ?? 2000;
     this.moved = 0;
     this.kind = "kLaserGunShot";
   }

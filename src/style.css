@@ -168,7 +168,7 @@ canvas {
   position: absolute;
   z-index: 1000;
   width: 100%;
-  display: flex;
+  display: none;
   align-items: center;
   box-sizing: border-box;
   top: 0.2em;
@@ -228,8 +228,21 @@ canvas {
 }
 
 #primary-weapon-types {
-  padding: 0.5rem;
+  /*padding: 0.5rem;
+  margin-left: 0.5rem;*/
+  width: 3rem;
+  aspect-ratio: 1 / 1;
+  border-radius: 0.1rem;
+  border: 1px solid #ccc;
+  display: flex;
+  overflow: hidden;
   margin-left: 0.5rem;
+}
+
+#primary-weapon-types > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 #primary-weapon-ammo,
@@ -237,8 +250,57 @@ canvas {
   font-size: 80%;
 }
 #secondary-weapon-types {
-  padding: 0.5rem;
+  /*padding: 0.5rem;
+  margin-left: 0.5rem;*/
+  width: 3rem;
+  aspect-ratio: 1 / 1;
+  border-radius: 0.1rem;
+  border: 1px solid #ccc;
+  display: flex;
+  overflow: hidden;
   margin-left: 0.5rem;
+}
+
+#secondary-weapon-types > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+#shield-types {
+  /*padding: 0.5rem;
+  margin-left: 0.5rem;*/
+  width: 3rem;
+  aspect-ratio: 1 / 1;
+  border-radius: 0.1rem;
+  border: 1px solid #ccc;
+  display: flex;
+  overflow: hidden;
+  margin-left: 0.5rem;
+}
+
+#shield-types > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+#secondary-types {
+  /*padding: 0.5rem;
+  margin-left: 0.5rem;*/
+  width: 3rem;
+  aspect-ratio: 1 / 1;
+  border-radius: 0.1rem;
+  border: 1px solid #ccc;
+  display: flex;
+  overflow: hidden;
+  margin-left: 0.5rem;
+}
+
+#secondary-types > img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 #current-powerups-hud {

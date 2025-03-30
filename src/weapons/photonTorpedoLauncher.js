@@ -11,6 +11,7 @@ import { Flame } from "../base/flame.js";
 class PhotonTorpedoLauncher extends Gun {
   static kind = "kPhotonTorpedoLauncher"; // TODO make an object with these constants
   kind = PhotonTorpedoLauncher.kind;
+  glyph = "photontorpedo.png";
   firerate = 1000; // It's not really a rate and it is annoying me
   html = "Pt"; // Asterisk alignment
   ammo = true;

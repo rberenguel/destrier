@@ -14,6 +14,7 @@ class MassDriverGun extends Gun {
   firerate = 100;
   kind = "kMassDriverGun";
   static kind = "kMassDriverGun";
+  glyph = "massdriver.png";
   html = "Md"; // Dot
   static baseStats = {
     // Mass, no energy use really

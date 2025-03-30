@@ -746,10 +746,10 @@ app.ticker.add((delta) => {
     if (app.canvas.style.display != "block") {
       app.canvas.style.display = "block";
     }
-  } /* else {
-    pausemenuDiv.textContent = "";
-    app.canvas.style.display = "none";
-  }*/
+    document.getElementById("info").style.display = "flex";
+  } else {
+    document.getElementById("info").style.display = "none";
+  }
 
   if (currentState === states.kPaused) {
     if (diffFinishCountdown == 0) {

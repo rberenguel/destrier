@@ -12,6 +12,7 @@ const rnd = seededRnd(performance.now());
 class PlasmaGun extends Gun {
   static kind = "kPlasmaGun";
   kind = "kPlasmaGun";
+  glyph = "plasmagun.png";
   firerate = 50;
   html = "Pg";
   static baseStats = {

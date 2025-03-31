@@ -32,7 +32,6 @@ window.sampler = (note, duration = 0.5) => {
     return;
   }
   try {
-    console.log(note);
     sampler.triggerAttackRelease(note, duration);
   } catch (err) {
     console.error(err);

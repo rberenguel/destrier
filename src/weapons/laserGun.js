@@ -31,6 +31,7 @@ class LaserGun extends Gun {
     super({ ...props });
     this.stats = { ...this.constructor.baseStats };
     this.color = props.color ?? 0x00ccff;
+    this.maxRange = window.settings.weaponProps.maxRange.laserGun;
   }
 
   fire(shooter, bulletList) {
@@ -60,7 +61,7 @@ class LaserGun extends Gun {
       },
       r: shooter.r,
       e: this.stats.baseE,
-      maxRange: window.settings.weaponProps.maxRange.laserGun,
+      maxRange: this.maxRange,
       decay: window.settings.weaponProps.decay.laserGun,
       scale: shooter.scale,
       color: this.color,

@@ -538,7 +538,7 @@ const commands = [
   },
   {
     title: "To level",
-    inputs: [{ title: "Which?", default: "10" }],
+    inputs: [{ title: "Which?", default: "9" }],
     lambda: (lev) => {
       level = parseInt(lev);
       for (let a of spaceScene.asteroids) {

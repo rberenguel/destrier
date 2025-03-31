@@ -1,3 +1,7 @@
+# 0.9.2
+
+- Bug fixes
+
 # 0.9.1
 
 - Mobile controls and CSS

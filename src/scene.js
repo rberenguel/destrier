@@ -536,6 +536,8 @@ class SpaceScene extends Scene {
           const pe = this.player.e;
           this.player.e -= b.e;
           b.e -= pe;
+          const bnv = sqnorm(b.vel.x, b.vel.y) + 0.01;
+          const pnv = sqnorm(this.player.vel.x, this.player.vel.y) + 0.01;
           for (let i = 0; i < settings.explosions.player.hitFlame.count; i++) {
             const fl = new Flame({
               pos: {
@@ -543,10 +545,8 @@ class SpaceScene extends Scene {
                 y: b.pos.y,
               },
               vel: {
-                x:
-                  0.1 * b.vel.x - this.player.vel.x * (this.player.mass ?? 100),
-                y:
-                  0.1 * b.vel.y - this.player.vel.y * (this.player.mass ?? 100),
+                x: (250 * b.vel.x) / bnv - (0.4 * this.player.vel.x) / pnv,
+                y: (250 * b.vel.y) / bnv - (0.4 * this.player.vel.y) / pnv,
               },
               r: 0,
               e: 12,
@@ -648,8 +648,8 @@ class SpaceScene extends Scene {
                 },
                 vel: {
                   // Bullets move too fast otherwise
-                  x: (2 * b.vel.x) / bnv - (0.3 * o.vel.x) / onv,
-                  y: (2 * b.vel.y) / bnv - (0.3 * o.vel.y) / onv,
+                  x: (290 * b.vel.x) / bnv - (0.3 * o.vel.x) / onv,
+                  y: (290 * b.vel.y) / bnv - (0.3 * o.vel.y) / onv,
                 },
                 fill: 0xff0000,
                 r: 0,

@@ -298,59 +298,56 @@ const otherControl = (props = {}) => {
 
     if (
       Math.abs(normalizeAngle(shootingAngle - other.r + Math.PI)) < 0.3 &&
-      sdist < 0.8 * (other.weapons[0]?.stats?.maxRange ?? 1500)
+      sdist < 0.8 * (other.weapons[0]?.maxRange ?? 1500)
     ) {
       const now = performance.now();
-      if (now - other.prevshot < (other.weapons[0]?.fireRate ?? 100)) {
-        return;
-      }
-      if ((other.ammo?.[other.weapons[0]?.kind]?.count ?? 0) < 2) {
-        return;
-      }
-      other.prevshot = now;
-      if (other.weapons && other.weapons[0])
-        other.weapons[0].fire(other, bulletList);
-      if (other.weapons && other.weapons[1])
-        other.weapons[1].fire(other, bulletList);
+      const waitOver =
+        now - other.prevshot < (other.weapons[0]?.fireRate ?? 100);
+      const noAmmo = (other.ammo?.[other.weapons[0]?.kind]?.count ?? 0) < 2;
+      if (!waitOver && !noAmmo) {
+        other.prevshot = now;
+        if (other.weapons && other.weapons[0])
+          other.weapons[0].fire(other, bulletList);
+        if (other.weapons && other.weapons[1])
+          other.weapons[1].fire(other, bulletList);
 
-      // TODO tracking firerate should be internal of the weapon itself
-      if (sdist < 1000 && other.secondaryWeapons[0]) {
-        other.secondaryWeapons[0].fire(other, bulletList);
+        // TODO tracking firerate should be internal of the weapon itself
+        if (sdist < 1000 && other.secondaryWeapons[0]) {
+          other.secondaryWeapons[0].fire(other, bulletList);
+        }
       }
     }
     // TODO: crude assumption about forward and backward weapons
     if (
       Math.abs(normalizeAngle(shootingAngle - other.r + Math.PI)) < 0.3 &&
-      sdist < 0.8 * (other.weapons[2]?.stats?.maxRange ?? 1500)
+      sdist < 0.8 * (other.weapons[2]?.maxRange ?? 1500)
     ) {
       const now = performance.now();
-      if (now - other.prevshot < (other.weapons[2]?.fireRate ?? 100)) {
-        return;
+      const waitOver =
+        now - other.prevshot < (other.weapons[2]?.fireRate ?? 100);
+      const noAmmo = (other.ammo?.[other.weapons[2]?.kind]?.count ?? 0) < 2;
+      if (!waitOver && !noAmmo) {
+        if (other.weapons && other.weapons[2])
+          other.weapons[2].fire(other, bulletList);
+        if (other.weapons && other.weapons[3])
+          other.weapons[3].fire(other, bulletList);
       }
-      if ((other.ammo?.[other.weapons[2]?.kind]?.count ?? 0) < 2) {
-        return;
-      }
-      if (other.weapons && other.weapons[2])
-        other.weapons[2].fire(other, bulletList);
-      if (other.weapons && other.weapons[3])
-        other.weapons[3].fire(other, bulletList);
     }
     if (
       Math.abs(normalizeAngle(shootingAngle - other.r)) < 0.3 &&
-      sdist < 0.8 * (other.weapons[4]?.stats?.maxRange ?? 1500)
+      sdist < 0.8 * (other.weapons[4]?.maxRange ?? 1500)
     ) {
       const now = performance.now();
-      if (now - other.prevshot < (other.weapons[4]?.fireRate ?? 100)) {
-        return;
+      const waitOver =
+        now - other.prevshot < (other.weapons[4]?.fireRate ?? 100);
+      const noAmmo = (other.ammo?.[other.weapons[4]?.kind]?.count ?? 0) < 2;
+      if (!waitOver && !noAmmo) {
+        // Back weapons handling
+        if (other.weapons && other.weapons[4])
+          other.weapons[4].fire(other, bulletList);
+        if (other.weapons && other.weapons[5])
+          other.weapons[5].fire(other, bulletList);
       }
-      if ((other.ammo?.[other.weapons[4]?.kind]?.count ?? 0) < 2) {
-        return;
-      }
-      // Back weapons handling
-      if (other.weapons && other.weapons[4])
-        other.weapons[4].fire(other, bulletList);
-      if (other.weapons && other.weapons[5])
-        other.weapons[5].fire(other, bulletList);
     }
   }
 

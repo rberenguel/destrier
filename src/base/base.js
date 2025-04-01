@@ -18,6 +18,7 @@ class Base1 {
     this.e = props?.e ?? 0;
     this.mass = props?.mass ?? 1;
     this.meshes = props?.meshes;
+    this.scale = props?.scale ?? 1;
   }
 
   generate(unconditionally = false) {

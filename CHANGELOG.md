@@ -1,3 +1,8 @@
+# 0.9.3
+
+- Upscale bullets
+- Leading targeting (first order correction)
+
 # 0.9.2
 
 - Bug fixes

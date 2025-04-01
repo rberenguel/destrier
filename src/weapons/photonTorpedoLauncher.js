@@ -71,7 +71,7 @@ class PhotonTorpedoLauncher extends Gun {
       maxRange: window.settings.weaponProps.maxRange.photonTorpedo,
       color: this.color,
       haloColor: this.haloColor,
-      scale: shooter.scale,
+      scale: window.settings.weaponProps.scale.photonTorpedo * shooter.scale,
       source: this.source,
       flameList: shooter.flameList,
     });
@@ -178,7 +178,7 @@ class PhotonTorpedo extends Base1 {
         continue;
       }
       presentation.rotation = Math.random() * Math.PI * 2;
-
+      presentation.scale = this.scale;
       presentation.alpha = alpha;
     }
   }

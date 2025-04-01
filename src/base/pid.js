@@ -62,7 +62,7 @@ const otherControl = (props = {}) => {
   if (!other.yawPID) {
     other.yawPID = new PIDController(0.1, 0.01, 0.01, dt);
     other.thrustPID = new PIDController(0.05, 0.001, 0.0001, dt);
-    other.positionPID = new PIDController(0.01, 0.0, 0.0, dt);
+    other.positionPID = new PIDController(0.01, 0.0001, 0.0001, dt);
   }
 
   // --- Wrapped Distance Calculation to Target ---
@@ -277,6 +277,7 @@ const otherControl = (props = {}) => {
   if (ship) {
     // Ship targetting
     const shootingAngle = Math.atan2(
+      // With no correction
       other.pos.y - ship.pos.y,
       other.pos.x - ship.pos.x,
     );
@@ -296,8 +297,19 @@ const otherControl = (props = {}) => {
     }
     const sdist = Math.sqrt(sdx * sdx + sdy * sdy);
 
+    // --- First Order Correction for Leading Target ---
+    const predictionTime = sdist / (other.weapons[0]?.stats?.ACCEL || 100); // Estimate based on distance and projectile speed (using ACCEL as a proxy)
+    const predictedShipX = ship.pos.x + ship.vel.x * predictionTime;
+    const predictedShipY = ship.pos.y + ship.vel.y * predictionTime;
+
+    const correctedShootingAngle = Math.atan2(
+      other.pos.y - predictedShipY,
+      other.pos.x - predictedShipX,
+    );
+
     if (
-      Math.abs(normalizeAngle(shootingAngle - other.r + Math.PI)) < 0.3 &&
+      Math.abs(normalizeAngle(correctedShootingAngle - other.r + Math.PI)) <
+        0.3 &&
       sdist < 0.8 * (other.weapons[0]?.maxRange ?? 1500)
     ) {
       const now = performance.now();
@@ -319,7 +331,8 @@ const otherControl = (props = {}) => {
     }
     // TODO: crude assumption about forward and backward weapons
     if (
-      Math.abs(normalizeAngle(shootingAngle - other.r + Math.PI)) < 0.3 &&
+      Math.abs(normalizeAngle(correctedShootingAngle - other.r + Math.PI)) <
+        0.3 &&
       sdist < 0.8 * (other.weapons[2]?.maxRange ?? 1500)
     ) {
       const now = performance.now();
@@ -334,7 +347,7 @@ const otherControl = (props = {}) => {
       }
     }
     if (
-      Math.abs(normalizeAngle(shootingAngle - other.r)) < 0.3 &&
+      Math.abs(normalizeAngle(correctedShootingAngle - other.r)) < 0.3 &&
       sdist < 0.8 * (other.weapons[4]?.maxRange ?? 1500)
     ) {
       const now = performance.now();

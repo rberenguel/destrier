@@ -69,7 +69,7 @@ class MassDriverGun extends Gun {
       f: this.stats.f,
       decay: window.settings.weaponProps.decay.massDriver,
       mass: this.stats.mass,
-      scale: shooter.scale,
+      scale: window.settings.weaponProps.scale.massDriver * shooter.scale,
       source: this.source,
     });
     b.shooter = shooter;
@@ -151,6 +151,7 @@ class MassDriverBullet extends Base1 {
         return;
       }
       presentation.rotation = this.r;
+      presentation.scale = this.scale;
       presentation.tint = hexColor;
     }
   }

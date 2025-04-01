@@ -59,7 +59,7 @@ class PlasmaGun extends Gun {
       r: shooter.r,
       e: this.stats.baseE,
       decay: window.settings.weaponProps.decay.plasmaGun,
-      scale: shooter.scale,
+      scale: window.settings.weaponProps.scale.plasmaGun * shooter.scale,
       source: this.source,
     });
     b.shooter = shooter;
@@ -116,6 +116,7 @@ class PlasmaBullet extends Base1 {
         return;
       }
       presentation.rotation = this.r;
+      presentation.scale = this.scale;
       presentation.tint = hexColor;
     }
   }

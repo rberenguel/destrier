@@ -123,8 +123,8 @@ class Ship extends Base1 {
     const energyShots = ["kPlasmaBullet", "kLaserGunShot", "kPhotonTorpedo"];
     const massShots = ["kGaussCannonBullet", "kMassDriverBullet"];
     const shieldRadius = 130;
-    if(other.source === this._id){
-      return
+    if (other.source === this._id) {
+      return;
     }
     if (this.phaseShield > performance.now()) {
       return false;

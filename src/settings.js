@@ -158,6 +158,13 @@ const settings = {
       gaussCannon: undefined,
       missileLauncher: undefined,
     },
+    scale: {
+      plasmaGun: 1.5,
+      massDriver: 1.5,
+      gaussCannon: 2.0,
+      laserGun: 0.3,
+      photonTorpedo: 1.5,
+    },
   },
   shipProps: {
     baseAccel: 0.1,

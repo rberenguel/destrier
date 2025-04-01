@@ -1,6 +1,8 @@
 # 0.9.2
 
 - Bug fixes
+- Tweak controls to enable gamepads with axes
+- Better wait-for-player-awake
 
 # 0.9.1
 

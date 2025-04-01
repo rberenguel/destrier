@@ -47,15 +47,15 @@ if (
 let buttonMap = await get("buttonMap");
 
 const defaultPadControls = {
-  b15: "moveRight",
-  b14: "moveLeft",
-  b13: "moveUp",
-  b12: "moveDown",
-  b1: "shoot",
-  b2: "secondaryShoot",
-  b3: "shield",
-  b4: "activeAbility",
-  b9: "menu",
+  "a:2,v:1": "moveRight",
+  "a:2,v:-1": "moveLeft",
+  "a:5,v:-1": "moveUp",
+  "a:5,v:1": "moveDown",
+  "b:1": "shoot",
+  "b:3": "secondaryShoot",
+  "b:4": "shield",
+  "b:0": "activeAbility",
+  "b:12": "menu",
 };
 
 if (
@@ -83,6 +83,7 @@ const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
     desc.innerHTML =
       "Tap on the keys or buttons to customise them. The settings will persist in your browser's <code>LocalStorage</code>.";
     wrapper.classList.add("control-list-wrapper");
+    wrapper.appendChild(desc);
     const table = e("TABLE");
     wrapper.appendChild(table);
     const headerRow = e("tr");
@@ -91,7 +92,7 @@ const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
     const headerButton = e("th");
     const headerKey = e("th");
     headerAction.innerText = "Action";
-    headerButton.innerText = "Button";
+    headerButton.innerText = "Button/Axis";
     headerKey.innerText = "Key";
     headerRow.append(headerAction, headerKey, headerButton);
 
@@ -118,9 +119,12 @@ const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
       tdb.addEventListener("click", async (ev) => {
         tdb.innerText = "???";
         const nb = await getDeviceInput("gamepad");
-        tdb.innerText = `b${nb}`;
-        buttonMap[`b${nb}`] = action;
+        tdb.innerText = `${nb}`;
+        buttonMap[`${nb}`] = action;
         await set("buttonMap", buttonMap);
+        console.log(buttonMap);
+        const foo = await get("buttonMap");
+        console.log(foo);
         setTimeout(() => (menu.ignoresKeys = false), 100);
       });
       tda.innerText = commandNames[action];

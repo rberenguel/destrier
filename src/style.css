@@ -247,7 +247,9 @@ canvas {
 }
 
 #primary-weapon-ammo,
-#secondary-weapon-ammo {
+#secondary-weapon-ammo,
+#shield-energy,
+#secondary-energy {
   font-size: 80%;
 }
 #secondary-weapon-types {
@@ -570,6 +572,7 @@ canvas {
 
 .game-over {
   width: 70rem;
+  font-size: 120%;
 }
 
 /* Mobile media queries */
@@ -679,6 +682,10 @@ canvas {
   .changelog-content {
     height: 50vh;
     overflow: scroll;
+  }
+
+  .game-over {
+    width: 70rem;
   }
 }
 

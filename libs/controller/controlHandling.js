@@ -10,6 +10,8 @@ export {
 const keys = {};
 
 const controllers = [];
+const steadyStateAxes = [];
+
 const touchZoneHandler = (elt, kn) => {
   elt.addEventListener("mousedown", (ev) => {
     keys[kn] = true; // Mark the key as pressed
@@ -100,13 +102,6 @@ const bindKeyHandlers = () => {
   });
 };
 
-const buttonPressed = (b) => {
-  if (typeof b == "object") {
-    return b.pressed; // binary
-  }
-  return b > 0.9; // analog value
-};
-
 const logPads = () => {
   let gamepads = navigator.getGamepads();
   for (let i in controllers) {
@@ -126,6 +121,7 @@ const gamepadHandler = (event, connecting) => {
   let gamepad = event.gamepad;
   if (connecting) {
     controllers[gamepad.index] = gamepad;
+    steadyStateAxes[gamepad.index] = [...gamepad.axes];
     console.info("Controller added to list:");
     console.info(controllers);
   } else {
@@ -144,6 +140,9 @@ const getDeviceInput = async (kind) => {
   return input;
 };
 
+const formatAxis = (axis, val) => `a:${axis},v:${Math.floor(val).toFixed(0)}`;
+const formatButton = (b) => `b:${b}`;
+
 const _getDeviceInput = (kind) => {
   let gamepads = navigator.getGamepads();
   if (kind == "keyboard") {
@@ -160,7 +159,16 @@ const _getDeviceInput = (kind) => {
       if (controller.buttons) {
         for (let b = 0; b < controller.buttons.length; b++) {
           if (buttonPressed(controller.buttons[b])) {
-            return b;
+            return formatButton(b);
+          }
+        }
+      }
+      if (controller.axes) {
+        let axes = controller.axes;
+        for (let axis = 0; axis < axes.length; axis++) {
+          let val = controller.axes[axis];
+          if (val != steadyStateAxes[i][axis]) {
+            return formatAxis(axis, val);
           }
         }
       }
@@ -176,9 +184,24 @@ const resetKeys = () => {
   }
 };
 
+const buttonPressed = (b) => {
+  if (typeof b == "object") {
+    return b.pressed; // binary
+  }
+  return b > 0.9; // analog value
+};
+
+const axisActive = (idx, axis, measured, triggerVal) => {
+  if (
+    measured != steadyStateAxes[idx][axis] &&
+    Math.abs(measured - triggerVal) < 0.1
+  ) {
+    return true;
+  }
+};
+
 const handleControls = (gameActions, keyMap, buttonMap) => () => {
   let gamepads = navigator.getGamepads();
-
   if (controllers.length == 0) {
     for (let key in keyMap) {
       if (keys[key]) {
@@ -193,8 +216,18 @@ const handleControls = (gameActions, keyMap, buttonMap) => () => {
     if (controller.buttons) {
       const pressed = (b) => buttonPressed(controller.buttons[b]);
       for (let button in buttonMap) {
-        if (buttonPressed(controller.buttons[button.slice(1)])) {
-          gameActions[buttonMap[button]]?.();
+        if (button.startsWith("b")) {
+          if (buttonPressed(controller.buttons[button.slice(2)])) {
+            gameActions[buttonMap[button]]?.();
+          }
+        }
+        if (button.startsWith("a")) {
+          const parsed = button.split(",");
+          const axis = parseInt(parsed[0].slice(2));
+          const val = parseFloat(parsed[1].slice(2));
+          if (axisActive(i, axis, controller.axes[axis], val)) {
+            gameActions[buttonMap[button]]?.();
+          }
         }
       }
     }

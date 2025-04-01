@@ -73,13 +73,13 @@ class Asteroid extends Base1 {
   collision(other) {
     // TODO: This could be in Base, somehow?
     if (dist(other.pos, this.pos) < 0.99 * this.radius) {
-      return true;
+      return 1;
     }
     if (dist(other.pos, this.pos) < (other.radius ?? 1) + 0.99 * this.radius) {
       // For bombs
-      return true;
+      return 1;
     }
-    return false;
+    return 0; // This was for close collisions -Math.abs(dist(other.pos, this.pos) - 0.99 * this.radius)
   }
 
   transferMomentum(other) {
@@ -186,7 +186,11 @@ class Asteroid extends Base1 {
       presentation.rotation = this.r;
     }
     super.update(delta);
-    super.move(delta.deltaTime);
+    if (this.disabled > performance.now()) {
+      return;
+    } else {
+      super.move(delta.deltaTime);
+    }
   }
 
   explode() {

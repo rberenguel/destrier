@@ -325,6 +325,8 @@ class SpaceScene extends Scene {
         size: size,
         spin: spin,
       });
+      ast.disabled =
+        performance.now() + window.settings.shipProps.disabledDelay; // Use the exact same settings as ship disabled, yes
       this.asteroids.push(ast);
     }
   }
@@ -685,7 +687,19 @@ class SpaceScene extends Scene {
       if (a.e < 0) {
         continue;
       }
-      if (this.player.e > 0 && this.player.collision(a)) {
+      const collisioning = a.collision(this.player);
+      // Asteroid flyby text effect. Not convinced about this.
+      /*const triggered = a.textEffect ?? 0
+      if (collisioning < 0 && collisioning > -150 && performance.now() > triggered) {
+        triggerTextEffect(
+          "kFlyBy",
+          this.player.pos.x,
+          this.player.pos.y,
+          this.scale
+        );
+        a.triggered = performance.now() + 1000
+      }*/
+      if (this.player.e > 0 && collisioning === 1) {
         a.e = -1;
         this.player.killedBy = { id: "kAsteroid" };
         window.sampler("a6", 1.9); // Self explosion
@@ -832,6 +846,12 @@ function triggerTextEffect(kind, x_, y_, scale) {
   }
   if (kind === "kClose") {
     const options = ["Close", "Missed", "Almost", "Weeez"].sort(
+      () => Math.random() - 0.5,
+    );
+    text = options[0];
+  }
+  if (kind === "kFlyBy") {
+    const options = ["Close", "Almost", "Weeez"].sort(
       () => Math.random() - 0.5,
     );
     text = options[0];

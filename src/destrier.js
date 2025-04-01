@@ -316,8 +316,6 @@ await app.init({
 document.body.appendChild(app.canvas);
 app.canvas.style.display = "none";
 
-console.log(app.canvas);
-
 // Enable interactivity
 app.stage.eventMode = "static";
 app.renderer.view.tabIndex = -1;
@@ -443,10 +441,6 @@ window.settings.weaponProps.maxRange.missileLauncher = scalingFactor * 0.3;
 
 // Too low of a ship speed is a bit shitty
 
-console.log(
-  settings.mobile.dscaling(settings.shipProps.baseAccel, scalingFactor),
-);
-
 window.settings.shipProps.accel = Math.max(
   0.1, // This is doing nothing for now, tweaking
   settings.mobile.dscaling(settings.shipProps.baseAccel, scalingFactor),
@@ -459,7 +453,7 @@ window.settings.asteroidProps.v = settings.mobile.dscaling(
   scalingFactor,
 );
 
-console.log(
+console.info(
   window.settings.weaponProps,
   window.settings.shipProps,
   window.settings.asteroidProps,
@@ -473,11 +467,13 @@ console.info("Scene constructed");
 
 const scoreDiv = document.getElementById("score");
 
-const fullRestart = () => {
+const fullRestart = (tran = true) => {
   msgs.hide();
   resetPlayerPVA(player, app, scale, spaceScene, true);
   resetKeys();
-  transition(states.kInGame);
+  if (tran) {
+    transition(states.kInGame);
+  }
   for (let a of spaceScene.asteroids) {
     a.e = -1;
   }
@@ -575,8 +571,6 @@ metaP.maxCommands = 100;
 metaP.bind(commands);
 msgs.attach();
 
-let paused = false;
-
 const pauseMenu = () => {
   const statsTable = presentStats(player);
   const wrapper = document.createElement("DIV");
@@ -605,11 +599,18 @@ const pauseMenu = () => {
   backToMainMenu.addEventListener("click", () => {
     msgs.hide();
     transition(states.kShowingMainMenu);
-    fullRestart();
+    fullRestart(/*tran=*/ false);
   });
   backToMainMenu.classList.add("pause-button");
   backToMainMenu.textContent = "Back to the main menu";
+  // TODO add these settings once ready
+  /*const settings = document.createElement("DIV");
+  settings.style.cursor = "pointer";
+  settings.addEventListener("click", customControlsLambda);
+  settings.classList.add("pause-button");
+  settings.textContent = "Settings";*/
   wrapper.appendChild(backToGame);
+  //wrapper.appendChild(settings)
   wrapper.appendChild(backToMainMenu);
   msgs.div(wrapper);
   msgs.show({ glass: 1000, msgs: 1001 });
@@ -639,6 +640,13 @@ const playLambda = () => {
   diffFinishCountdown = 0;
 };
 
+const customControlsLambda = () => {
+  menuP.ignoreKeys();
+  msgs.div(controlsChanger());
+  msgs.show({ glass: 1001, msgs: 1002 });
+  transition(states.kSettingsMenu);
+};
+
 const mainMenuCommands = [
   {
     title: "Play",
@@ -646,12 +654,7 @@ const mainMenuCommands = [
   },
   {
     title: "Settings",
-    lambda: () => {
-      menuP.ignoreKeys();
-      msgs.div(controlsChanger());
-      msgs.show({ glass: 1001, msgs: 1002 });
-      transition(states.kSettingsMenu);
-    },
+    lambda: customControlsLambda,
   },
   {
     title: "About",
@@ -938,13 +941,11 @@ app.ticker.add((delta) => {
       div.style = "font-size: 2rem;";
 
       div.addEventListener("click", (e) => {
-        console.log("clicked");
         if (currentState === states.kBetweenLevels) {
           countdown = performance.now();
           // This does not transition, since this is handled further down
         }
       });
-      console.log(div);
       msgs.div(div);
       msgs.show();
     } else if (performance.now() >= countdown) {

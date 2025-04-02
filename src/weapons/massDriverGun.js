@@ -25,11 +25,15 @@ class MassDriverGun extends Gun {
   };
   ammo = true;
   ammoMax = 99;
-  static present = () => {
-    return `<p class='powerup-title'>Mass driver</p><p class='powerup-description'>Short range, short damage.</p><hr/>`;
+  static present = (oh = 1) => {
+    const oht =
+      oh > 1
+        ? `<p style="color: #c06;">Deals ${oh}x more damage at the expense of <b>self-damage when firing</b></p>`
+        : ``;
+    return `<p class='powerup-title'>Mass driver</p><p class='powerup-description'>Short range, short damage.</p>${oht}<hr/>`;
   };
   present() {
-    return MassDriverGun.present();
+    return MassDriverGun.present(this.overheat);
   }
   constructor(props) {
     super({ ...props });
@@ -51,8 +55,9 @@ class MassDriverGun extends Gun {
     const spread = -0.005 + 0.01 * rf;
     const ivx = Math.cos(shooter.r + spread);
     const ivy = Math.sin(shooter.r + spread);
-    const vx = this.stats.ACCEL * ivx + shooter.vel.x;
-    const vy = this.stats.ACCEL * ivy + shooter.vel.y;
+    const oh = this.overheat ?? 1;
+    const vx = this.stats.ACCEL * ivx * oh + shooter.vel.x;
+    const vy = this.stats.ACCEL * ivy * oh + shooter.vel.y;
     const [rpx, rpy] = rotate(this.pos.x, this.pos.y, shooter.r);
     const [rvx, rvy] = rotate(vx, vy, this.angleShift);
     const b = new MassDriverBullet({
@@ -67,10 +72,11 @@ class MassDriverGun extends Gun {
       r: shooter.r,
       e: this.stats.e,
       f: this.stats.f,
-      decay: window.settings.weaponProps.decay.massDriver,
+      decay: window.settings.weaponProps.decay.massDriver * this.overheat,
       mass: this.stats.mass,
       scale: window.settings.weaponProps.scale.massDriver * shooter.scale,
       source: this.source,
+      overheat: this.overheat,
     });
     b.shooter = shooter;
     b.firedBy = "kMassDriverGun";
@@ -90,7 +96,7 @@ class MassDriverBullet extends Base1 {
       center: [0, 0],
       radius: 7,
       color: 0xffffff,
-      fill: 0xffffff,
+      fill: props.overheat > 1 ? 0xff5555 : 0xffffff,
     });
     super({ ...props, meshes: [mesh] });
     this.f = props.f ?? 0.2; // Multiplying factor for energy

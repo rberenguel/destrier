@@ -178,6 +178,9 @@ const showHUDInfo = (player, spaceScene, level) => () => {
     containerActive.src = "src/media/glyphs/none.png";
   }
   containerPrimary.src = `src/media/glyphs/${primaryGlyph}`;
+  if (wa.overheat > 1) {
+    containerPrimary.classList.add("overheated");
+  }
 
   containerSecondary.src = `src/media/glyphs/${secondaryGlyph}`;
 

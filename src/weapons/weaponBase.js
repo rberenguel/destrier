@@ -14,11 +14,16 @@ class Gun {
     this.source = props.source ?? -1;
     this.color = props.color ?? 0xffcc00;
     this.angleShift = props.angleShift ?? 0;
+    this.overheat = props.overheat ?? 1;
+    this.overheatSelfDamage = props.overheatSelfDamage ?? 0;
   }
 
   fire(shooter, bulletList) {
     if (shooter.human) {
       shooter.stats.shots[this.kind].fired++;
+    }
+    if (this.overheat > 1) {
+      shooter.e -= this.overheatSelfDamage;
     }
     // Muzzle fire
     const [rpx, rpy] = rotate(

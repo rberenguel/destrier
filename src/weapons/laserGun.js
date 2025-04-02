@@ -21,11 +21,15 @@ class LaserGun extends Gun {
   ammo = true;
   ammoMax = 50;
   // Although it's an energy weapon, it uses a lot of energy. Let's treat it as ammo
-  static present = () => {
-    return `<p class='powerup-title'>Laser gun</p><p class='powerup-description'>Long range, low damage, classsic sci-fi.</p><hr/>`;
+  static present = (oh = 1) => {
+    const oht =
+      oh > 1
+        ? `<p style="color: #c06;">Deals ${oh}x more damage at the expense of <b>self-damage when firing</b></p>`
+        : ``;
+    return `<p class='powerup-title'>Laser gun</p><p class='powerup-description'>Long range, low damage, classsic sci-fi.</p>${oht}<hr/>`;
   };
   present() {
-    return LaserGun.present();
+    return PlasmaGun.present(this.overheat);
   }
   constructor(props) {
     super({ ...props });
@@ -60,12 +64,13 @@ class LaserGun extends Gun {
         y: vy,
       },
       r: shooter.r,
-      e: this.stats.baseE,
+      e: this.stats.baseE * this.overheat,
       maxRange: this.maxRange,
-      decay: window.settings.weaponProps.decay.laserGun,
+      decay: window.settings.weaponProps.decay.laserGun * this.overheat,
       scale: shooter.scale,
       color: this.color,
       source: this.source,
+      overheat: this.overheat,
     });
     b.shooter = shooter;
     b.firedBy = "kLaserGun";

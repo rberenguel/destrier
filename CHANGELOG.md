@@ -3,6 +3,7 @@
 - Upscale bullets
 - Leading targeting (first order correction)
 - Audio/screenshake settings
+- Some interesting powerup choices for weapons
 
 # 0.9.2
 

@@ -21,11 +21,15 @@ class PlasmaGun extends Gun {
     ACCEL: 40,
   };
   ammo = false;
-  static present = () => {
-    return `<p class='powerup-title'>Plasma gun</p><p class='powerup-description'>Medium range, medium damage.</p><hr/>`;
+  static present = (oh = 1) => {
+    const oht =
+      oh > 1
+        ? `<p style="color: #c06;">Deals ${oh}x more damage at the expense of <b>self-damage when firing</b></p>`
+        : ``;
+    return `<p class='powerup-title'>Plasma gun</p><p class='powerup-description'>Medium range, medium damage.</p>${oht}<hr/>`;
   };
   present() {
-    return PlasmaGun.present();
+    return PlasmaGun.present(this.overheat);
   }
   constructor(props) {
     super({ ...props });
@@ -57,10 +61,11 @@ class PlasmaGun extends Gun {
         y: vy,
       },
       r: shooter.r,
-      e: this.stats.baseE,
-      decay: window.settings.weaponProps.decay.plasmaGun,
+      e: this.stats.baseE * this.overheat,
+      decay: window.settings.weaponProps.decay.plasmaGun * this.overheat,
       scale: window.settings.weaponProps.scale.plasmaGun * shooter.scale,
       source: this.source,
+      overheat: this.overheat,
     });
     b.shooter = shooter;
     b.firedBy = "kPlasmaGun";
@@ -81,8 +86,7 @@ class PlasmaBullet extends Base1 {
         [-12, 0],
         [0, 7],
       ],
-      color: 0x00ffff,
-      fill: 0x00ffff,
+      fill: props.overheat > 1 ? 0xff5555 : 0x00ffff,
     });
     super({ ...props, meshes: [mesh] });
 
@@ -91,6 +95,7 @@ class PlasmaBullet extends Base1 {
     this.decay = props.decay ?? 0.15;
     this.mass = props.mass ?? 1;
     this.source = props.source ?? -1;
+    this.overheat = props.overheat;
   }
 
   generate() {
@@ -101,11 +106,20 @@ class PlasmaBullet extends Base1 {
     super.update(delta);
     super.move(delta.deltaTime);
     this.e -= 0.5 * (Math.random() * this.decay + this.decay);
+    let hexColor;
     const ne = Math.max(0, Math.min(1, this.e / this.initialE));
-    const red = Math.floor(255 * (1 - ne)); // Cools to red
-    const green = Math.floor(255 * ne);
-    const blue = Math.floor(255 * ne * ne);
-    const hexColor = (red << 16) | (green << 8) | blue;
+    if (this.overheat > 1) {
+      const red = Math.floor(255 * ne);
+      const green = Math.floor(255 * (1 - ne));
+      const blue = Math.floor(255 * (1 - ne) * ne);
+      hexColor = (red << 16) | (green << 8) | blue;
+    } else {
+      const red = Math.floor(255 * (1 - ne)); // Cools to red if not overheated
+      const green = Math.floor(255 * ne);
+      const blue = Math.floor(255 * ne * ne);
+      hexColor = (red << 16) | (green << 8) | blue;
+    }
+
     for (let presentation of this.presentations) {
       if (!presentation) {
         this.presentation = { destroyed: true };

@@ -331,6 +331,11 @@ canvas {
   transform: translate(0, round(nearest, -1rem, 1px));
 }
 
+.overheated {
+  border: 4px solid #c06 !important;
+  box-sizing: border-box;
+}
+
 #current-powerups-hud > div > img {
   width: 100%;
   height: 100%;
@@ -364,7 +369,7 @@ canvas {
 
 .powerup-replaces {
   font-size: 1.2rem;
-  color: red;
+  color: #c60;
   font-style: italic;
 }
 

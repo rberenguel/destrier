@@ -44,6 +44,9 @@ const currentPowerupsToDiv = (div, player, kind) => {
     d.appendChild(i);
     d.title = props[0].name;
     div.appendChild(d);
+    if (props[0].overheated) {
+      d.classList.add("overheated");
+    }
   }
   if (added == 0) {
     const d = document.createElement("DIV");
@@ -118,6 +121,8 @@ const offerChoices = (options = [], globals = {}) => {
   const currentPowerups = document.getElementById("current-powerups");
   currentPowerups.innerHTML = "";
 
+  console.log(options);
+
   currentPowerupsToDiv(currentPowerups, globals.player);
 
   const choiceElements = document.querySelectorAll(".powerup-choice");
@@ -137,6 +142,9 @@ const offerChoices = (options = [], globals = {}) => {
     const glyphElement = glyphElements[i];
     glyphElement.innerHTML = `<img src="src/media/glyphs/${option.glyph}"></img>`;
     const descriptionElement = descriptionElements[i];
+    if (option.overheated) {
+      glyphElement.classList.add("overheated");
+    }
     descriptionElement.innerHTML = option.description();
     // To avoid having a million powerups on the same one
     choiceElement.onclick = () => {
@@ -220,6 +228,46 @@ const allPowerUpChoices = (player) => [
     },
   },
   {
+    id: "kMassDriverGunOH",
+    name: "Overheated Mass Driver",
+    kind: "primary",
+    overheated: true,
+    description: () => {
+      const title = "<h2>Primary weapon (Overheated)</h2>";
+      const htmlA = MassDriverGun.present(2);
+      const htmlB = player.weapons[0].present();
+      return `${title} ${htmlA} ${replaces} ${htmlB}`;
+    },
+    glyph: "massdriver.png",
+    lambda: () => {
+      const massDriverGun1 = new MassDriverGun({
+        pos: {
+          x: -40,
+          y: 40,
+        },
+        overheat: 2,
+        overheatSelfDamage: 20,
+      });
+      const massDriverGun2 = new MassDriverGun({
+        pos: {
+          x: -40,
+          y: -40,
+        },
+        overheat: 2,
+        overheatSelfDamage: 20,
+      });
+
+      player.weapons = [massDriverGun1, massDriverGun2];
+      player.ammo[MassDriverGun.kind] = {};
+      player.ammo[MassDriverGun.kind].count = 99;
+      player.ammo[MassDriverGun.kind].max = massDriverGun1.ammoMax;
+      for (let w of player.weapons) {
+        w.source = player._id;
+      }
+      setWeaponPowerup(player, "kMassDriverGun");
+    },
+  },
+  {
     id: "kPlasmaGun",
     name: "Plasma gun",
     kind: "primary",
@@ -242,6 +290,44 @@ const allPowerUpChoices = (player) => [
           x: -40,
           y: -40,
         },
+      });
+
+      player.weapons = [plasmaGun1, plasmaGun2];
+
+      for (let w of player.weapons) {
+        w.source = player._id;
+      }
+      setWeaponPowerup(player, "kPlasmaGun");
+    },
+  },
+  {
+    id: "kPlasmaGunOH",
+    name: "Overheated Plasma gun",
+    kind: "primary",
+    overheated: true,
+    description: () => {
+      const title = "<h2>Primary weapon (Overheated)</h2>";
+      const htmlA = PlasmaGun.present(2);
+      const htmlB = player.weapons[0].present();
+      return `${title} ${htmlA} ${replaces} ${htmlB}`;
+    },
+    glyph: "plasmagun.png",
+    lambda: () => {
+      const plasmaGun1 = new PlasmaGun({
+        pos: {
+          x: -40,
+          y: 40,
+        },
+        overheat: 2,
+        overheatSelfDamage: 1.6,
+      });
+      const plasmaGun2 = new PlasmaGun({
+        pos: {
+          x: -40,
+          y: -40,
+        },
+        overheat: 2,
+        overheatSelfDamage: 1.6,
       });
 
       player.weapons = [plasmaGun1, plasmaGun2];
@@ -365,6 +451,47 @@ const allPowerUpChoices = (player) => [
       player.weapons = [laserGun1, laserGun2];
       player.ammo[LaserGun.kind] = {};
       player.ammo[LaserGun.kind].count = 10;
+      player.ammo[LaserGun.kind].max = laserGun1.ammoMax;
+      for (let w of player.weapons) {
+        w.source = player._id;
+      }
+      setWeaponPowerup(player, "kLaserGun");
+    },
+  },
+  {
+    id: "kLaserGunOH",
+    name: "Overheated Laser Gun",
+    kind: "primary",
+    overheated: true,
+    description: () => {
+      const title = "<h2>Primary weapon (Overheated)</h2>";
+      const htmlA = LaserGun.present(2);
+      const htmlB = player.weapons[0].present();
+      return `${title} ${htmlA} ${replaces} ${htmlB}`;
+    },
+    glyph: "lasergun.png",
+    lambda: () => {
+      const laserGun1 = new LaserGun({
+        pos: {
+          x: -40,
+          y: 40,
+        },
+        overheat: 2,
+        overheatSelfDamage: 10,
+        color: 0xff00ff,
+      });
+      const laserGun2 = new LaserGun({
+        pos: {
+          x: -40,
+          y: -40,
+        },
+        overheat: 2,
+        overheatSelfDamage: 10,
+        color: 0xff00ff,
+      });
+      player.weapons = [laserGun1, laserGun2];
+      player.ammo[LaserGun.kind] = {};
+      player.ammo[LaserGun.kind].count = 20;
       player.ammo[LaserGun.kind].max = laserGun1.ammoMax;
       for (let w of player.weapons) {
         w.source = player._id;

@@ -31,7 +31,7 @@ import {
   powerupControls,
   currentPowerUpsHud,
 } from "./powerups.js";
-import { SpaceScene } from "./scene.js";
+import { SpaceScene, triggerTextEffect } from "./scene.js";
 
 import { dropEmp } from "./weapons/empBlast.js";
 import { dropBomb } from "./weapons/bomb.js";
@@ -44,6 +44,7 @@ import {
 import { Intro } from "./intro.js";
 import { states, transitions } from "./states.js";
 import { get } from "../libs/3rdparty/idb-keyval.js";
+import { triggerFireworks } from "./fireworks.js";
 
 const globalCanvasScale = 0.95;
 
@@ -315,6 +316,7 @@ await app.init({
   antialias: true,
 }); // Ugh?
 
+app.canvas.id = "destrier";
 document.body.appendChild(app.canvas);
 app.canvas.style.display = "none";
 
@@ -533,6 +535,23 @@ const commands = [
     title: "Debug commands:",
     lambda: () => {},
     disabled: true,
+  },
+  {
+    title: "Fireworks!",
+    lambda: () => {
+      triggerFireworks(
+        app.renderer.width * Math.random(),
+        app.renderer.height * Math.random(),
+      );
+    },
+  },
+  {
+    title: "Remove enemies",
+    lambda: () => {
+      for (let o of spaceScene.otherShips) {
+        o.e = -1;
+      }
+    },
   },
   {
     title: "To level",
@@ -932,6 +951,15 @@ app.ticker.add((delta) => {
   if (spaceScene.otherShips.length === 0 && currentState === states.kInGame) {
     if (finishCountdown === 0) {
       finishCountdown = performance.now() + 10000;
+      if (level === 20) {
+        finishCountdown = performance.now() + 60000;
+        triggerTextEffect(
+          "kLvl20",
+          player.pos.x,
+          player.pos.y,
+          spaceScene.scale,
+        );
+      }
     } else if (performance.now() >= finishCountdown) {
       // Finish countdown has ended
       for (let a of spaceScene.asteroids) {
@@ -959,6 +987,16 @@ app.ticker.add((delta) => {
       }
       transition(states.kOfferPowerups);
     } else {
+      if (level === 20) {
+        if (performance.now() % 5 === 0) {
+          for (let i = 0; i < 8; i++) {
+            triggerFireworks(
+              app.renderer.width * Math.random(),
+              app.renderer.height * Math.random(),
+            );
+          }
+        }
+      }
       const remainingTime = Math.ceil(
         (finishCountdown - performance.now()) / 1000,
       ).toFixed(0); // Calculate remaining seconds

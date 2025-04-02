@@ -1,4 +1,4 @@
-export { Scene, SpaceScene };
+export { Scene, SpaceScene, triggerTextEffect };
 
 import { Viewframe, Wrapper } from "./base/viewframe.js";
 import { Starfield } from "./base/parallax.js";
@@ -20,6 +20,7 @@ import {
 } from "./weapons/weapons.js";
 import { settings } from "./settings.js";
 import { Panther } from "./base/panther.js";
+import { triggerFireworks } from "./fireworks.js";
 const rnd = seededRnd(performance.now());
 
 class Scene {
@@ -857,13 +858,22 @@ function triggerTextEffect(kind, x_, y_, scale) {
     text = options[0];
   }
   if (kind === "kLastShip") {
-    const options = ["Bye", "Booya", `Another one bites<br/>the dust`].sort(
-      () => Math.random() - 0.5,
-    );
+    const options = [
+      "Bye",
+      "Booya",
+      `Another one bites<br/>the dust`,
+      "Yay",
+    ].sort(() => Math.random() - 0.5);
     text = options[0];
   }
   if (kind === "kShipAsteroid") {
     const options = ["Loser", "Pow", "Crash", "Oopsie", "Oh no!"].sort(
+      () => Math.random() - 0.5,
+    );
+    text = options[0];
+  }
+  if (kind === "kLvl20") {
+    const options = [`You made it till<br/>the end!`, "Congratulations!"].sort(
       () => Math.random() - 0.5,
     );
     text = options[0];

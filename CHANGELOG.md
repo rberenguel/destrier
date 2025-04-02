@@ -4,6 +4,7 @@
 - Leading targeting (first order correction)
 - Audio/screenshake settings
 - Some interesting powerup choices for weapons
+- Something for level 20
 
 # 0.9.2
 

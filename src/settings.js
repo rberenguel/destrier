@@ -1,6 +1,14 @@
 export { settings };
 
+import { get } from "../libs/3rdparty/idb-keyval.js";
+
+const audioEnabled = (await get("audioEnabled")) || true;
+const screenShakeEnabled = (await get("screenShakeEnabled")) || true;
+
 const shake = (app, minShake = -2, angle = undefined) => {
+  if (!window.settings.screenShake) {
+    return;
+  }
   const maxShake = -minShake;
   let rx = 0;
   let ry = 0;
@@ -37,6 +45,8 @@ const isKinetic = (w) => {
 };
 
 const settings = {
+  audioEnabled: audioEnabled,
+  screenShakeEnabled: screenShakeEnabled,
   hull: {
     pctRecoveredPerAsteroid: 5,
   },

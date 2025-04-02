@@ -28,7 +28,7 @@ const sampler = new Tone.Sampler({
 }).toDestination();
 
 window.sampler = (note, duration = 0.5) => {
-  if (window.destrierAudioOff) {
+  if (!window.settings.audioEnabled) {
     return;
   }
   try {

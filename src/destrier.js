@@ -14,6 +14,7 @@ import {
 import { presentKeyMap, keyMap, buttonMap } from "./setupControls.js";
 
 import { VirtualPad } from "../libs/controller/virtualPad.js";
+import { set } from "../libs/3rdparty/idb-keyval.js";
 import { settings } from "./settings.js";
 import { getEncouragementMessage } from "./encouragement.js";
 import { enemiesPerLevel } from "./leveling.js";
@@ -42,6 +43,7 @@ import {
 } from "./player.js";
 import { Intro } from "./intro.js";
 import { states, transitions } from "./states.js";
+import { get } from "../libs/3rdparty/idb-keyval.js";
 
 const globalCanvasScale = 0.95;
 
@@ -640,9 +642,78 @@ const playLambda = () => {
   diffFinishCountdown = 0;
 };
 
-const customControlsLambda = () => {
+function createCheckbox(id, name, labelText, onChangeHandler, checked = false) {
+  // Create the checkbox input element
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.id = id;
+  checkbox.name = name;
+  console.log(checked);
+  checkbox.checked = checked;
+
+  // Attach the onchange event handler if provided
+  if (onChangeHandler && typeof onChangeHandler === "function") {
+    checkbox.addEventListener("change", onChangeHandler);
+  }
+
+  // Create the label element
+  const label = document.createElement("label");
+  label.setAttribute("for", id); // Associate the label with the checkbox
+  label.textContent = labelText;
+
+  // Create a container (optional, but often useful for layout)
+  const container = document.createElement("div");
+  container.appendChild(checkbox);
+  container.appendChild(label);
+
+  container.updateLabel = (newLabelText) => {
+    label.textContent = newLabelText;
+  };
+
+  return container; // Return the container holding the checkbox and label
+}
+
+const customControlsLambda = async () => {
   menuP.ignoreKeys();
-  msgs.div(controlsChanger());
+  const div = document.createElement("DIV");
+  const controls = controlsChanger();
+  const audioEnabledFlag = window.settings.audioEnabled;
+  const labelTextAudio = `Audio ${audioEnabledFlag ? "enabled" : "disabled"}`;
+  const audioEnabled = createCheckbox(
+    "audio-enabled",
+    "audio-enabled",
+    labelTextAudio,
+    async (ev) => {
+      settings.audioEnabled = ev.target.checked;
+      await set("audioEnabled", ev.target.checked);
+      const newText = `Audio ${(await get("audioEnabled")) ? "enabled" : "disabled"}`;
+      console.info(newText);
+      ev.target.parentElement.updateLabel(newText);
+    },
+    window.settings.audioEnabled,
+  );
+  audioEnabled.classList.add("settings-checkbox");
+  const screenShakeEnabledFlag = window.settings.audioEnabled;
+  const labelTextShake = `Screenshake ${screenShakeEnabledFlag ? "enabled" : "disabled"}`;
+  const screenShakeEnabled = createCheckbox(
+    "screenshake-enabled",
+    "screenshake-enabled",
+    labelTextShake,
+    async (ev) => {
+      settings.screenShakeEnabled = ev.target.checked;
+      await set("screenShakeEnabled", ev.target.checked);
+      const newText = `Screenshake ${(await get("screenShakeEnabled")) ? "enabled" : "disabled"}`;
+      console.info(newText);
+      ev.target.parentElement.updateLabel(newText);
+    },
+    window.settings.screenShakeEnabled,
+  );
+  screenShakeEnabled.classList.add("settings-checkbox");
+  div.appendChild(audioEnabled);
+  div.appendChild(screenShakeEnabled);
+  div.appendChild(document.createElement("HR"));
+  div.appendChild(controls);
+  msgs.div(div);
   msgs.show({ glass: 1001, msgs: 1002 });
   transition(states.kSettingsMenu);
 };

@@ -492,6 +492,31 @@ canvas {
   border-right: 1px solid #cc0;
 }
 
+.settings-checkbox {
+  font-size: 110%;
+  text-align: left;
+  margin-left: 10em;
+}
+
+.settings-checkbox > input {
+  width: 1.5em;
+  height: 1.5em;
+  vertical-align: middle;
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: black;
+  border: 1px solid #ccc;
+  border-radius: 0.2em;
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  margin-right: 2em;
+}
+
+.settings-checkbox > input:checked {
+  background-color: #6c0;
+}
+
 #effectText {
   position: absolute;
   font-size: 1em;

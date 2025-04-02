@@ -2,6 +2,7 @@
 
 - Upscale bullets
 - Leading targeting (first order correction)
+- Audio/screenshake settings
 
 # 0.9.2
 

@@ -29,7 +29,7 @@ class LaserGun extends Gun {
     return `<p class='powerup-title'>Laser gun</p><p class='powerup-description'>Long range, low damage, classsic sci-fi.</p>${oht}<hr/>`;
   };
   present() {
-    return PlasmaGun.present(this.overheat);
+    return LaserGun.present(this.overheat);
   }
   constructor(props) {
     super({ ...props });

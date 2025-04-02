@@ -336,6 +336,11 @@ canvas {
   box-sizing: border-box;
 }
 
+.defective {
+  border: 4px solid #c06 !important;
+  box-sizing: border-box;
+}
+
 #current-powerups-hud > div > img {
   width: 100%;
   height: 100%;

@@ -46,6 +46,13 @@ const currentPowerupsToDiv = (div, player, kind) => {
     div.appendChild(d);
     if (props[0].overheated) {
       d.classList.add("overheated");
+    } else {
+      d.classList.remove("overheated");
+    }
+    if (props[0].defective) {
+      d.classList.add("defective");
+    } else {
+      d.classList.remove("defective");
     }
   }
   if (added == 0) {
@@ -144,6 +151,13 @@ const offerChoices = (options = [], globals = {}) => {
     const descriptionElement = descriptionElements[i];
     if (option.overheated) {
       glyphElement.classList.add("overheated");
+    } else {
+      glyphElement.classList.remove("overheated");
+    }
+    if (option.defective) {
+      glyphElement.classList.add("defective");
+    } else {
+      glyphElement.classList.remove("defective");
     }
     descriptionElement.innerHTML = option.description();
     // To avoid having a million powerups on the same one
@@ -264,7 +278,7 @@ const allPowerUpChoices = (player) => [
       for (let w of player.weapons) {
         w.source = player._id;
       }
-      setWeaponPowerup(player, "kMassDriverGun");
+      setWeaponPowerup(player, "kMassDriverGunOH");
     },
   },
   {
@@ -335,7 +349,7 @@ const allPowerUpChoices = (player) => [
       for (let w of player.weapons) {
         w.source = player._id;
       }
-      setWeaponPowerup(player, "kPlasmaGun");
+      setWeaponPowerup(player, "kPlasmaGunOH");
     },
   },
   {
@@ -496,7 +510,7 @@ const allPowerUpChoices = (player) => [
       for (let w of player.weapons) {
         w.source = player._id;
       }
-      setWeaponPowerup(player, "kLaserGun");
+      setWeaponPowerup(player, "kLaserGunOH");
     },
   },
   {
@@ -539,6 +553,20 @@ const allPowerUpChoices = (player) => [
     },
   },
   {
+    id: "kFasterRotationD",
+    name: "Defective rotation",
+    defective: true,
+    kind: "passive",
+    description: () => {
+      const title = "<h2>Passive ability</h2>";
+      return `${title}<p class='powerup-title'>Slower rotation</p>Rotate slower. Does not accumulate.`;
+    },
+    glyph: "rotatefaster.png",
+    lambda: () => {
+      player.yawRate = 0.02;
+    },
+  },
+  {
     id: "kFasterAcceleration",
     name: "Faster acceleration",
     kind: "passive",
@@ -549,6 +577,20 @@ const allPowerUpChoices = (player) => [
     glyph: "speedup.png",
     lambda: () => {
       player.accel = window.settings.shipProps.accel * 2;
+    },
+  },
+  {
+    id: "kFasterAccelerationD",
+    name: "Slower acceleration",
+    defective: true,
+    kind: "passive",
+    description: () => {
+      const title = "<h2>Passive ability</h2>";
+      return `${title}<p class='powerup-title'>Slower acceleration</p>Accelerate slower. Does not accumulate.`;
+    },
+    glyph: "speedup.png",
+    lambda: () => {
+      player.accel = window.settings.shipProps.accel * 0.7;
     },
   },
   {
@@ -565,6 +607,20 @@ const allPowerUpChoices = (player) => [
     },
   },
   {
+    id: "kExtraAmmoD",
+    name: "Less ammunition/energy",
+    kind: "passive",
+    defective: true,
+    description: () => {
+      const title = "<h2>Passive ability</h2>";
+      return `${title}<p class='powerup-title'>Less ammunition/energy</p>x0.75 your storage. Does not accumulate.`;
+    },
+    glyph: "extraammo.png",
+    lambda: () => {
+      player.extraAmmo = 0.75;
+    },
+  },
+  {
     id: "kExtraHull",
     name: "10% more hull",
     kind: "passive",
@@ -575,7 +631,20 @@ const allPowerUpChoices = (player) => [
     glyph: "extrahull.png",
     lambda: () => {
       player.maxE = 1650;
-      player.e = 1650;
+    },
+  },
+  {
+    id: "kExtraHullD",
+    name: "10% less hull",
+    kind: "passive",
+    defective: true,
+    description: () => {
+      const title = "<h2>Passive ability</h2>";
+      return `${title}<p class='powerup-title'>Less hull</p>10% less hull. Does not accumulate.`;
+    },
+    glyph: "extrahull.png",
+    lambda: () => {
+      player.maxE = 1350;
     },
   },
 ];

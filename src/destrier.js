@@ -917,7 +917,7 @@ app.ticker.add((delta) => {
     menuController();
     return;
   }
-  if (player.lives <= 0 && currentState === states.kInGame) {
+  if (player.e <= 0 && currentState === states.kInGame) {
     transition(states.kGameOver);
     const div = document.createElement("DIV");
     div.classList.add("game-over");

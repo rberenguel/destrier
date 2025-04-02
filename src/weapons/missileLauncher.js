@@ -15,7 +15,7 @@ class MissileLauncher extends Gun {
   firerate = 1000; // It's not really a rate and it is annoying me
   html = "Mi"; // Asterisk alignment
   ammo = true;
-  ammoMax = 1;
+  ammoMax = 1.4;
   static baseStats = {
     // Energy, no mass usage really
     baseE: 1010,

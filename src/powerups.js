@@ -260,7 +260,7 @@ const allPowerUpChoices = (player) => [
           y: 40,
         },
         overheat: 2,
-        overheatSelfDamage: 20,
+        overheatSelfDamage: 10,
       });
       const massDriverGun2 = new MassDriverGun({
         pos: {
@@ -491,7 +491,7 @@ const allPowerUpChoices = (player) => [
           y: 40,
         },
         overheat: 2,
-        overheatSelfDamage: 10,
+        overheatSelfDamage: 8,
         color: 0xff00ff,
       });
       const laserGun2 = new LaserGun({

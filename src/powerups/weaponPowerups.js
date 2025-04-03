@@ -235,7 +235,7 @@ const primaryWeaponPowerups = {
             y: 40,
           },
           overheat: 2,
-          overheatSelfDamage: 6,
+          overheatSelfDamage: 4,
           color: 0xff00ff,
         });
         const laserGun2 = new LaserGun({
@@ -244,7 +244,7 @@ const primaryWeaponPowerups = {
             y: -40,
           },
           overheat: 2,
-          overheatSelfDamage: 6,
+          overheatSelfDamage: 4,
           color: 0xff00ff,
         });
         player.weapons = [laserGun1, laserGun2];

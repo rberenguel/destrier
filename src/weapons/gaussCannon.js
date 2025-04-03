@@ -11,7 +11,7 @@ class GaussCannon extends Gun {
   kind = "kGaussCannon"; // TODO make an object with these constants
   static kind = "kGaussCannon"; // TODO make an object with these constants
   glyph = "gausscannon.png";
-  firerate = 1000;
+  firerate = 100; // More fun if more often
   html = "Gc"; // Fisheye
   static baseStats = {
     mass: 5,

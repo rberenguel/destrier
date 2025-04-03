@@ -19,6 +19,13 @@ import {
   MissileLauncher,
 } from "./weapons/weapons.js";
 
+import { settings } from "./settings.js";
+import {
+  primaryWeaponPowerups,
+  secondaryWeaponPowerups,
+} from "./powerups/weaponPowerups.js";
+import { passivePowerups } from "./powerups/passivePowerups.js";
+
 const glass = document.getElementById("glass");
 
 const currentPowerupsToDiv = (div, player, kind) => {
@@ -195,447 +202,25 @@ const setSecondaryWeaponPowerup = (player, weapon) => {
 const replaces = `<h3 class="powerup-replaces">replaces</h3>`;
 
 const allPowerUpChoices = (player) => [
-  {
-    id: "kMassDriverGun",
-    name: "Mass Driver",
-    kind: "primary",
-    description: () => {
-      const title = "<h2>Primary weapon</h2>";
-      const htmlA = MassDriverGun.present();
-      const htmlB = player.weapons[0].present();
-      return `${title} ${htmlA} ${replaces} ${htmlB}`;
-    },
-    glyph: "massdriver.png",
-    lambda: () => {
-      const massDriverGun1 = new MassDriverGun({
-        pos: {
-          x: -40,
-          y: 40,
-        },
-      });
-      const massDriverGun2 = new MassDriverGun({
-        pos: {
-          x: -40,
-          y: -40,
-        },
-      });
-
-      player.weapons = [massDriverGun1, massDriverGun2];
-      player.ammo[MassDriverGun.kind] = {};
-      player.ammo[MassDriverGun.kind].count = 99;
-      player.ammo[MassDriverGun.kind].max = massDriverGun1.ammoMax;
-      for (let w of player.weapons) {
-        w.source = player._id;
-      }
-      setWeaponPowerup(player, "kMassDriverGun");
-    },
-  },
-  {
-    id: "kMassDriverGunOH",
-    name: "Overheated Mass Driver",
-    kind: "primary",
-    overheated: true,
-    description: () => {
-      const title = "<h2>Primary weapon (Overheated)</h2>";
-      const htmlA = MassDriverGun.present(2);
-      const htmlB = player.weapons[0].present();
-      return `${title} ${htmlA} ${replaces} ${htmlB}`;
-    },
-    glyph: "massdriver.png",
-    lambda: () => {
-      const massDriverGun1 = new MassDriverGun({
-        pos: {
-          x: -40,
-          y: 40,
-        },
-        overheat: 2,
-        overheatSelfDamage: 10,
-      });
-      const massDriverGun2 = new MassDriverGun({
-        pos: {
-          x: -40,
-          y: -40,
-        },
-        overheat: 2,
-        overheatSelfDamage: 20,
-      });
-
-      player.weapons = [massDriverGun1, massDriverGun2];
-      player.ammo[MassDriverGun.kind] = {};
-      player.ammo[MassDriverGun.kind].count = 99;
-      player.ammo[MassDriverGun.kind].max = massDriverGun1.ammoMax;
-      for (let w of player.weapons) {
-        w.source = player._id;
-      }
-      setWeaponPowerup(player, "kMassDriverGunOH");
-    },
-  },
-  {
-    id: "kPlasmaGun",
-    name: "Plasma gun",
-    kind: "primary",
-    description: () => {
-      const title = "<h2>Primary weapon</h2>";
-      const htmlA = PlasmaGun.present();
-      const htmlB = player.weapons[0].present();
-      return `${title} ${htmlA} ${replaces} ${htmlB}`;
-    },
-    glyph: "plasmagun.png",
-    lambda: () => {
-      const plasmaGun1 = new PlasmaGun({
-        pos: {
-          x: -40,
-          y: 40,
-        },
-      });
-      const plasmaGun2 = new PlasmaGun({
-        pos: {
-          x: -40,
-          y: -40,
-        },
-      });
-
-      player.weapons = [plasmaGun1, plasmaGun2];
-
-      for (let w of player.weapons) {
-        w.source = player._id;
-      }
-      setWeaponPowerup(player, "kPlasmaGun");
-    },
-  },
-  {
-    id: "kPlasmaGunOH",
-    name: "Overheated Plasma gun",
-    kind: "primary",
-    overheated: true,
-    description: () => {
-      const title = "<h2>Primary weapon (Overheated)</h2>";
-      const htmlA = PlasmaGun.present(2);
-      const htmlB = player.weapons[0].present();
-      return `${title} ${htmlA} ${replaces} ${htmlB}`;
-    },
-    glyph: "plasmagun.png",
-    lambda: () => {
-      const plasmaGun1 = new PlasmaGun({
-        pos: {
-          x: -40,
-          y: 40,
-        },
-        overheat: 2,
-        overheatSelfDamage: 1.6,
-      });
-      const plasmaGun2 = new PlasmaGun({
-        pos: {
-          x: -40,
-          y: -40,
-        },
-        overheat: 2,
-        overheatSelfDamage: 1.6,
-      });
-
-      player.weapons = [plasmaGun1, plasmaGun2];
-
-      for (let w of player.weapons) {
-        w.source = player._id;
-      }
-      setWeaponPowerup(player, "kPlasmaGunOH");
-    },
-  },
-  {
-    id: "kGaussCannon",
-    name: "Gauss Cannon",
-    kind: "secondary",
-    description: () => {
-      const title = "<h2>Secondary weapon</h2>";
-      const htmlA = GaussCannon.present();
-      const htmlB = player.secondaryWeapons[0].present();
-      return `${title} ${htmlA} ${replaces} ${htmlB}`;
-    },
-    glyph: "gausscannon.png",
-    lambda: () => {
-      const railGun = new GaussCannon({
-        pos: {
-          x: 0,
-          y: 0,
-        },
-      });
-      player.secondaryWeapons = [railGun];
-      player.ammo[GaussCannon.kind] = {};
-      player.ammo[GaussCannon.kind].count = 2;
-      player.ammo[GaussCannon.kind].max = 2;
-      for (let w of player.secondaryWeapons) {
-        w.source = player._id;
-      }
-      setSecondaryWeaponPowerup(player, "kGaussCannon");
-    },
-  },
-  {
-    id: "kPhotonTorpedoLauncher",
-    name: "Photon torpedo launcher",
-    kind: "secondary",
-    description: () => {
-      const title = "<h2>Secondary weapon</h2>";
-      const htmlA = PhotonTorpedoLauncher.present();
-      const htmlB = player.secondaryWeapons[0].present();
-      return `${title} ${htmlA} ${replaces} ${htmlB}`;
-    },
-    glyph: "photontorpedo.png",
-    lambda: () => {
-      const torpedo = new PhotonTorpedoLauncher({
-        pos: {
-          x: 0,
-          y: 0,
-        },
-        color: 0x00ddff,
-        haloColor: 0x11ddff,
-      });
-      player.secondaryWeapons = [torpedo];
-      player.ammo[PhotonTorpedoLauncher.kind] = {};
-      player.ammo[PhotonTorpedoLauncher.kind].count = 2;
-      player.ammo[PhotonTorpedoLauncher.kind].max = 2;
-      for (let w of player.secondaryWeapons) {
-        w.source = player._id;
-      }
-      setSecondaryWeaponPowerup(player, "kPhotonTorpedoLauncher");
-    },
-  },
-  {
-    id: "kMissileLauncher",
-    name: "Missile launcher",
-    kind: "secondary",
-    description: () => {
-      const title = "<h2>Secondary weapon</h2>";
-      const htmlA = MissileLauncher.present();
-      const htmlB = player.secondaryWeapons[0].present();
-      return `${title} ${htmlA} ${replaces} ${htmlB}`;
-    },
-    glyph: "missiles.png",
-    lambda: () => {
-      const torpedo = new MissileLauncher({
-        pos: {
-          x: 0,
-          y: 0,
-        },
-      });
-      player.secondaryWeapons = [torpedo];
-      player.ammo[MissileLauncher.kind] = {};
-      player.ammo[MissileLauncher.kind].count = 2;
-      player.ammo[MissileLauncher.kind].max = 2;
-      for (let w of player.secondaryWeapons) {
-        w.source = player._id;
-      }
-      setSecondaryWeaponPowerup(player, "kMissileLauncher");
-    },
-  },
-  {
-    id: "kLaserGun",
-    name: "Laser Gun",
-    kind: "primary",
-    description: () => {
-      const title = "<h2>Primary weapon</h2>";
-      const htmlA = LaserGun.present();
-      const htmlB = player.weapons[0].present();
-      return `${title} ${htmlA} ${replaces} ${htmlB}`;
-    },
-    glyph: "lasergun.png",
-    lambda: () => {
-      const laserGun1 = new LaserGun({
-        pos: {
-          x: -40,
-          y: 40,
-        },
-      });
-      const laserGun2 = new LaserGun({
-        pos: {
-          x: -40,
-          y: -40,
-        },
-      });
-      player.weapons = [laserGun1, laserGun2];
-      player.ammo[LaserGun.kind] = {};
-      player.ammo[LaserGun.kind].count = 10;
-      player.ammo[LaserGun.kind].max = laserGun1.ammoMax;
-      for (let w of player.weapons) {
-        w.source = player._id;
-      }
-      setWeaponPowerup(player, "kLaserGun");
-    },
-  },
-  {
-    id: "kLaserGunOH",
-    name: "Overheated Laser Gun",
-    kind: "primary",
-    overheated: true,
-    description: () => {
-      const title = "<h2>Primary weapon (Overheated)</h2>";
-      const htmlA = LaserGun.present(2);
-      const htmlB = player.weapons[0].present();
-      return `${title} ${htmlA} ${replaces} ${htmlB}`;
-    },
-    glyph: "lasergun.png",
-    lambda: () => {
-      const laserGun1 = new LaserGun({
-        pos: {
-          x: -40,
-          y: 40,
-        },
-        overheat: 2,
-        overheatSelfDamage: 8,
-        color: 0xff00ff,
-      });
-      const laserGun2 = new LaserGun({
-        pos: {
-          x: -40,
-          y: -40,
-        },
-        overheat: 2,
-        overheatSelfDamage: 10,
-        color: 0xff00ff,
-      });
-      player.weapons = [laserGun1, laserGun2];
-      player.ammo[LaserGun.kind] = {};
-      player.ammo[LaserGun.kind].count = 20;
-      player.ammo[LaserGun.kind].max = laserGun1.ammoMax;
-      for (let w of player.weapons) {
-        w.source = player._id;
-      }
-      setWeaponPowerup(player, "kLaserGunOH");
-    },
-  },
-  {
-    id: "kEmergencyBrakes",
-    name: "Emergency brakes",
-    kind: "passive",
-    description: () => {
-      const title = "<h2>Passive utility</h2>";
-      return `${title}<p class='powerup-title'>Emergency brakes</p> Accelerate in the opposite direction of your travel to brake immediately.`;
-    },
-    glyph: "emergencybrakes.png",
-    lambda: () => {
-      player.emergencyBrakes = true;
-    },
-  },
-  {
-    id: "kPointSight",
-    name: "Point sight",
-    kind: "passive",
-    description: () => {
-      const title = "<h2>Passive utility</h2>";
-      return `${title}<p class='powerup-title'>Point sight</p> Show an overlay of where you are aiming at. Particularly useful for long range weapons`;
-    },
-    glyph: "pointsight.png",
-    lambda: () => {
-      player.pointSight = true;
-    },
-  },
-  {
-    id: "kFasterRotation",
-    name: "Faster rotation",
-    kind: "passive",
-    description: () => {
-      const title = "<h2>Passive ability</h2>";
-      return `${title}<p class='powerup-title'>Faster rotation</p>Rotate faster. Does not accumulate.`;
-    },
-    glyph: "rotatefaster.png",
-    lambda: () => {
-      player.yawRate = 0.05;
-    },
-  },
-  {
-    id: "kFasterRotationD",
-    name: "Defective rotation",
-    defective: true,
-    kind: "passive",
-    description: () => {
-      const title = "<h2>Passive ability</h2>";
-      return `${title}<p class='powerup-title'>Slower rotation</p>Rotate slower. Does not accumulate.`;
-    },
-    glyph: "rotatefaster.png",
-    lambda: () => {
-      player.yawRate = 0.02;
-    },
-  },
-  {
-    id: "kFasterAcceleration",
-    name: "Faster acceleration",
-    kind: "passive",
-    description: () => {
-      const title = "<h2>Passive ability</h2>";
-      return `${title}<p class='powerup-title'>Faster acceleration</p>Accelerate faster. Does not accumulate.`;
-    },
-    glyph: "speedup.png",
-    lambda: () => {
-      player.accel = window.settings.shipProps.accel * 2;
-    },
-  },
-  {
-    id: "kFasterAccelerationD",
-    name: "Slower acceleration",
-    defective: true,
-    kind: "passive",
-    description: () => {
-      const title = "<h2>Passive ability</h2>";
-      return `${title}<p class='powerup-title'>Slower acceleration</p>Accelerate slower. Does not accumulate.`;
-    },
-    glyph: "speedup.png",
-    lambda: () => {
-      player.accel = window.settings.shipProps.accel * 0.7;
-    },
-  },
-  {
-    id: "kExtraAmmo",
-    name: "Additional ammunition/energy",
-    kind: "passive",
-    description: () => {
-      const title = "<h2>Passive ability</h2>";
-      return `${title}<p class='powerup-title'>Additional ammunition/energy</p>x1.5 your storage. Does not accumulate.`;
-    },
-    glyph: "extraammo.png",
-    lambda: () => {
-      player.extraAmmo = 1.5;
-    },
-  },
-  {
-    id: "kExtraAmmoD",
-    name: "Less ammunition/energy",
-    kind: "passive",
-    defective: true,
-    description: () => {
-      const title = "<h2>Passive ability</h2>";
-      return `${title}<p class='powerup-title'>Less ammunition/energy</p>x0.75 your storage. Does not accumulate.`;
-    },
-    glyph: "extraammo.png",
-    lambda: () => {
-      player.extraAmmo = 0.75;
-    },
-  },
-  {
-    id: "kExtraHull",
-    name: "10% more hull",
-    kind: "passive",
-    description: () => {
-      const title = "<h2>Passive ability</h2>";
-      return `${title}<p class='powerup-title'>More hull</p>10% more hull. Does not accumulate.`;
-    },
-    glyph: "extrahull.png",
-    lambda: () => {
-      player.maxE = 1650;
-    },
-  },
-  {
-    id: "kExtraHullD",
-    name: "10% less hull",
-    kind: "passive",
-    defective: true,
-    description: () => {
-      const title = "<h2>Passive ability</h2>";
-      return `${title}<p class='powerup-title'>Less hull</p>10% less hull. Does not accumulate.`;
-    },
-    glyph: "extrahull.png",
-    lambda: () => {
-      player.maxE = 1350;
-    },
-  },
+  primaryWeaponPowerups.kMassDriverGun(player),
+  primaryWeaponPowerups.kMassDriverGunOH(player),
+  primaryWeaponPowerups.kLaserGun(player),
+  primaryWeaponPowerups.kLaserGunOH(player),
+  primaryWeaponPowerups.kPlasmaGun(player),
+  primaryWeaponPowerups.kPlasmaGunOH(player),
+  secondaryWeaponPowerups.kGaussCannon(player),
+  secondaryWeaponPowerups.kPhotonTorpedoLauncher(player),
+  secondaryWeaponPowerups.kMissileLauncher(player),
+  passivePowerups.kEmergencyBrakes(player),
+  passivePowerups.kPointSight(player),
+  passivePowerups.kFasterRotation(player),
+  passivePowerups.kFasterRotationD(player),
+  passivePowerups.kFasterAcceleration(player),
+  passivePowerups.kFasterAccelerationD(player),
+  passivePowerups.kExtraAmmo(player),
+  passivePowerups.kExtraAmmoD(player),
+  passivePowerups.kExtraHull(player),
+  passivePowerups.kExtraHullD(player),
 ];
 
 const shieldPowerups = (player) => [
@@ -765,16 +350,13 @@ const superPowerups = (player) => [
 ];
 
 const shieldDescs = {
-  kDeflectorShield:
-    "<p class='powerup-title'>Deflector shield</p><hr/>Deflects strongly kinetic weapons for 3 seconds, affects mildly energy weapons.<br/><em>You can't fire your secondary weapon while the shield is on</em>",
-  kEnergyShield:
-    "<p class='powerup-title'>Energy shield</p><hr/>Stops completely energy weapons for 3 seconds, no effect on kinetic weapons.<br/><em>You can't fire your secondary weapon while the shield is on</em>",
-  kPhaseShield:
-    "<p class='powerup-title'>Phase shield</p><hr/>Let's you pass through asteroids, projectiles and beams for 3 seconds.<br/><em>You can't fire your secondary weapon while the shield is on</em>",
+  kDeflectorShield: `<p class='powerup-title'>Deflector shield</p><hr/>Deflects strongly kinetic weapons for ${settings.shipProps.shieldDuration} seconds, affects mildly energy weapons.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
+  kEnergyShield: `<p class='powerup-title'>Energy shield</p><hr/>Stops completely energy weapons for ${settings.shipProps.shieldDuration} seconds, no effect on kinetic weapons.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
+  kPhaseShield: `<p class='powerup-title'>Phase shield</p><hr/>Let's you pass through asteroids, projectiles and beams for ${settings.shipProps.shieldDuration} seconds.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
 };
 
 const activeAbilityDescs = {
-  kEmp: "<p>EMP pulse</p><hr/>Generates an EMP pulse where you are, disabling enemy ships for 3 seconds.",
+  kEmp: `<p>EMP pulse</p><hr/>Generates an EMP pulse where you are, disabling enemy ships for ${settings.shipProps.empDuration} seconds.`,
   kBomb:
     "<p class='powerup-title'>Gravitic bomb</p><hr/>Drop it and it will explode in 1 second for massive damage. Won't affect your ship.",
   kBoost:

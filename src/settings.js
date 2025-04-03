@@ -195,6 +195,8 @@ const settings = {
   },
   player: {
     speedLimit: 500,
+    shieldDuration: 5000,
+    empDuration: 5000,
   },
   mobile: {
     iscaling: (base, factor) => {

@@ -4,6 +4,7 @@
 - Boost powerup
 - Asteroid flyby messages
 - Phase shield improvement
+- Reduce negative impact
 
 # 0.9.3
 

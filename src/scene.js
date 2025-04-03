@@ -631,7 +631,8 @@ class SpaceScene extends Scene {
             if (b.kind === "kEmpBlast") {
               // Note that this can be used for mine/bomb too
               // This could be temporary at some point
-              o.disabled = performance.now() + 3000;
+              o.disabled =
+                performance.now() + window.settings.shipProps.empDuration;
             } else if (b.kind === "kBombBlast") {
               o.e -= b.e;
             } else if (b.kind === "kMissile") {

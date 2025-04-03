@@ -140,6 +140,7 @@ const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
         tdk.classList.remove("setting-control");
         keyMap[nk] = action;
         await set("keyMap", keyMap);
+        console.log(await get("keyMap"));
         setTimeout(() => (menu.ignoresKeys = false), 100);
       });
       tdb.addEventListener("click", async (ev) => {
@@ -154,10 +155,10 @@ const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
         tdb.classList.add("setting-control");
         const nb = await getDeviceInput("gamepad");
         tdb.innerText = `${nb}`;
-        tdb.classList.add("setting-control");
+        tdb.classList.remove("setting-control");
         buttonMap[`${nb}`] = action;
         await set("buttonMap", buttonMap);
-        const foo = await get("buttonMap");
+        console.log(await get("buttonMap"));
         setTimeout(() => (menu.ignoresKeys = false), 100);
       });
       tda.innerText = commandNames[action];

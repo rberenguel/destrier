@@ -146,15 +146,15 @@ const gameActions = {
     if (player.shield && player.shieldEnergy >= 1) {
       const now = performance.now();
       if (player.shield === "kDeflectorShield") {
-        player.deflectorShield = now + 3000;
+        player.deflectorShield = now + window.settings.player.shieldDuration;
         player.shieldEnergy = 0;
       }
       if (player.shield === "kEnergyShield") {
-        player.energyShield = now + 3000;
+        player.energyShield = now + window.settings.player.shieldDuration;
         player.shieldEnergy = 0;
       }
       if (player.shield === "kPhaseShield") {
-        player.phaseShield = now + 3000;
+        player.phaseShield = now + window.settings.player.shieldDuration;
         player.shieldEnergy = 0;
       }
     }
@@ -235,6 +235,8 @@ const inMenuActions = {
       countdown = performance.now();
       // This does not transition, since this is handled further down
       inMenuActions.debounce = performance.now() + 300;
+      player.prevshot =
+        performance.now() + window.settings.shipProps.disabledDelay - 100;
       return;
     }
   },

@@ -15,7 +15,7 @@ import { presentKeyMap, keyMap, buttonMap } from "./setupControls.js";
 
 import { VirtualPad } from "../libs/controller/virtualPad.js";
 import { set } from "../libs/3rdparty/idb-keyval.js";
-import { settings } from "./settings.js";
+import { settings, isMobile } from "./settings.js";
 import { getEncouragementMessage } from "./encouragement.js";
 import { enemiesPerLevel } from "./leveling.js";
 import { resetStats, presentStats, showHUDInfo } from "./stats.js";
@@ -279,11 +279,6 @@ const isLandscape = () =>
   window.screen.orientation.angle === 90 ||
   window.screen.orientation.angle === -90 ||
   window.screen.orientation.type.startsWith("landscape");
-
-const isMobile = () => {
-  const userAgent = navigator.userAgent.toLowerCase();
-  return /android|iphone|ipad|ipod|mobi/i.test(userAgent);
-};
 
 const needsStandalone = () => {
   const standaloneiOS = window.navigator.standalone === true;
@@ -712,7 +707,7 @@ const customControlsLambda = async () => {
     window.settings.audioEnabled,
   );
   audioEnabled.classList.add("settings-checkbox");
-  const screenShakeEnabledFlag = window.settings.audioEnabled;
+  const screenShakeEnabledFlag = window.settings.screenShakeEnabled;
   const labelTextShake = `Screenshake ${screenShakeEnabledFlag ? "enabled" : "disabled"}`;
   const screenShakeEnabled = createCheckbox(
     "screenshake-enabled",
@@ -728,8 +723,34 @@ const customControlsLambda = async () => {
     window.settings.screenShakeEnabled,
   );
   screenShakeEnabled.classList.add("settings-checkbox");
+
+  const mobileControlsEnabledFlag = window.settings.mobileControlsEnabled;
+  const labelTextMobile = `Mobile controls ${mobileControlsEnabledFlag ? "enabled" : "disabled"}`;
+  const mobileControlsEnabled = createCheckbox(
+    "audio-enabled",
+    "audio-enabled",
+    labelTextMobile,
+    async (ev) => {
+      settings.mobileControlsEnabled = ev.target.checked;
+      await set("mobileControlsEnabled", ev.target.checked);
+      const newText = `Mobile controls ${(await get("mobileControlsEnabled")) ? "enabled" : "disabled"}`;
+      console.info(newText);
+      ev.target.parentElement.updateLabel(newText);
+      if (await get("mobileControlsEnabled")) {
+        document.getElementById("gamepad-dpad").style.display = "flex";
+        document.getElementById("action-buttons").style.display = "flex";
+      } else {
+        document.getElementById("gamepad-dpad").style.display = "none";
+        document.getElementById("action-buttons").style.display = "none";
+      }
+    },
+    window.settings.mobileControlsEnabled,
+  );
+  mobileControlsEnabled.classList.add("settings-checkbox");
+
   div.appendChild(audioEnabled);
   div.appendChild(screenShakeEnabled);
+  div.appendChild(mobileControlsEnabled);
   div.appendChild(document.createElement("HR"));
   div.appendChild(controls);
   msgs.div(div);
@@ -1133,8 +1154,7 @@ handleOrientationChange(); // Call once on load
 /* Mobile controls */
 
 const setupTouchZones = () => {
-  if (isMobile() || DEBUG) {
-    // TODO: might only really be needed in menus
+  if (window.settings.mobileControlsEnabled || DEBUG) {
     document.getElementById("gamepad-dpad").style.display = "flex";
     document.getElementById("action-buttons").style.display = "flex";
   }

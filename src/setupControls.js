@@ -5,6 +5,8 @@ import { set, get } from "../libs/3rdparty/idb-keyval.js";
 import { getDeviceInput } from "../libs/controller/controlHandling.js";
 import { states } from "./states.js";
 
+import { isMobile } from "./settings.js";
+
 let keyMap = await get("keyMap");
 
 const commandNames = {
@@ -35,13 +37,28 @@ const defaultKeyboardControls = {
   KeyQ: "menu",
 };
 
+const mobileKeyboardEquivalent = {
+  ArrowUp: "moveDown",
+  ArrowDown: "moveUp",
+  ArrowLeft: "moveLeft",
+  ArrowRight: "moveRight",
+  KeyA: "shoot",
+  KeyY: "secondaryShoot",
+  KeyX: "shield",
+  KeyB: "activeAbility",
+};
+
 console.log(keyMap);
 
 if (
   keyMap === undefined ||
   Object.keys(keyMap).length != Object.keys(defaultKeyboardControls).length
 ) {
-  keyMap = defaultKeyboardControls;
+  if (isMobile()) {
+    keyMap = mobileKeyboardEquivalent;
+  } else {
+    keyMap = defaultKeyboardControls;
+  }
 }
 
 let buttonMap = await get("buttonMap");
@@ -109,6 +126,14 @@ const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
       const oldkey = rkeymap[action];
       const oldbutton = rbuttonmap[action];
       tdk.addEventListener("click", async (ev) => {
+        if (tdk.innerText === "???" || tdk.innerText === "undefined") {
+          return;
+        } else {
+          console.info(keyMap);
+          delete keyMap[tdk.innerText];
+          await set("keyMap", keyMap);
+          console.info(keyMap);
+        }
         tdk.innerText = "???";
         const nk = await getDeviceInput("keyboard");
         tdk.innerText = nk;
@@ -117,6 +142,14 @@ const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
         setTimeout(() => (menu.ignoresKeys = false), 100);
       });
       tdb.addEventListener("click", async (ev) => {
+        if (tdb.innerText === "???" || tdb.innerText === "undefined") {
+          return;
+        } else {
+          console.info(buttonMap);
+          delete buttonMap[tdb.innerText];
+          await set("buttonMap", buttonMap);
+          console.info(buttonMap);
+        }
         tdb.innerText = "???";
         const nb = await getDeviceInput("gamepad");
         tdb.innerText = `${nb}`;

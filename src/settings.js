@@ -1,9 +1,16 @@
-export { settings };
+export { settings, isMobile };
 
 import { get } from "../libs/3rdparty/idb-keyval.js";
 
+const isMobile = () => {
+  const userAgent = navigator.userAgent.toLowerCase();
+  return /android|iphone|ipad|ipod|mobi/i.test(userAgent);
+};
+
 const audioEnabled = (await get("audioEnabled")) || true;
 const screenShakeEnabled = (await get("screenShakeEnabled")) || true;
+const mobileControlsEnabled =
+  (await get("mobileControlsEnabled")) || isMobile();
 
 const shake = (app, minShake = -2, angle = undefined) => {
   if (!window.settings.screenShake) {
@@ -47,6 +54,7 @@ const isKinetic = (w) => {
 const settings = {
   audioEnabled: audioEnabled,
   screenShakeEnabled: screenShakeEnabled,
+  mobileControlsEnabled: mobileControlsEnabled,
   hull: {
     pctRecoveredPerAsteroid: 5,
   },

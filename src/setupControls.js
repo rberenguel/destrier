@@ -127,7 +127,6 @@ const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
       const oldbutton = rbuttonmap[action];
       tdk.addEventListener("click", async (ev) => {
         if (tdk.innerText === "???" || tdk.innerText === "undefined") {
-          return;
         } else {
           console.info(keyMap);
           delete keyMap[tdk.innerText];
@@ -143,7 +142,6 @@ const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
       });
       tdb.addEventListener("click", async (ev) => {
         if (tdb.innerText === "???" || tdb.innerText === "undefined") {
-          return;
         } else {
           console.info(buttonMap);
           delete buttonMap[tdb.innerText];
@@ -155,14 +153,18 @@ const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
         tdb.innerText = `${nb}`;
         buttonMap[`${nb}`] = action;
         await set("buttonMap", buttonMap);
-        console.log(buttonMap);
         const foo = await get("buttonMap");
-        console.log(foo);
         setTimeout(() => (menu.ignoresKeys = false), 100);
       });
       tda.innerText = commandNames[action];
-      tdb.innerText = oldbutton;
-      tdk.innerText = oldkey;
+      tdb.innerText = oldbutton ?? "???";
+      if (tdb.innerText === "undefined") {
+        tdb.innerText = "???";
+      }
+      tdk.innerText = oldkey ?? "???";
+      if (tdk.innerText === "undefined") {
+        tdk.innerText = "???";
+      }
       row.append(tda, tdk, tdb);
     }
     d.appendChild(wrapper);

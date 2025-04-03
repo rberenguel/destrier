@@ -112,7 +112,10 @@ class SpaceScene extends Scene {
 
     const debrisLayer = new Wrapper();
     debrisLayer.attach(this.viewframe);
+    const asteroidLayer = new Wrapper();
+    asteroidLayer.attach(this.viewframe);
     this.debrisLayer = debrisLayer;
+    this.asteroidLayer = asteroidLayer;
     this.bulletList = [];
     this.flameList = [];
     this.debrisList = [];
@@ -138,7 +141,6 @@ class SpaceScene extends Scene {
 
   addEnemies(n, loadouts = []) {
     let localLoadouts = [...loadouts];
-    console.log(localLoadouts);
     const otherLaser = (other) => {
       other.ammo[LaserGun.kind] = {};
       other.ammo[LaserGun.kind].count = 10;
@@ -523,7 +525,6 @@ class SpaceScene extends Scene {
 
             if (a.e < 0 && b.source === this.player._id) {
               this.player.increaseEnergy(settings.hull.pctRecoveredPerAsteroid);
-              console.log(this.player.e);
               newAsteroids.push(...a.split(b.vel, this.debrisList));
               window.sampler("a5", 1.9);
             }
@@ -690,18 +691,29 @@ class SpaceScene extends Scene {
       }
       const collisioning = a.collision(this.player);
       // Asteroid flyby text effect. Not convinced about this.
-      /*const triggered = a.textEffect ?? 0
-      if (collisioning < 0 && collisioning > -150 && performance.now() > triggered) {
-        triggerTextEffect(
-          "kFlyBy",
-          this.player.pos.x,
-          this.player.pos.y,
-          this.scale
-        );
-        a.triggered = performance.now() + 1000
-      }*/
-      if (this.player.e > 0 && collisioning === 1) {
+
+      if (
+        collisioning < 0 &&
+        collisioning > -150 &&
+        this.player.phaseShield < performance.now()
+      ) {
+        if (this.player.e > 0) {
+          triggerTextEffect(
+            "kFlyBy",
+            this.player.pos.x,
+            this.player.pos.y,
+            this.scale,
+          );
+          a.minDistance[this.player._id] = Infinity;
+        }
+      }
+      if (
+        this.player.e > 0 &&
+        collisioning === 1 &&
+        this.player.phaseShield < performance.now()
+      ) {
         a.e = -1;
+        a.minDistance[this.player._id] = Infinity;
         this.player.killedBy = { id: "kAsteroid" };
         window.sampler("a6", 1.9); // Self explosion
 
@@ -807,7 +819,7 @@ class SpaceScene extends Scene {
     for (let a of this.asteroids) {
       if (!a.drawn) {
         a.generate();
-        a.attach(this.viewframe);
+        a.attach(this.asteroidLayer);
       }
       wrapPos(a, {
         wmin: 0,
@@ -852,9 +864,7 @@ function triggerTextEffect(kind, x_, y_, scale) {
     text = options[0];
   }
   if (kind === "kFlyBy") {
-    const options = ["Close", "Almost", "Weeez"].sort(
-      () => Math.random() - 0.5,
-    );
+    const options = ["Close", "Almost", "Ole"].sort(() => Math.random() - 0.5);
     text = options[0];
   }
   if (kind === "kLastShip") {
@@ -889,8 +899,8 @@ function triggerTextEffect(kind, x_, y_, scale) {
   const height = rect.height;
 
   // Calculate the centered position
-  const centeredX = x - width / 2;
-  const centeredY = y - height / 2;
+  const centeredX = x + 150 * scale; // - width / 2;
+  const centeredY = y + 150 * scale; // - height / 2;
 
   effectText.style.left = centeredX + "px";
   effectText.style.top = centeredY + "px";

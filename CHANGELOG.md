@@ -1,3 +1,10 @@
+# 0.9.4
+
+- Cosmetic fixes on UI/menus
+- Boost powerup
+- Asteroid flyby messages
+- Phase shield improvement
+
 # 0.9.3
 
 - Upscale bullets

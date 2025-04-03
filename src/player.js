@@ -36,7 +36,7 @@ const initPlayer = (app, scale) => {
   player.shieldEnergy = 1;
   player.shieldEnergyRecoveryRate = 0.0007;
   player.activeAbilityEnergyRecoveryRate = 0.0005;
-  player.powerUps = {};
+  player.powerUps = { kPlasmaGun: true, kPhotonTorpedoLauncher: true };
   player.recoveryRate = 0.0;
   player.emergencyBrakes = false;
   player.energyShield = 0;

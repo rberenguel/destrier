@@ -193,6 +193,9 @@ const settings = {
     baseV: 4,
     v: undefined,
   },
+  player: {
+    speedLimit: 500,
+  },
   mobile: {
     iscaling: (base, factor) => {
       // Inverse scaling, for things that increase when size decreases

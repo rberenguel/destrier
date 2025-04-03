@@ -35,6 +35,7 @@ import { SpaceScene, triggerTextEffect } from "./scene.js";
 
 import { dropEmp } from "./weapons/empBlast.js";
 import { dropBomb } from "./weapons/bomb.js";
+import { boost } from "./weapons/boost.js";
 import {
   initPlayer,
   resetPlayerPVA,
@@ -84,14 +85,14 @@ const gameActions = {
     if (currentState != states.kInGame) {
       return;
     }
-    player.backThrust(1, 500);
+    player.backThrust(1, settings.player.speedLimit);
   },
   moveUp: (f = 1) => {
     if (currentState != states.kInGame) {
       return;
     }
 
-    player.forwardThrust(1, 500);
+    player.forwardThrust(1, settings.player.speedLimit);
   },
   moveRight: (f = 1) => {
     if (currentState != states.kInGame) {
@@ -169,6 +170,10 @@ const gameActions = {
       }
       if (player.activeAbility === "kBomb") {
         dropBomb(player, player.bulletList);
+        player.activeAbilityEnergy = 0;
+      }
+      if (player.activeAbility === "kBoost") {
+        boost(player, settings.player.speedLimit);
         player.activeAbilityEnergy = 0;
       }
     }
@@ -514,6 +519,7 @@ const fullRestart = (tran = true) => {
   player.maxE = 1500;
   player.e = player.maxE;
   const { weapons, secondaryWeapons } = baseWeapons();
+  player.powerUps = { kPlasmaGun: true, kPhotonTorpedoLauncher: true };
   player.weapons = weapons;
   player.secondaryWeapons = secondaryWeapons;
   resetPlayerAmmo(player);
@@ -598,7 +604,6 @@ const pauseMenu = () => {
   div.style.display = "flex";
   div.style.flexDirection = "row";
   div.classList.add("current-powerups");
-  div.addEventListener("click", () => msgs.hide());
   currentPowerupsToDiv(div, player);
   wrapper.appendChild(div);
   wrapper.appendChild(statsTable);
@@ -909,14 +914,14 @@ app.ticker.add((delta) => {
       return;
     }
     if (level < 3) {
-      offerChoices(choices.slice(0, 2), globals);
+      offerChoices(choices, globals);
       return;
     } else if (level < 7) {
       const choices = [
         ...allPowerUpChoices(player).concat(shieldPowerups(player)),
       ];
       choices.sort(() => Math.random() - 0.5);
-      offerChoices(choices.slice(0, 2), globals);
+      offerChoices(choices, globals);
       return;
     } else {
       const choices = [
@@ -925,7 +930,7 @@ app.ticker.add((delta) => {
         ),
       ];
       choices.sort(() => Math.random() - 0.5);
-      offerChoices(choices.slice(0, 2), globals);
+      offerChoices(choices, globals);
       return;
     }
     // Leaving the unused return while I sort out the options above better.
@@ -1099,7 +1104,7 @@ app.ticker.add((delta) => {
       }
     }
   }
-  if (msgs.visible && player.lives > 0) {
+  if (msgs.visible && player.e > 0) {
     return;
   }
   spaceScene.update(delta);

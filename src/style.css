@@ -527,6 +527,10 @@ canvas {
   background-color: #6c0;
 }
 
+.setting-control {
+  color: #c60;
+}
+
 #effectText {
   position: absolute;
   font-size: 1em;

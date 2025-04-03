@@ -98,7 +98,7 @@ const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
     const wrapper = e("DIV");
     const desc = e("P");
     desc.innerHTML =
-      "Tap on the keys or buttons to customise them. The settings will persist in your browser's <code>LocalStorage</code>.";
+      "Tap on the keys or buttons to customise them.<br/>Mobile controls map to keyboard keys for customisation.<br/>The settings will persist.";
     wrapper.classList.add("control-list-wrapper");
     wrapper.appendChild(desc);
     const table = e("TABLE");
@@ -134,8 +134,10 @@ const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
           console.info(keyMap);
         }
         tdk.innerText = "???";
+        tdk.classList.add("setting-control");
         const nk = await getDeviceInput("keyboard");
         tdk.innerText = nk;
+        tdk.classList.remove("setting-control");
         keyMap[nk] = action;
         await set("keyMap", keyMap);
         setTimeout(() => (menu.ignoresKeys = false), 100);
@@ -149,8 +151,10 @@ const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
           console.info(buttonMap);
         }
         tdb.innerText = "???";
+        tdb.classList.add("setting-control");
         const nb = await getDeviceInput("gamepad");
         tdb.innerText = `${nb}`;
+        tdb.classList.add("setting-control");
         buttonMap[`${nb}`] = action;
         await set("buttonMap", buttonMap);
         const foo = await get("buttonMap");

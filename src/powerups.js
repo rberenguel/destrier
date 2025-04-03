@@ -116,7 +116,7 @@ const powerupControls = (ev) => {
   }
 };
 
-const offerChoices = (options = [], globals = {}) => {
+const offerChoices = (_options = [], globals = {}) => {
   // Options is a list of powerups, of the form
   // {id: "kPowerup", name: "Human name", description: "Description"}
 
@@ -127,8 +127,10 @@ const offerChoices = (options = [], globals = {}) => {
 
   const currentPowerups = document.getElementById("current-powerups");
   currentPowerups.innerHTML = "";
-
-  console.log(options);
+  const enabledPowerups = Object.keys(globals.player.powerUps).filter(
+    (p) => globals.player.powerUps[p],
+  );
+  const options = _options.filter((o) => !enabledPowerups.includes(o.id));
 
   currentPowerupsToDiv(currentPowerups, globals.player);
 
@@ -175,19 +177,6 @@ const offerChoices = (options = [], globals = {}) => {
       globals.transition(states.kBetweenLevels);
     };
   }
-  /*const skipPowerup = document.getElementById("skip-powerup");
-  if (skipPowerup) {
-    skipPowerup.textContent =
-      "Skip the choice (very bad idea, and -2000 points)";
-    skipPowerup.addEventListener("click", () => {
-      globals.spaceScene.score -= 2000;
-      glass.style.display = "none";
-      powerupContainer.style.display = "none";
-      globals.setPowerUpChosen(true);
-      globals.showHUDInfo();
-      globals.player.stats.powerups.skipped++;
-    });
-  }*/
 };
 
 const setWeaponPowerup = (player, weapon) => {
@@ -720,7 +709,7 @@ const superPowerups = (player) => [
     description: () => {
       const title = "<h2>Active ability</h2>";
       let html = `${title}${activeAbilityDescs["kEmp"]}`;
-      if (player.shield) {
+      if (player.activeAbility) {
         html += `${replaces} ${activeAbilityDescs[player.activeAbility]}`;
       }
       return html;
@@ -740,7 +729,7 @@ const superPowerups = (player) => [
     description: () => {
       const title = "<h2>Active ability</h2>";
       let html = `${title}${activeAbilityDescs["kBomb"]}`;
-      if (player.shield) {
+      if (player.activeAbility) {
         html += `${replaces} ${activeAbilityDescs[player.activeAbility]}`;
       }
       return html;
@@ -751,6 +740,26 @@ const superPowerups = (player) => [
         player.powerUps[player.activeAbility] = false;
       }
       player.activeAbility = "kBomb";
+    },
+  },
+  {
+    id: "kBoost",
+    name: "Boost",
+    kind: "active",
+    description: () => {
+      const title = "<h2>Active ability</h2>";
+      let html = `${title}${activeAbilityDescs["kBoost"]}`;
+      if (player.activeAbility) {
+        html += `${replaces} ${activeAbilityDescs[player.activeAbility]}`;
+      }
+      return html;
+    },
+    glyph: "boost.png",
+    lambda: () => {
+      if (player.activeAbility) {
+        player.powerUps[player.activeAbility] = false;
+      }
+      player.activeAbility = "kBoost";
     },
   },
 ];
@@ -768,6 +777,8 @@ const activeAbilityDescs = {
   kEmp: "<p>EMP pulse</p><hr/>Generates an EMP pulse where you are, disabling enemy ships for 3 seconds.",
   kBomb:
     "<p class='powerup-title'>Gravitic bomb</p><hr/>Drop it and it will explode in 1 second for massive damage. Won't affect your ship.",
+  kBoost:
+    "<p class='powerup-title'>Displacement boost</p><hr/>Instantly accelerate forward at high speed.",
 };
 
 const debugCommands = (player) => {

@@ -66,6 +66,36 @@ class Ship extends Base1 {
     return;
   }
 
+  burst(props = {}) {
+    const minenergy = props.minenergy ?? 12;
+    const explenergy = Math.min(Math.max(props.e ?? 3, 1), 5);
+    const pos = props.pos ?? { x: 0, y: 0 };
+    const [rpx, rpy] = rotate(pos.x, pos.y, this.r);
+    for (
+      let i = 0;
+      i < settings.explosions.ships.explode.baseCount * explenergy;
+      i++
+    ) {
+      const m = 8 * Math.random();
+      const a = Math.random() * 2 * Math.PI;
+      const fl = new Flame({
+        pos: {
+          x: this.pos.x + rpx,
+          y: this.pos.y + rpy,
+        },
+        vel: {
+          x: m * Math.cos(a),
+          y: m * Math.sin(a),
+        },
+        fill: props.fill,
+        r: 0,
+        e: minenergy + Math.random() * 8,
+        scale: settings.explosions.ships.flame.scale(),
+      });
+      this.flameList.push(fl);
+    }
+  }
+
   explode(props = {}) {
     const minenergy = props.minenergy ?? 12;
     const explenergy = Math.min(Math.max(props.e, 1), 5);
@@ -287,6 +317,9 @@ class Ship extends Base1 {
       return;
     }
     const nv = sqnorm(this.vel.x, this.vel.y);
+    if (nv < limit) {
+      this.noLimits = false;
+    }
     const velocityAngle = Math.atan2(this.vel.y, this.vel.x);
 
     const oppositeVelocityAngle = normalizeAngle(velocityAngle + Math.PI);
@@ -299,10 +332,10 @@ class Ship extends Base1 {
     if (nv > 10 && Math.abs(angleDifference) < 0.5 && this.emergencyBrakes) {
       this.vel.x = 0;
       this.vel.y = 0;
-      this.explode({
+      this.burst({
         pos: { x: -60, y: 0 },
         count: 15,
-        minenergy: 20,
+        minenergy: 10,
         fill: 0x00ccff,
       });
       if (this.human) {
@@ -314,7 +347,7 @@ class Ship extends Base1 {
     const _vx = this.vel.x + this.accel * Math.cos(this.r) * f;
     const _vy = this.vel.y + this.accel * Math.sin(this.r) * f;
     const _nv = sqnorm(_vx, _vy);
-    if (_nv < limit) {
+    if (_nv < limit || (this.noLimits && _nv < nv)) {
       if (this.human && Math.random() < 0.05) {
         window.sampler("e2", 0.3); // Wind
       }
@@ -362,16 +395,18 @@ class Ship extends Base1 {
       return;
     }
     const nv = sqnorm(this.vel.x, this.vel.y);
+    if (nv < limit) {
+      this.noLimits = false;
+    }
     const velocityAngle = Math.atan2(this.vel.y, this.vel.x);
-    //const angleDifference = normalizeAngle(this.r - velocityAngle);
     const angleDifference = shortestAngleDifference(this.r, velocityAngle);
     if (nv > 10 && Math.abs(angleDifference) < 0.2 && this.emergencyBrakes) {
       this.vel.x = 0;
       this.vel.y = 0;
-      this.explode({
+      this.burst({
         pos: { x: 90, y: 0 },
         count: 15,
-        minenergy: 20,
+        minenergy: 10,
         fill: 0x00ccff,
       });
       if (this.human) {
@@ -383,7 +418,7 @@ class Ship extends Base1 {
     const _vx = this.vel.x - this.accel * Math.cos(this.r) * f;
     const _vy = this.vel.y - this.accel * Math.sin(this.r) * f;
     const _nv = sqnorm(_vx, _vy);
-    if (_nv < limit) {
+    if (_nv < limit || (this.noLimits && _nv < nv)) {
       this.vel.x = _vx;
       this.vel.y = _vy;
       for (let i = 0; i < 3; i++) {

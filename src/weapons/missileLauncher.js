@@ -225,7 +225,7 @@ class Missile extends Base1 {
           r: 0,
           e: 4,
           scale: 0.8,
-          decay: 0.5,
+          decay: 0.2,
         });
         this.flameList.push(fl);
       }
@@ -234,7 +234,7 @@ class Missile extends Base1 {
       Math.abs(this.vel.x * delta.deltaTime) +
       Math.abs(this.vel.y * delta.deltaTime);
     if (this.moved > this.maxRange) {
-      this.e -= 10;
+      this.e -= 8;
     }
 
     if (this.target) {
@@ -258,7 +258,7 @@ class Missile extends Base1 {
 
         // Adjust velocity to move towards the target and speed up
         const acceleration = 0.6; // Adjust for faster/slower acceleration
-        const maxSpeed = 50; // Adjust for the missile's top speed
+        const maxSpeed = 80; // Adjust for the missile's top speed
 
         const currentSpeed = Math.hypot(this.vel.x, this.vel.y);
 
@@ -271,6 +271,9 @@ class Missile extends Base1 {
           this.vel.y = Math.sin(this.r) * maxSpeed;
         }
       }
+    } else {
+      this.vel.x += Math.cos(this.r) * 0.8 * delta.deltaTime;
+      this.vel.y += Math.sin(this.r) * 0.8 * delta.deltaTime;
     }
 
     for (let presentation of this.presentations) {

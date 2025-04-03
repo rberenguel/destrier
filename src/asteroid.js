@@ -79,6 +79,24 @@ class Asteroid extends Base1 {
       // For bombs
       return 1;
     }
+    const d = dist(other.pos, this.pos) - 0.99 * this.radius;
+    if (other.human && d < 300) {
+      if (!this.minDistance) {
+        this.minDistance = {};
+        this.minDistance[other._id] = d;
+      }
+      if (
+        (this.minDistance[other._id] ?? Infinity) > 0 &&
+        d > this.minDistance[other._id]
+        // This should be the "getting further" condition.
+      ) {
+        return -this.minDistance[other._id];
+      }
+      this.minDistance[other._id] = Math.min(
+        this.minDistance[other._id] ?? Infinity,
+        d,
+      );
+    }
     return 0; // This was for close collisions -Math.abs(dist(other.pos, this.pos) - 0.99 * this.radius)
   }
 

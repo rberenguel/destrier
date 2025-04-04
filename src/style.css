@@ -578,9 +578,27 @@ canvas {
   color: #c06;
 }
 
+/* Styles the scrollbar track (the gutter) */
+::-webkit-scrollbar-track {
+  background-color: black;
+}
+
+/* Styles the scrollbar thumb (the draggable part) */
+::-webkit-scrollbar-thumb {
+  background-color: #660;
+  border-radius: 4px;
+}
+
+/* You might also want to define the scrollbar width */
+::-webkit-scrollbar {
+  width: 10px; /* Adjust width as needed */
+}
+
 .changelog-content {
   text-align: left;
   cursor: pointer;
+  height: 50vh;
+  overflow-y: scroll;
 }
 
 .changelog-content > h1 {

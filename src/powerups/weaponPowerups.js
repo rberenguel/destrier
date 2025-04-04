@@ -13,6 +13,9 @@ const setWeaponPowerup = (player, weapon) => {
   player.powerUps["kLaserGun"] = false;
   player.powerUps["kPlasmaGun"] = false;
   player.powerUps["kMassDriverGun"] = false;
+  player.powerUps["kLaserGunOH"] = false;
+  player.powerUps["kPlasmaGunOH"] = false;
+  player.powerUps["kMassDriverGunOH"] = false;
   player.powerUps[weapon] = true;
 };
 

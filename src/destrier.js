@@ -154,7 +154,7 @@ const gameActions = {
         player.shieldEnergy = 0;
       }
       if (player.shield === "kPhaseShield") {
-        player.phaseShield = now + window.settings.player.shieldDuration;
+        player.phaseShield = now + window.settings.player.phaseShieldDuration;
         player.shieldEnergy = 0;
       }
     }

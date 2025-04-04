@@ -12,7 +12,7 @@ class PhotonTorpedoLauncher extends Gun {
   static kind = "kPhotonTorpedoLauncher"; // TODO make an object with these constants
   kind = PhotonTorpedoLauncher.kind;
   glyph = "photontorpedo.png";
-  firerate = 100; // More fun if more often
+  firerate = 300; // More fun if more often
   html = "Pt"; // Asterisk alignment
   ammo = true;
   ammoMax = 2;

@@ -1,14 +1,15 @@
 import { sqnorm } from "../base/math.js";
+import { settings } from "../settings.js";
 
 export { boost };
 
-const boostAccel = 20;
+const boostAccel = 30;
 
 const boost = (shooter, limit) => {
   shooter.burst({
     pos: { x: 90, y: 0 },
     count: 10,
-    minenergy: 50,
+    minenergy: 25,
     fill: 0xffff00,
   });
 
@@ -17,4 +18,6 @@ const boost = (shooter, limit) => {
   shooter.vel.x = _vx;
   shooter.vel.y = _vy;
   shooter.noLimits = true;
+  shooter.boostStop = performance.now() + settings.player.boostDuration;
+  shooter.phaseShield = performance.now() + settings.player.boostDuration;
 };

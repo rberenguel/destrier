@@ -615,7 +615,7 @@ class SpaceScene extends Scene {
           if (collisioning == 1) {
             const oe = o.e;
             o.showHit = performance.now() + settings.showHitMs;
-            if (b.shooter?.human) {
+            if (b.shooter?.human && b.kind !== "kEmpBlast") {
               b.shooter.stats.shots[b.firedBy].hitsShip++;
               // This is a global though, I pass it to the player like this
               if (
@@ -629,6 +629,10 @@ class SpaceScene extends Scene {
               b.shooter.sleepUntil = performance.now() + settings.hitSleepMs;
             }
             if (b.kind === "kEmpBlast") {
+              if (!o.emped) {
+                b.shooter.stats.shots[b.firedBy].hitsShip++;
+                o.emped = true;
+              }
               // Note that this can be used for mine/bomb too
               // This could be temporary at some point
               o.disabled =

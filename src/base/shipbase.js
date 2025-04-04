@@ -43,6 +43,7 @@ class Ship extends Base1 {
     this.activeAbilityEnergy = 1;
     this.maxActiveAbilityEnergy = 1;
     this.shieldEnergyRecoveryRate = props.shieldEnergyRecoveryRate ?? 0;
+    this.boostStop = 0;
     this.shieldEnergy = 1;
     this.maxShieldEnergy = 1;
     this._id = getShipId();
@@ -493,6 +494,20 @@ class Ship extends Base1 {
   /* pos would be universe coordinates, then here I need to use screen coordinates */
 
   update(delta) {
+    if (this.boostStop != 0 && this.boostStop < performance.now()) {
+      this.boostStop = 0;
+      this.vel.x = 0;
+      this.vel.y = 0;
+      this.burst({
+        pos: { x: 90, y: 0 },
+        count: 15,
+        minenergy: 25,
+        fill: 0x00ccff,
+      });
+      if (this.human) {
+        window.sampler("e1", 0.8); // Snare ghost
+      }
+    }
     super.update(delta);
     super.move(delta.deltaTime);
     this.e += this.recoveryRate * delta.deltaTime;

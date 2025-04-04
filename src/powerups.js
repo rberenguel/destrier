@@ -10,14 +10,6 @@ export {
 };
 
 import { states } from "./states.js";
-import {
-  GaussCannon,
-  MassDriverGun,
-  LaserGun,
-  PhotonTorpedoLauncher,
-  PlasmaGun,
-  MissileLauncher,
-} from "./weapons/weapons.js";
 
 import { settings } from "./settings.js";
 import {
@@ -186,19 +178,6 @@ const offerChoices = (_options = [], globals = {}) => {
   }
 };
 
-const setWeaponPowerup = (player, weapon) => {
-  player.powerUps["kLaserGun"] = false;
-  player.powerUps["kPlasmaGun"] = false;
-  player.powerUps["kMassDriverGun"] = false;
-  player.powerUps[weapon] = true;
-};
-
-const setSecondaryWeaponPowerup = (player, weapon) => {
-  player.powerUps["kGaussCannon"] = false;
-  player.powerUps["kTorpedoLauncher"] = false;
-  player.powerUps[weapon] = true;
-};
-
 const replaces = `<h3 class="powerup-replaces">replaces</h3>`;
 
 const allPowerUpChoices = (player) => [
@@ -350,17 +329,16 @@ const superPowerups = (player) => [
 ];
 
 const shieldDescs = {
-  kDeflectorShield: `<p class='powerup-title'>Deflector shield</p><hr/>Deflects strongly kinetic weapons for ${settings.shipProps.shieldDuration} seconds, affects mildly energy weapons.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
-  kEnergyShield: `<p class='powerup-title'>Energy shield</p><hr/>Stops completely energy weapons for ${settings.shipProps.shieldDuration} seconds, no effect on kinetic weapons.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
-  kPhaseShield: `<p class='powerup-title'>Phase shield</p><hr/>Let's you pass through asteroids, projectiles and beams for ${settings.shipProps.shieldDuration} seconds.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
+  kDeflectorShield: `<p class='powerup-title'>Deflector shield</p><hr/>Deflects strongly kinetic weapons for ${(settings.shipProps.shieldDuration / 1000).toFixed(2)} seconds, affects mildly energy weapons.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
+  kEnergyShield: `<p class='powerup-title'>Energy shield</p><hr/>Stops completely energy weapons for ${(settings.shipProps.shieldDuration / 1000).toFixed(2)} seconds, no effect on kinetic weapons.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
+  kPhaseShield: `<p class='powerup-title'>Phase shield</p><hr/>Let's you pass through asteroids, projectiles and beams for ${(settings.shipProps.phaseShieldDuration / 1000).toFixed(2)} seconds.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
 };
 
 const activeAbilityDescs = {
   kEmp: `<p>EMP pulse</p><hr/>Generates an EMP pulse where you are, disabling enemy ships for ${settings.shipProps.empDuration} seconds.`,
   kBomb:
     "<p class='powerup-title'>Gravitic bomb</p><hr/>Drop it and it will explode in 1 second for massive damage. Won't affect your ship.",
-  kBoost:
-    "<p class='powerup-title'>Displacement boost</p><hr/>Instantly accelerate forward at high speed.",
+  kBoost: `<p class='powerup-title'>Displacement boost</p><hr/>Instantly accelerate forward at high speed for ${settings.shipProps.boostDuration} seconds and stop immediately. Your phase shield is active while boosted, so <em>you can pass through asteroids and enemy fire</em>`,
 };
 
 const debugCommands = (player) => {

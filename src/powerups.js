@@ -70,7 +70,7 @@ const currentPowerUpsHud = document.getElementById("current-powerups-hud");
 let selection = null;
 
 const powerupControls = (ev) => {
-  if (powerupContainer.style.display != "flex") {
+  if (powerupContainer && powerupContainer.style.display != "flex") {
     return;
   }
   try {

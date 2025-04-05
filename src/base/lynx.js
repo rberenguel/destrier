@@ -13,7 +13,6 @@ class Lynx extends Ship {
       [-70, 50],
     ];
     const width = 14;
-    console.log(width);
     const mesh = new Mesh({
       name: "",
       kind: Meshes.kPoly,

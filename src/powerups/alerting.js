@@ -25,7 +25,6 @@ class RangeHint extends Base1 {
   generate() {
     this.presentations = [];
     for (const mesh of this.meshes) {
-      console.log(mesh);
       let p1 = new Graphics();
       let p2 = new Graphics();
       p1.arc(
@@ -42,7 +41,7 @@ class RangeHint extends Base1 {
         -mesh.aperture / 2,
         mesh.aperture / 2,
       );
-      p1.lineTo(0, 0);
+      p1.lineTo(0, 0); // Without the lineto, the arc is never filled, even with a closepath
       p1.fill(mesh.fill);
       p2.stroke({ color: mesh.color, width: mesh.width ?? 0 });
       p1.rotation = this.r;
@@ -58,7 +57,7 @@ class RangeHint extends Base1 {
   }
 
   destroy() {
-    for (let presentation of (this.presentations) ?? []) {
+    for (let presentation of this.presentations ?? []) {
       presentation.destroy();
     }
     super.destroy();

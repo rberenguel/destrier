@@ -2,6 +2,8 @@
 
 - Collision sensor powerup. Powerup?
 - Weapon range powerup
+- Fix some bugs
+- Increased difficulty after each 20 levels
 
 # 0.9.5
 

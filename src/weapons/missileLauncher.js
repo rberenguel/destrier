@@ -82,7 +82,7 @@ class MissileLauncher extends Gun {
     b.firedBy = "kMissileLauncher";
     bulletList.push(b);
     if (shooter.human) {
-      //window.sampler("b0", 0.8); // Torpedo, based on Hihat foot stomp
+      window.sampler("e2", 1.2); // Wind, as she propulsion system
     }
     shooter.ammo[MissileLauncher.kind].count--;
   }

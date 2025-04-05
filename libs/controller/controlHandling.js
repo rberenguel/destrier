@@ -40,7 +40,7 @@ const touchZoneHandler = (elt, kn) => {
 const bindGamepadHandlers = () => {
   window.addEventListener("gamepadconnected", function (e) {
     gamepadHandler(e, true);
-    console.log(
+    console.info(
       "Gamepad connected at index %d: %s. %d buttons, %d axes.",
       e.gamepad.index,
       e.gamepad.id,
@@ -49,7 +49,7 @@ const bindGamepadHandlers = () => {
     );
   });
   window.addEventListener("gamepaddisconnected", function (e) {
-    console.log(
+    console.info(
       "Gamepad disconnected from index %d: %s",
       e.gamepad.index,
       e.gamepad.id,
@@ -81,7 +81,6 @@ const _skipModifiers = (event) => {
 
 const bindKeyHandlers = () => {
   document.addEventListener("keydown", (event) => {
-    //console.log("Captured here")
     if (_skipModifiers(event)) {
       return;
     }
@@ -110,7 +109,7 @@ const logPads = () => {
       for (let btn = 0; btn < controller.buttons.length; btn++) {
         let val = controller.buttons[btn];
         if (buttonPressed(val)) {
-          console.log(btn);
+          console.info(btn);
         }
       }
     }

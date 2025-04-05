@@ -71,7 +71,6 @@ class NebulaGenerator {
         p.colorMode(p.HSL);
         p.noFill();
         p.noLoop();
-        console.log("Device Pixel Ratio:", density);
 
         // You can set pixelDensity based on the device's density
         if (density > 1) {

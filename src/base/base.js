@@ -92,7 +92,7 @@ class Base1 {
   }
 
   destroy() {
-    for (let presentation of this.presentations) {
+    for (let presentation of this.presentations ?? []) {
       if (!presentation || presentation.destroyed) {
         continue;
       }

@@ -48,8 +48,6 @@ const mobileKeyboardEquivalent = {
   KeyB: "activeAbility",
 };
 
-console.log(keyMap);
-
 if (
   keyMap === undefined ||
   Object.keys(keyMap).length != Object.keys(defaultKeyboardControls).length
@@ -140,7 +138,7 @@ const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
         tdk.classList.remove("setting-control");
         keyMap[nk] = action;
         await set("keyMap", keyMap);
-        console.log(await get("keyMap"));
+        console.info(await get("keyMap"));
         setTimeout(() => (menu.ignoresKeys = false), 100);
       });
       tdb.addEventListener("click", async (ev) => {
@@ -158,7 +156,7 @@ const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
         tdb.classList.remove("setting-control");
         buttonMap[`${nb}`] = action;
         await set("buttonMap", buttonMap);
-        console.log(await get("buttonMap"));
+        console.info(await get("buttonMap"));
         setTimeout(() => (menu.ignoresKeys = false), 100);
       });
       tda.innerText = commandNames[action];

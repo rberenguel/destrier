@@ -145,7 +145,7 @@ class SpaceScene extends Scene {
     this.player.viewframe = this.viewframe; // Linking to have zoom
   }
 
-  addEnemies(n, loadouts = []) {
+  addEnemies(n, loadouts = [], level) {
     let localLoadouts = [...loadouts];
     const otherLaser = (other) => {
       other.ammo[LaserGun.kind] = {};
@@ -261,6 +261,8 @@ class SpaceScene extends Scene {
         other.action = () => "kChase";
         other.generate();
         other.attach(this.viewframe);
+        other.e = other.e * (1 + 0.3 * Math.floor((level - 1) / 20));
+        console.info(`Scaled e for level ${level}: ${other.e}`);
         this.otherShips.push(other);
         return;
       }
@@ -268,6 +270,9 @@ class SpaceScene extends Scene {
       other.prevShot = -1;
       other.disabled = performance.now() + 500;
       // They start 500ms later
+
+      other.e = other.e * (1 + 0.3 * Math.floor((level - 1) / 20));
+      console.info(`Scaled e for level ${level}: ${other.e}`);
 
       if (localLoadouts.length > 0) {
         const loadout = localLoadouts[0];
@@ -564,7 +569,6 @@ class SpaceScene extends Scene {
             }
 
             if (!rh.drawn) {
-              console.log(`Drawing for ${o._id}`);
               rh.tint = 0xff0000;
               rh.generate();
               rh.attach(this.viewframe); // TODO custom top
@@ -811,6 +815,8 @@ class SpaceScene extends Scene {
           a.sensor.visible = true;
           if (warning.kind === "v") {
             a.sensor.r = Math.PI / 2;
+          } else {
+            a.sensor.r = 0;
           }
         } else {
           a.sensor.visible = false;

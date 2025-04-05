@@ -68,7 +68,7 @@ const transition = (toState) => {
 
   if (possibleTransitions) {
     if (possibleTransitions.includes(toState)) {
-      console.log(`Transitioning from ${currentState} to ${toState}`);
+      console.info(`Transitioning from ${currentState} to ${toState}`);
       currentState = toState;
     } else {
       throw new Error(`Invalid transition from ${currentState} to ${toState}`);
@@ -309,7 +309,7 @@ const app = new Application({
   height: landscapeDimensions.height,
 });
 
-console.log(resolution);
+console.info(`Resolution: ${resolution}`);
 
 await app.init({
   id: "destrier",
@@ -396,7 +396,7 @@ const scale = (() => {
   //return Math.max(0.12, (SpaceScene.MAXSCALE * width * height) / 2200000);
 })();
 
-console.log(
+console.info(
   `Universe size: ${app.renderer.width / scale}, ${app.renderer.height / scale}`,
 );
 
@@ -498,7 +498,7 @@ const fullRestart = (tran = true) => {
   level = 1;
   const nextLevel = enemiesPerLevel(level);
   spaceScene.addAsteroids(nextLevel.asteroids);
-  spaceScene.addEnemies(nextLevel.ships, nextLevel.shipLoadouts);
+  spaceScene.addEnemies(nextLevel.ships, nextLevel.shipLoadouts, level);
   spaceScene.score = 0;
   scoreDiv.textContent = 0;
   finishCountdown = 0;
@@ -679,7 +679,6 @@ function createCheckbox(id, name, labelText, onChangeHandler, checked = false) {
   checkbox.type = "checkbox";
   checkbox.id = id;
   checkbox.name = name;
-  console.log(checked);
   checkbox.checked = checked;
 
   // Attach the onchange event handler if provided
@@ -1118,7 +1117,7 @@ app.ticker.add((delta) => {
       resetPlayerPVA(player, app, scale, spaceScene, false);
       resetKeys();
       spaceScene.addAsteroids(nextLevel.asteroids);
-      spaceScene.addEnemies(nextLevel.ships, nextLevel.shipLoadouts);
+      spaceScene.addEnemies(nextLevel.ships, nextLevel.shipLoadouts, level);
       countdown = 0;
       finishCountdown = 0;
       transition(states.kInGame);

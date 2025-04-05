@@ -253,12 +253,12 @@ class Missile extends Base1 {
         while (angleDifference > Math.PI) angleDifference -= 2 * Math.PI;
         while (angleDifference <= -Math.PI) angleDifference += 2 * Math.PI;
 
-        const turnSpeed = 3; // Adjust for faster/slower turning
+        const turnSpeed = 1; // Adjust for faster/slower turning
         this.r += angleDifference * turnSpeed;
 
         // Adjust velocity to move towards the target and speed up
-        const acceleration = 0.6; // Adjust for faster/slower acceleration
-        const maxSpeed = 80; // Adjust for the missile's top speed
+        const acceleration = 0.4; // Adjust for faster/slower acceleration
+        const maxSpeed = 40; // Adjust for the missile's top speed
 
         const currentSpeed = Math.hypot(this.vel.x, this.vel.y);
 

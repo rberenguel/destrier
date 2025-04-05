@@ -11,7 +11,7 @@ class GaussCannon extends Gun {
   kind = "kGaussCannon"; // TODO make an object with these constants
   static kind = "kGaussCannon"; // TODO make an object with these constants
   glyph = "gausscannon.png";
-  firerate = 100; // More fun if more often
+  firerate = 300; // More fun if more often
   html = "Gc"; // Fisheye
   static baseStats = {
     mass: 5,
@@ -70,7 +70,7 @@ class GaussCannon extends Gun {
       e: 1,
       scale: window.settings.weaponProps.scale.gaussCannon * shooter.scale,
       source: this.source,
-      flameList: shooter.bulletList,
+      flameList: shooter.flameList,
     });
     shooter.ammo[GaussCannon.kind].count--;
     b.kind = "kGaussCannonBullet"; // TODO: unify these constants somewhere

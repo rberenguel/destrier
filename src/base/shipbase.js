@@ -476,6 +476,16 @@ class Ship extends Base1 {
 
   generate() {
     super.generate();
+    if (this.weapons[0] && this.weapons[0].rangeHint) {
+      this.weapons[0].rangeHint.generate();
+    }
+    if (this.weapons[1] && this.weapons[1].rangeHint) {
+      this.weapons[1].rangeHint.generate();
+    }
+  }
+
+  attach(viewframe) {
+    super.attach(viewframe);
   }
 
   shieldsOn() {
@@ -492,6 +502,18 @@ class Ship extends Base1 {
   }
 
   /* pos would be universe coordinates, then here I need to use screen coordinates */
+
+  destroy() {
+    this.presentation = { destroyed: true };
+    this.destroyWeapons();
+    super.destroy();
+  }
+
+  destroyWeapons() {
+    for (let w of this.weapons ?? []) {
+      w.destroy();
+    }
+  }
 
   update(delta) {
     if (this.boostStop != 0 && this.boostStop < performance.now()) {
@@ -561,20 +583,20 @@ class Ship extends Base1 {
     const blue = Math.floor(255 * ne);
     const hexColor = (red << 16) | (green << 8) | blue;
     if (isNaN(this.vel.x) || isNaN(this.vel.y)) {
-      this.presentation = { destroyed: true };
+      this.destroy(false);
       return;
     }
     if (isNaN(this.pos.x) || isNaN(this.pos.y)) {
-      this.presentation = { destroyed: true };
+      this.destroy(false);
       return;
     }
     for (let presentation of this.presentations) {
       if (!presentation) {
-        this.presentation = { destroyed: true };
+        this.destroy();
         return;
       }
       if (presentation.destroyed) {
-        this.presentation = { destroyed: true };
+        this.destroy();
         return;
       }
       presentation.rotation = this.r;

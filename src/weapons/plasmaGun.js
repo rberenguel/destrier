@@ -6,6 +6,7 @@ import { Base1 } from "../base/base.js";
 import { Mesh, Meshes } from "../base/mesh.js";
 import { seededRnd } from "../base/rnd.js";
 import { settings } from "../settings.js";
+import { RangeHint } from "../powerups/alerting.js";
 
 const rnd = seededRnd(performance.now());
 
@@ -35,6 +36,18 @@ class PlasmaGun extends Gun {
     super({ ...props });
     this.stats = { ...this.constructor.baseStats };
     this.color = 0x00ffff;
+    this.decay = window.settings.weaponProps.decay.plasmaGun * this.overheat;
+    this.e = this.stats.baseE * this.overheat;
+    const t = this.e / (0.5 * (this.decay + this.decay));
+    if (props.rh) {
+      this.rangeHint = new RangeHint({
+        pos: {
+          x: 0,
+          y: 0,
+        },
+        radius: 0.9 * t * this.stats.ACCEL,
+      });
+    }
   }
 
   fire(shooter, bulletList) {
@@ -61,8 +74,8 @@ class PlasmaGun extends Gun {
         y: vy,
       },
       r: shooter.r,
-      e: this.stats.baseE * this.overheat,
-      decay: window.settings.weaponProps.decay.plasmaGun * this.overheat,
+      e: this.e,
+      decay: this.decay,
       scale: window.settings.weaponProps.scale.plasmaGun * shooter.scale,
       source: this.source,
       overheat: this.overheat,

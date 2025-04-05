@@ -79,6 +79,7 @@ class Bobcat extends Ship {
           x: -30,
           y: 50,
         },
+        rh: true,
         source: this._id,
       });
       const massDriverGun2 = new MassDriverGun({
@@ -86,6 +87,7 @@ class Bobcat extends Ship {
           x: -30,
           y: -50,
         },
+        rh: false,
         source: this._id,
       });
       weapons = [massDriverGun1, massDriverGun2];

@@ -7,6 +7,7 @@ export {
   wrap,
   wrapPos,
   normalizeAngle,
+  shortestAngleDifference,
 };
 
 const rotate = (x1, x2, ang) => {
@@ -23,6 +24,14 @@ function normalizeAngle(angle) {
     angle += 2 * Math.PI;
   }
   return angle;
+}
+
+function shortestAngleDifference(angle1, angle2) {
+  let difference = angle1 - angle2;
+  const twoPI = 2 * Math.PI;
+  while (difference > Math.PI) difference -= twoPI;
+  while (difference < -Math.PI) difference += twoPI;
+  return difference;
 }
 
 const sqnorm = (a, b) => a * a + b * b;

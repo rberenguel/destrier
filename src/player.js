@@ -101,12 +101,14 @@ const baseWeapons = () => {
         x: -40,
         y: 40,
       },
+      rh: true,
     });
     const plasmaGun2 = new PlasmaGun({
       pos: {
         x: -40,
         y: -40,
       },
+      rh: false,
     });
     const photonTorpedo = new PhotonTorpedoLauncher({
       pos: {

@@ -4,7 +4,7 @@ import { Gun } from "./weaponBase.js";
 import { rotate } from "../base/math.js";
 import { Base1 } from "../base/base.js";
 import { Mesh, Meshes } from "../base/mesh.js";
-
+import { RangeHint } from "../powerups/alerting.js";
 class LaserGun extends Gun {
   static kind = "kLaserGun";
   kind = "kLaserGun";
@@ -36,6 +36,15 @@ class LaserGun extends Gun {
     this.stats = { ...this.constructor.baseStats };
     this.color = props.color ?? 0x00ccff;
     this.maxRange = window.settings.weaponProps.maxRange.laserGun;
+    if (props.rh) {
+      this.rangeHint = new RangeHint({
+        pos: {
+          x: 0,
+          y: 0,
+        },
+        radius: 0.7 * this.maxRange,
+      });
+    }
   }
 
   fire(shooter, bulletList) {

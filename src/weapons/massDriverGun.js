@@ -6,6 +6,7 @@ import { Base1 } from "../base/base.js";
 import { sqnorm, rotate } from "../base/math.js";
 import { Mesh, Meshes } from "../base/mesh.js";
 import { seededRnd } from "../base/rnd.js";
+import { RangeHint } from "../powerups/alerting.js";
 
 const rnd = seededRnd(performance.now());
 
@@ -39,6 +40,16 @@ class MassDriverGun extends Gun {
     super({ ...props });
     this.stats = { ...this.constructor.baseStats };
     this.color = 0xffffff;
+    this.maxRange = window.settings.weaponProps.maxRange.massDriverGun;
+    if (props.rh) {
+      this.rangeHint = new RangeHint({
+        pos: {
+          x: 0,
+          y: 0,
+        },
+        radius: 0.9 * this.maxRange,
+      });
+    }
   }
 
   fire(shooter, bulletList) {
@@ -75,6 +86,7 @@ class MassDriverGun extends Gun {
       decay: window.settings.weaponProps.decay.massDriver * this.overheat,
       mass: this.stats.mass,
       scale: window.settings.weaponProps.scale.massDriver * shooter.scale,
+      maxRange: this.maxRange,
       source: this.source,
       overheat: this.overheat,
     });
@@ -105,6 +117,7 @@ class MassDriverBullet extends Base1 {
     this._initial_e = this.e;
     this.mass = props.mass ?? 0.4;
     this.moved = 0;
+    this.maxRange = props.maxRange ?? 1000;
     this.source = props.source ?? -1;
     this.flameList = props.flameList;
     this.kind = "kMassDriverBullet";
@@ -138,11 +151,17 @@ class MassDriverBullet extends Base1 {
     this.moved +=
       Math.abs(this.vel.x * delta.deltaTime) +
       Math.abs(this.vel.y * delta.deltaTime);
+    if (this.moved > this.maxRange) {
+      this.e = -1;
+    }
     this.e = Math.min(
       1500,
       this.f * sqnorm(this.vel.x, this.vel.y) * this.mass,
     );
     this.f -= this.decay;
+    if (this.e < 5) {
+      this.e = -1;
+    }
     const ne = Math.max(0, Math.min(1, this.e / this._initial_e));
     const gray = Math.floor(200 + 55 * ne); // Cools to black
 

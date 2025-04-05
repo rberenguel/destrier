@@ -3,7 +3,13 @@ export { Scene, SpaceScene, triggerTextEffect };
 import { Viewframe, Wrapper } from "./base/viewframe.js";
 import { Starfield } from "./base/parallax.js";
 //import { RenderedSystem } from "./tinker/renderedSystem.js";
-import { sqnorm, wrapPos, dist } from "./base/math.js";
+import {
+  sqnorm,
+  wrapPos,
+  dist,
+  normalizeAngle,
+  shortestAngleDifference,
+} from "./base/math.js";
 import { Flame } from "./base/flame.js";
 //import { PlanetKinds } from "./tinker/system.js";
 import { NebulaGenerator } from "./base/nebula.js";
@@ -150,6 +156,7 @@ class SpaceScene extends Scene {
           x: -30,
           y: 50,
         },
+        rh: true,
         color: 0xff2200,
       });
       const laserGun2 = new LaserGun({
@@ -157,6 +164,7 @@ class SpaceScene extends Scene {
           x: -30,
           y: -50,
         },
+        rh: false,
         color: 0xff2200,
       });
       laserGun1.stats.baseE = LaserGun.baseStats.baseE * 1.7;
@@ -511,6 +519,81 @@ class SpaceScene extends Scene {
           });
           s.update(delta);
         }
+      }
+
+      if (this.player.powerUps["kRangeHint"]) {
+        if (this.player.weapons[0] && this.player.weapons[0].rangeHint) {
+          const rh = this.player.weapons[0].rangeHint;
+          rh.pos.x = this.player.pos.x;
+          rh.pos.y = this.player.pos.y;
+
+          rh.r = this.player.r;
+          if (!rh.drawn && !rh.destroyed) {
+            const w = this.player.weapons[0];
+            if (w.kind === "kPlasmaGun") {
+              rh.tint = 0x00ffff;
+            }
+            if (w.kind === "kLaserGun") {
+              rh.tint = 0x0033ff;
+            }
+            if (w.kind === "kMassDriverGun") {
+              rh.tint = 0xcccccc;
+            }
+            rh.generate();
+            rh.attach(this.viewframe); // TODO custom top
+          }
+          wrapPos(rh, {
+            wmin: 0,
+            wmax: this.app.renderer.width / this.viewframe.scale,
+            hmin: 0,
+            hmax: this.app.renderer.height / this.viewframe.scale,
+          });
+          rh.update(delta);
+        }
+        for (let o of this.otherShips) {
+          if (o.weapons[0] && o.weapons[0].rangeHint) {
+            const rh = o.weapons[0].rangeHint;
+            rh.pos.x = o.pos.x;
+            rh.pos.y = o.pos.y;
+            const E = 0.03; // Example constant value for the minimum angular difference
+            const rotationSmoothingFactor = 0.2; // Adjust this value (0 to 1)
+            const diff = shortestAngleDifference(o.r, rh.r);
+            if (Math.abs(diff) > E) {
+              // Apply smoothing using linear interpolation (Lerp)
+              rh.r += diff * rotationSmoothingFactor;
+            }
+
+            if (!rh.drawn) {
+              console.log(`Drawing for ${o._id}`);
+              rh.tint = 0xff0000;
+              rh.generate();
+              rh.attach(this.viewframe); // TODO custom top
+            }
+            wrapPos(rh, {
+              wmin: 0,
+              wmax: this.app.renderer.width / this.viewframe.scale,
+              hmin: 0,
+              hmax: this.app.renderer.height / this.viewframe.scale,
+            });
+            rh.update(delta);
+          }
+        }
+        /*if(this.player.weapons[1] && this.player.weapons[1].rangeHint){
+          const rh = this.player.weapons[1].rangeHint
+          rh.pos.x = this.player.pos.x
+          rh.pos.y = this.player.pos.y
+          if(!rh.drawn){
+            rh.generate()
+            rh.attach(this.viewframe) // TODO custom top
+          }
+          wrapPos(rh, {
+            wmin: 0,
+            wmax: this.app.renderer.width / this.viewframe.scale,
+            hmin: 0,
+            hmax: this.app.renderer.height / this.viewframe.scale,
+          });
+          rh.update(delta);
+        } */
       }
 
       for (let b of flammable.bulletList) {

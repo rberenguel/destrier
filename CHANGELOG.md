@@ -1,6 +1,7 @@
 # 0.9.6
 
 - Collision sensor powerup. Powerup?
+- Weapon range powerup
 
 # 0.9.5
 

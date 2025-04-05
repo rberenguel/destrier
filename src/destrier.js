@@ -442,8 +442,8 @@ window.settings.weaponProps.decay.laserGun =
     scalingFactor,
   );
 window.settings.weaponProps.maxRange.laserGun = scalingFactor * 0.25;
-
-window.settings.weaponProps.maxRange.missileLauncher = scalingFactor * 0.3;
+window.settings.weaponProps.maxRange.massDriverGun = scalingFactor * 0.07;
+window.settings.weaponProps.maxRange.missileLauncher = scalingFactor * 0.6;
 
 // Too low of a ship speed is a bit shitty
 

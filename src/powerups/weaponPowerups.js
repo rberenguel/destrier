@@ -46,14 +46,16 @@ const primaryWeaponPowerups = {
             x: -40,
             y: 40,
           },
+          rh: true,
         });
         const massDriverGun2 = new MassDriverGun({
           pos: {
             x: -40,
             y: -40,
           },
+          rh: false,
         });
-
+        player.destroyWeapons();
         player.weapons = [massDriverGun1, massDriverGun2];
         player.ammo[MassDriverGun.kind] = {};
         player.ammo[MassDriverGun.kind].count = 99;
@@ -86,6 +88,7 @@ const primaryWeaponPowerups = {
           },
           overheat: 2,
           overheatSelfDamage: 8,
+          rh: true,
         });
         const massDriverGun2 = new MassDriverGun({
           pos: {
@@ -94,8 +97,9 @@ const primaryWeaponPowerups = {
           },
           overheat: 2,
           overheatSelfDamage: 8,
+          rh: false,
         });
-
+        player.destroyWeapons();
         player.weapons = [massDriverGun1, massDriverGun2];
         player.ammo[MassDriverGun.kind] = {};
         player.ammo[MassDriverGun.kind].count = 99;
@@ -125,14 +129,16 @@ const primaryWeaponPowerups = {
             x: -40,
             y: 40,
           },
+          rh: true,
         });
         const plasmaGun2 = new PlasmaGun({
           pos: {
             x: -40,
             y: -40,
           },
+          rh: false,
         });
-
+        player.destroyWeapons();
         player.weapons = [plasmaGun1, plasmaGun2];
 
         for (let w of player.weapons) {
@@ -163,6 +169,7 @@ const primaryWeaponPowerups = {
           },
           overheat: 2,
           overheatSelfDamage: 1.2,
+          rh: true,
         });
         const plasmaGun2 = new PlasmaGun({
           pos: {
@@ -171,8 +178,9 @@ const primaryWeaponPowerups = {
           },
           overheat: 2,
           overheatSelfDamage: 1.2,
+          rh: false,
         });
-
+        player.destroyWeapons();
         player.weapons = [plasmaGun1, plasmaGun2];
 
         for (let w of player.weapons) {
@@ -200,13 +208,16 @@ const primaryWeaponPowerups = {
             x: -40,
             y: 40,
           },
+          rh: true,
         });
         const laserGun2 = new LaserGun({
           pos: {
             x: -40,
             y: -40,
           },
+          rh: false,
         });
+        player.destroyWeapons();
         player.weapons = [laserGun1, laserGun2];
         player.ammo[LaserGun.kind] = {};
         player.ammo[LaserGun.kind].count = 10;
@@ -240,6 +251,7 @@ const primaryWeaponPowerups = {
           overheat: 2,
           overheatSelfDamage: 4,
           color: 0xff00ff,
+          rh: true,
         });
         const laserGun2 = new LaserGun({
           pos: {
@@ -249,7 +261,9 @@ const primaryWeaponPowerups = {
           overheat: 2,
           overheatSelfDamage: 4,
           color: 0xff00ff,
+          rh: false,
         });
+        player.destroyWeapons();
         player.weapons = [laserGun1, laserGun2];
         player.ammo[LaserGun.kind] = {};
         player.ammo[LaserGun.kind].count = 20;

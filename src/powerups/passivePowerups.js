@@ -29,7 +29,22 @@ const passivePowerups = {
       },
       glyph: "sensors.png",
       lambda: () => {
-        player.emergencyBrakes = true;
+        //player.sensors = true;
+      },
+    };
+  },
+  kRangeHint: (player) => {
+    return {
+      id: "kRangeHint",
+      name: "Weapon range HUD",
+      kind: "passive",
+      description: () => {
+        const title = "<h2>Passive utility</h2>";
+        return `${title}<p class='powerup-title'>Weapon range HUD</p>View where your weapons and enemy weapons reach`;
+      },
+      glyph: "rangehint.png",
+      lambda: () => {
+        //player.sensors = true;
       },
     };
   },

@@ -41,7 +41,6 @@ class Debris extends Base1 {
 
       meshes.push(mesh);
     }
-    //}
     return meshes;
   }
 

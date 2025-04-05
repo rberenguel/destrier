@@ -4,6 +4,7 @@ const Meshes = {
   kPoly: "kPoly",
   kCircle: "kCircle",
   kLine: "kLine",
+  kArc: "kArc",
   kPlanet: "kPlanet",
 };
 
@@ -18,6 +19,7 @@ class Mesh {
     this.gradienter = props.gradienter;
     this.center = props.center;
     this.radius = props.radius;
+    this.aperture = props.aperture;
     this.texture = props.texture;
   }
   flatten() {

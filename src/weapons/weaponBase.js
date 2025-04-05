@@ -18,6 +18,13 @@ class Gun {
     this.overheatSelfDamage = props.overheatSelfDamage ?? 0;
   }
 
+  destroy() {
+    if (this.rangeHint) {
+      console.info("Destroying rangehint");
+      this.rangeHint.destroy();
+    }
+  }
+
   fire(shooter, bulletList) {
     if (shooter.human) {
       shooter.stats.shots[this.kind].fired++;

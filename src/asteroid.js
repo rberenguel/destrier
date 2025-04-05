@@ -7,7 +7,7 @@ import { Flame } from "./base/flame.js";
 import { seededRnd } from "./base/rnd.js";
 import { settings } from "./settings.js";
 import { Debris, kinds as debrisKinds } from "./base/debris.js";
-
+import { SensorHint } from "./powerups/alerting.js";
 const rnd = seededRnd(performance.now());
 
 class Asteroid extends Base1 {
@@ -48,6 +48,14 @@ class Asteroid extends Base1 {
     this.e = energy;
     this.flameList = []; // For explosions
     this.bulletList = []; // Dummy, but needed for the loops
+    const s = new SensorHint({
+      pos: {
+        x: 0,
+        y: 0,
+      },
+      size: this.radius,
+    });
+    this.sensor = s;
   }
 
   static getVertices = (size, sides) => {

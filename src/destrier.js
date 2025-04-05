@@ -557,6 +557,14 @@ const commands = [
     },
   },
   {
+    title: "Remove asteroids",
+    lambda: () => {
+      for (let a of spaceScene.asteroids) {
+        a.e = -1;
+      }
+    },
+  },
+  {
     title: "To level",
     inputs: [{ title: "Which?", default: "9" }],
     lambda: (lev) => {
@@ -657,6 +665,8 @@ const controlsChanger = () => {
 const menuP = new MetaP({ id: "main-menu" });
 
 const playLambda = () => {
+  fullRestart(/*tran=*/ false);
+  level = 0;
   transition(states.kBetweenLevels);
   finishCountdown = 0;
   countdown = 0;
@@ -707,7 +717,9 @@ const customControlsLambda = async () => {
     async (ev) => {
       settings.audioEnabled = ev.target.checked;
       await set("audioEnabled", ev.target.checked);
-      const newText = `Audio ${(await get("audioEnabled")) ? "enabled" : "disabled"}`;
+      const newText = `Audio ${
+        (await get("audioEnabled")) ? "enabled" : "disabled"
+      }`;
       console.info(newText);
       ev.target.parentElement.updateLabel(newText);
     },
@@ -715,7 +727,9 @@ const customControlsLambda = async () => {
   );
   audioEnabled.classList.add("settings-checkbox");
   const screenShakeEnabledFlag = window.settings.screenShakeEnabled;
-  const labelTextShake = `Screenshake ${screenShakeEnabledFlag ? "enabled" : "disabled"}`;
+  const labelTextShake = `Screenshake ${
+    screenShakeEnabledFlag ? "enabled" : "disabled"
+  }`;
   const screenShakeEnabled = createCheckbox(
     "screenshake-enabled",
     "screenshake-enabled",
@@ -723,7 +737,9 @@ const customControlsLambda = async () => {
     async (ev) => {
       settings.screenShakeEnabled = ev.target.checked;
       await set("screenShakeEnabled", ev.target.checked);
-      const newText = `Screenshake ${(await get("screenShakeEnabled")) ? "enabled" : "disabled"}`;
+      const newText = `Screenshake ${
+        (await get("screenShakeEnabled")) ? "enabled" : "disabled"
+      }`;
       console.info(newText);
       ev.target.parentElement.updateLabel(newText);
     },
@@ -732,7 +748,9 @@ const customControlsLambda = async () => {
   screenShakeEnabled.classList.add("settings-checkbox");
 
   const mobileControlsEnabledFlag = window.settings.mobileControlsEnabled;
-  const labelTextMobile = `Mobile controls ${mobileControlsEnabledFlag ? "enabled" : "disabled"}`;
+  const labelTextMobile = `Mobile controls ${
+    mobileControlsEnabledFlag ? "enabled" : "disabled"
+  }`;
   const mobileControlsEnabled = createCheckbox(
     "audio-enabled",
     "audio-enabled",
@@ -740,7 +758,9 @@ const customControlsLambda = async () => {
     async (ev) => {
       settings.mobileControlsEnabled = ev.target.checked;
       await set("mobileControlsEnabled", ev.target.checked);
-      const newText = `Mobile controls ${(await get("mobileControlsEnabled")) ? "enabled" : "disabled"}`;
+      const newText = `Mobile controls ${
+        (await get("mobileControlsEnabled")) ? "enabled" : "disabled"
+      }`;
       console.info(newText);
       ev.target.parentElement.updateLabel(newText);
       if (await get("mobileControlsEnabled")) {
@@ -1015,6 +1035,12 @@ app.ticker.add((delta) => {
       }
       transition(states.kOfferPowerups);
     } else {
+      if (spaceScene.asteroids.length === 0) {
+        // Skip ahead if there are no asteroids left
+        if (finishCountdown > performance.now() + 500) {
+          finishCountdown = performance.now() + 500;
+        }
+      }
       if (level === 20) {
         if (performance.now() % 5 === 0) {
           for (let i = 0; i < 8; i++) {

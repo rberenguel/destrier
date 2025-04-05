@@ -191,6 +191,7 @@ const allPowerUpChoices = (player) => [
   secondaryWeaponPowerups.kPhotonTorpedoLauncher(player),
   secondaryWeaponPowerups.kMissileLauncher(player),
   passivePowerups.kEmergencyBrakes(player),
+  passivePowerups.kSensors(player),
   passivePowerups.kPointSight(player),
   passivePowerups.kFasterRotation(player),
   passivePowerups.kFasterRotationD(player),

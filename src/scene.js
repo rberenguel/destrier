@@ -330,6 +330,7 @@ class SpaceScene extends Scene {
       });
       ast.disabled =
         performance.now() + window.settings.shipProps.disabledDelay; // Use the exact same settings as ship disabled, yes
+
       this.asteroids.push(ast);
     }
   }
@@ -492,6 +493,26 @@ class SpaceScene extends Scene {
         f.update(delta);
       }
 
+      if (this.player.powerUps["kSensors"]) {
+        for (let a of this.asteroids) {
+          const s = a.sensor;
+          if (a.e < 0) {
+            s.e = -1;
+          }
+          if (!s.drawn) {
+            s.generate();
+            s.attach(this.viewframe); // TODO custom top viewframe
+          }
+          wrapPos(s, {
+            wmin: 0,
+            wmax: this.app.renderer.width / this.viewframe.scale,
+            hmin: 0,
+            hmax: this.app.renderer.height / this.viewframe.scale,
+          });
+          s.update(delta);
+        }
+      }
+
       for (let b of flammable.bulletList) {
         // Handle bullet collisions with asteroids now
         if (b.e <= 0.01) {
@@ -502,6 +523,7 @@ class SpaceScene extends Scene {
           if (a.e < 0) {
             continue;
           }
+
           if (a.collision(b)) {
             const ae = a.e;
             a.e = b.e > 0 ? a.e - b.e : a.e; // Strange situations
@@ -694,6 +716,24 @@ class SpaceScene extends Scene {
       if (a.e < 0) {
         continue;
       }
+      if (a.sensor) {
+        const warning = getAsteroidEdgeWarningPosition(
+          a,
+          this.app,
+          this.viewframe,
+        );
+        if (warning) {
+          a.sensor.pos.x = warning.x;
+          a.sensor.pos.y = warning.y;
+          a.sensor.visible = true;
+          if (warning.kind === "v") {
+            a.sensor.r = Math.PI / 2;
+          }
+        } else {
+          a.sensor.visible = false;
+        }
+      }
+
       const collisioning = a.collision(this.player);
       // Asteroid flyby text effect. Not convinced about this.
 
@@ -930,4 +970,47 @@ function triggerTextEffect(kind, x_, y_, scale) {
       }, 300); // Same as transition
     }
   }, 50);
+}
+
+function getAsteroidEdgeWarningPosition(
+  asteroid,
+  app,
+  viewframe,
+  predict = false,
+) {
+  // Each asteroid will come with its own hint reference
+  const warningThresholdBase = 4 * asteroid.size;
+  const speedFactor = 5;
+  const asteroidSpeed = Math.hypot(asteroid.vel.x, asteroid.vel.y);
+  const warningThreshold = warningThresholdBase + asteroidSpeed * speedFactor;
+
+  const gw = app.renderer.width / viewframe.scale;
+  const gh = app.renderer.height / viewframe.scale;
+
+  const wrappedX = (asteroid.pos.x + gw) % gw;
+  const wrappedY = (asteroid.pos.y + gh) % gh;
+
+  if (predict) {
+    if (wrappedX < warningThreshold && asteroid.vel.x < 0) {
+      return { x: gw - 10, y: wrappedY }; // Line on the right
+    } else if (wrappedX > gw - warningThreshold && asteroid.vel.x > 0) {
+      return { x: 10, y: wrappedY };
+    } else if (wrappedY < warningThreshold && asteroid.vel.y < 0) {
+      return { x: wrappedX, y: gh - 10 }; // Line on the bottom
+    } else if (wrappedY > gh - warningThreshold && asteroid.vel.y > 0) {
+      return { x: wrappedX, y: 10 };
+    }
+  } else {
+    if (wrappedX < warningThreshold) {
+      return { x: gw - 20, y: wrappedY, kind: "v" }; // Line on the right
+    } else if (wrappedX > gw - warningThreshold) {
+      return { x: 20, y: wrappedY, kind: "v" };
+    } else if (wrappedY < warningThreshold) {
+      return { x: wrappedX, y: gh - 20, kind: "h" }; // Line on the bottom
+    } else if (wrappedY > gh - warningThreshold) {
+      return { x: wrappedX, y: 20, kind: "h" };
+    }
+  }
+
+  return null;
 }

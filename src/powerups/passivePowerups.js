@@ -10,9 +10,24 @@ const passivePowerups = {
       kind: "passive",
       description: () => {
         const title = "<h2>Passive utility</h2>";
-        return `${title}<p class='powerup-title'>Emergency brakes</p> Accelerate in the opposite direction of your travel to brake immediately.`;
+        return `${title}<p class='powerup-title'>Emergency brakes</p>Accelerate in the opposite direction of your travel to brake immediately.`;
       },
       glyph: "emergencybrakes.png",
+      lambda: () => {
+        player.emergencyBrakes = true;
+      },
+    };
+  },
+  kSensors: (player) => {
+    return {
+      id: "kSensors",
+      name: "Collision sensors",
+      kind: "passive",
+      description: () => {
+        const title = "<h2>Passive utility</h2>";
+        return `${title}<p class='powerup-title'>Collision sensors</p>Side hints for asteroids on the other side of the screen`;
+      },
+      glyph: "sensors.png",
       lambda: () => {
         player.emergencyBrakes = true;
       },

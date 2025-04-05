@@ -1,3 +1,7 @@
+# 0.9.6
+
+- Collision sensor powerup. Powerup?
+
 # 0.9.5
 
 - Tweaks to boost

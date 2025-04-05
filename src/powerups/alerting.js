@@ -58,7 +58,7 @@ class RangeHint extends Base1 {
   }
 
   destroy() {
-    for (let presentation of this.presentations) {
+    for (let presentation of (this.presentations) ?? []) {
       presentation.destroy();
     }
     super.destroy();

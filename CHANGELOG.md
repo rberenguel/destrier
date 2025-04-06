@@ -2,6 +2,7 @@
 
 - Small usability improvements
 - Small endgame improvements
+- Filled shield and fix… something
 
 # 0.9.6
 

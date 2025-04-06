@@ -34,7 +34,8 @@ class Lynx extends Ship {
       kind: Meshes.kCircle,
       center: [0, 0],
       radius: 130,
-      color: 0xcccccc,
+      color: 0xffffff,
+      fill: 0xcccccc,
       width: 10,
     });
     const phaseShieldMesh = new Mesh({

@@ -948,7 +948,9 @@ class SpaceScene extends Scene {
     // asteroids explode. Likely ordering issue
     for (let i = this.asteroids.length - 1; i >= 0; i--) {
       const dis = this.asteroids[i];
-      if (dis.destroyed) {
+      // Weird: if this check is dis.destroyed the whole game speeds up a lot. Likely I have
+      // a deltaTime problem somewhere.
+      if (dis.presentation?.destroyed) {
         if (dis.flameList.length > 0) {
           this.flameList.push(...dis.flameList); // Save the flames
         }
@@ -958,7 +960,7 @@ class SpaceScene extends Scene {
     // Remove extra debris
     for (let i = this.debrisList.length - 1; i >= 0; i--) {
       const dis = this.debrisList[i];
-      if (dis.presentation?.destroyed) {
+      if (dis.destroyed) {
         this.debrisList.splice(i, 1);
       }
     }

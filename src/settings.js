@@ -8,6 +8,7 @@ const isMobile = () => {
 };
 
 const audioEnabled = (await get("audioEnabled")) || true;
+const reverseYDisabled = (await get("reverseYEnabled")) || true; // Yes I know
 const screenShakeEnabled = (await get("screenShakeEnabled")) || true;
 const mobileControlsEnabled =
   (await get("mobileControlsEnabled")) || isMobile();
@@ -55,6 +56,7 @@ const settings = {
   audioEnabled: audioEnabled,
   screenShakeEnabled: screenShakeEnabled,
   mobileControlsEnabled: mobileControlsEnabled,
+  reverseYDisabled: reverseYDisabled,
   hull: {
     pctRecoveredPerAsteroid: 5,
   },

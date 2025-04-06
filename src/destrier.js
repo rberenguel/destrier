@@ -85,14 +85,21 @@ const gameActions = {
     if (currentState != states.kInGame) {
       return;
     }
-    player.backThrust(1, settings.player.speedLimit);
+    if (window.settings.reverseYDisabled) {
+      player.forwardThrust(1, settings.player.speedLimit);
+    } else {
+      player.backThrust(1, settings.player.speedLimit);
+    }
   },
   moveUp: (f = 1) => {
     if (currentState != states.kInGame) {
       return;
     }
-
-    player.forwardThrust(1, settings.player.speedLimit);
+    if (window.settings.reverseYDisabled) {
+      player.backThrust(1, settings.player.speedLimit);
+    } else {
+      player.forwardThrust(1, settings.player.speedLimit);
+    }
   },
   moveRight: (f = 1) => {
     if (currentState != states.kInGame) {
@@ -198,7 +205,7 @@ const inMenuActions = {
     }
     if (currentState === states.kShowingIntro) {
       menuActionsHistory.push("down");
-      menuActionsHistory = menuActionsHistory.slice(-8);
+      menuActionsHistory = menuActionsHistory.slice(-9);
     }
     inMenuActions.debounce = performance.now() + 300;
   },
@@ -214,7 +221,7 @@ const inMenuActions = {
     }
     if (currentState === states.kShowingIntro) {
       menuActionsHistory.push("up");
-      menuActionsHistory = menuActionsHistory.slice(-8);
+      menuActionsHistory = menuActionsHistory.slice(-9);
     }
 
     inMenuActions.debounce = performance.now() + 300;
@@ -228,7 +235,7 @@ const inMenuActions = {
     }
     if (currentState === states.kShowingIntro) {
       menuActionsHistory.push("right");
-      menuActionsHistory = menuActionsHistory.slice(-8);
+      menuActionsHistory = menuActionsHistory.slice(-9);
     }
     inMenuActions.debounce = performance.now() + 300;
   },
@@ -241,7 +248,7 @@ const inMenuActions = {
     }
     if (currentState === states.kShowingIntro) {
       menuActionsHistory.push("left");
-      menuActionsHistory = menuActionsHistory.slice(-8);
+      menuActionsHistory = menuActionsHistory.slice(-9);
     }
     inMenuActions.debounce = performance.now() + 300;
   },
@@ -259,34 +266,35 @@ const inMenuActions = {
     }
     if (currentState === states.kShowingIntro) {
       const history = menuActionsHistory.join("|");
-      const optA = [
-        "down",
-        "down",
+      console.info(history);
+      const konami = [
         "up",
         "up",
+        "down",
+        "down",
         "right",
         "left",
         "right",
         "left",
+        "B",
       ].join("|");
-      const optB = [
-        "down",
-        "down",
-        "up",
-        "up",
-        "right",
-        "left",
-        "right",
-        "left",
-      ].join("|");
-      if (history === optA || history === optB) {
+      if (history === konami) {
         document.getElementById("debug-menu").style.display = "block";
         menuActionsHistory = [];
       }
     }
     inMenuActions.debounce = performance.now() + 300;
   },
-  activeAbility: () => {},
+  activeAbility: () => {
+    if (inMenuActions.debounce > performance.now()) {
+      return;
+    }
+    if (currentState === states.kShowingIntro) {
+      menuActionsHistory.push("B");
+      menuActionsHistory = menuActionsHistory.slice(-9);
+    }
+    inMenuActions.debounce = performance.now() + 300;
+  },
   secondaryShoot: () => {
     if (inMenuActions.debounce > performance.now()) {
       return;
@@ -771,6 +779,25 @@ const customControlsLambda = async () => {
     window.settings.audioEnabled,
   );
   audioEnabled.classList.add("settings-checkbox");
+  const reverseYDisabledFlag = window.settings.reverseYDisabled;
+  const labelReverseY = `Reverse Y axis (in-game) ${reverseYDisabledFlag ? "disabled" : "enabled"}`;
+  // TODO: avoid having a label setter repeated
+  const reverseYDisabled = createCheckbox(
+    "reverse-y-enabled",
+    "reverse-y-enabled",
+    labelReverseY,
+    async (ev) => {
+      settings.reverseYDisabled = !ev.target.checked;
+      await set("reverseYDisabled", ev.target.checked);
+      const newText = `Reverse Y axis (in-game) ${
+        (await get("reverseYDisabled")) ? "enabled" : "disabled" // This is confusing with negated props
+      }`;
+      console.info(newText);
+      ev.target.parentElement.updateLabel(newText);
+    },
+    !window.settings.reverseYDisabled,
+  );
+  reverseYDisabled.classList.add("settings-checkbox");
   const screenShakeEnabledFlag = window.settings.screenShakeEnabled;
   const labelTextShake = `Screenshake ${
     screenShakeEnabledFlag ? "enabled" : "disabled"
@@ -797,8 +824,8 @@ const customControlsLambda = async () => {
     mobileControlsEnabledFlag ? "enabled" : "disabled"
   }`;
   const mobileControlsEnabled = createCheckbox(
-    "audio-enabled",
-    "audio-enabled",
+    "mobile-enabled",
+    "mobile-enabled",
     labelTextMobile,
     async (ev) => {
       settings.mobileControlsEnabled = ev.target.checked;
@@ -821,10 +848,12 @@ const customControlsLambda = async () => {
   mobileControlsEnabled.classList.add("settings-checkbox");
 
   div.appendChild(audioEnabled);
+  div.appendChild(reverseYDisabled);
   div.appendChild(screenShakeEnabled);
   div.appendChild(mobileControlsEnabled);
   div.appendChild(document.createElement("HR"));
   div.appendChild(controls);
+  console.info(window.settings);
   msgs.div(div);
   msgs.show({ glass: 1001, msgs: 1002 });
   transition(states.kSettingsMenu);

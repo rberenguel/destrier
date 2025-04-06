@@ -10,8 +10,8 @@ import { isMobile } from "./settings.js";
 let keyMap = await get("keyMap");
 
 const commandNames = {
-  moveDown: "Back thrusters (move forward)",
-  moveUp: "Forward thrusters (move backward)",
+  moveDown: "Forward thrusters (move backward)",
+  moveUp: "Back thrusters (move forward)",
   moveLeft: "Rotate left",
   moveRight: "Rotate right",
   shoot: "Fire primary weapon",
@@ -26,8 +26,8 @@ const commandNames = {
    seem to expect */
 
 const defaultKeyboardControls = {
-  ArrowUp: "moveDown",
-  ArrowDown: "moveUp",
+  ArrowUp: "moveUp",
+  ArrowDown: "moveDown",
   ArrowLeft: "moveLeft",
   ArrowRight: "moveRight",
   Space: "shoot",
@@ -38,8 +38,8 @@ const defaultKeyboardControls = {
 };
 
 const mobileKeyboardEquivalent = {
-  ArrowUp: "moveDown",
-  ArrowDown: "moveUp",
+  ArrowUp: "moveUp",
+  ArrowDown: "moveDown",
   ArrowLeft: "moveLeft",
   ArrowRight: "moveRight",
   KeyA: "shoot",

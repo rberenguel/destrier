@@ -27,7 +27,7 @@ import {
   currentPowerupsToDiv,
   debugCommands,
   shieldPowerups,
-  superPowerups,
+  activePowerups,
   powerupControls,
   currentPowerUpsHud,
 } from "./powerups.js";
@@ -183,16 +183,22 @@ const gameActions = {
   },
 };
 
+let menuActionsHistory = [];
+
 const inMenuActions = {
   moveDown: (f = 1) => {
     if (inMenuActions.debounce > performance.now()) {
       return;
     }
     if (currentState === states.kWaitingPowerUpChoice) {
-      powerupControls("GoUp");
+      powerupControls("GoDown");
     }
     if (currentState === states.kShowingMainMenu) {
       menuP.goDown();
+    }
+    if (currentState === states.kShowingIntro) {
+      menuActionsHistory.push("down");
+      menuActionsHistory = menuActionsHistory.slice(-8);
     }
     inMenuActions.debounce = performance.now() + 300;
   },
@@ -201,10 +207,14 @@ const inMenuActions = {
       return;
     }
     if (currentState === states.kWaitingPowerUpChoice) {
-      powerupControls("GoDown");
+      powerupControls("GoUp");
     }
     if (currentState === states.kShowingMainMenu) {
       menuP.goUp();
+    }
+    if (currentState === states.kShowingIntro) {
+      menuActionsHistory.push("up");
+      menuActionsHistory = menuActionsHistory.slice(-8);
     }
 
     inMenuActions.debounce = performance.now() + 300;
@@ -216,6 +226,10 @@ const inMenuActions = {
     if (currentState === states.kWaitingPowerUpChoice) {
       powerupControls("GoRight");
     }
+    if (currentState === states.kShowingIntro) {
+      menuActionsHistory.push("right");
+      menuActionsHistory = menuActionsHistory.slice(-8);
+    }
     inMenuActions.debounce = performance.now() + 300;
   },
   moveLeft: (f = 1) => {
@@ -224,6 +238,10 @@ const inMenuActions = {
     }
     if (currentState === states.kWaitingPowerUpChoice) {
       powerupControls("GoLeft");
+    }
+    if (currentState === states.kShowingIntro) {
+      menuActionsHistory.push("left");
+      menuActionsHistory = menuActionsHistory.slice(-8);
     }
     inMenuActions.debounce = performance.now() + 300;
   },
@@ -239,6 +257,34 @@ const inMenuActions = {
         performance.now() + window.settings.shipProps.disabledDelay - 100;
       return;
     }
+    if (currentState === states.kShowingIntro) {
+      const history = menuActionsHistory.join("|");
+      const optA = [
+        "down",
+        "down",
+        "up",
+        "up",
+        "right",
+        "left",
+        "right",
+        "left",
+      ].join("|");
+      const optB = [
+        "down",
+        "down",
+        "up",
+        "up",
+        "right",
+        "left",
+        "right",
+        "left",
+      ].join("|");
+      if (history === optA || history === optB) {
+        document.getElementById("debug-menu").style.display = "block";
+        menuActionsHistory = [];
+      }
+    }
+    inMenuActions.debounce = performance.now() + 300;
   },
   activeAbility: () => {},
   secondaryShoot: () => {
@@ -600,7 +646,7 @@ const commands = [
   ...debugCommands(player),
 ];
 metaP.maxCommands = 100;
-metaP.bind(commands);
+metaP.bind(commands, /*filters=*/ {}, /*metaPhandler=*/ false);
 msgs.attach();
 
 const pauseMenu = () => {
@@ -930,8 +976,8 @@ app.ticker.add((delta) => {
     };
     // Level is increased before being here
     if (level === 3) {
-      console.info("Offering only shields!");
-      offerChoices(shieldPowerups(player), globals);
+      console.info("Offering only base shields!");
+      offerChoices(shieldPowerups(player).slice(0, 2), globals);
       return;
     }
     if (level < 3) {
@@ -947,7 +993,7 @@ app.ticker.add((delta) => {
     } else {
       const choices = [
         ...allPowerUpChoices(player).concat(
-          shieldPowerups(player).concat(superPowerups(player)),
+          shieldPowerups(player).concat(activePowerups(player)),
         ),
       ];
       choices.sort(() => Math.random() - 0.5);

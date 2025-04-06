@@ -4,7 +4,7 @@ export {
   currentPowerupsToDiv,
   debugCommands,
   shieldPowerups,
-  superPowerups,
+  activePowerups,
   powerupControls,
   currentPowerUpsHud,
 };
@@ -23,7 +23,7 @@ const glass = document.getElementById("glass");
 const currentPowerupsToDiv = (div, player, kind) => {
   const allChoices = allPowerUpChoices(player)
     .concat(shieldPowerups(player))
-    .concat(superPowerups(player));
+    .concat(activePowerups(player));
   let added = 0;
   for (let pup of Object.keys(player.powerUps ?? {})) {
     if (!player.powerUps[pup]) {
@@ -180,16 +180,22 @@ const offerChoices = (_options = [], globals = {}) => {
 
 const replaces = `<h3 class="powerup-replaces">replaces</h3>`;
 
-const allPowerUpChoices = (player) => [
+const primaryWeapons = (player) => [
   primaryWeaponPowerups.kMassDriverGun(player),
   primaryWeaponPowerups.kMassDriverGunOH(player),
   primaryWeaponPowerups.kLaserGun(player),
   primaryWeaponPowerups.kLaserGunOH(player),
   primaryWeaponPowerups.kPlasmaGun(player),
   primaryWeaponPowerups.kPlasmaGunOH(player),
+];
+
+const secondaryWeapons = (player) => [
   secondaryWeaponPowerups.kGaussCannon(player),
   secondaryWeaponPowerups.kPhotonTorpedoLauncher(player),
   secondaryWeaponPowerups.kMissileLauncher(player),
+];
+
+const passives = (player) => [
   passivePowerups.kEmergencyBrakes(player),
   passivePowerups.kSensors(player),
   passivePowerups.kRangeHint(player),
@@ -202,6 +208,12 @@ const allPowerUpChoices = (player) => [
   passivePowerups.kExtraAmmoD(player),
   passivePowerups.kExtraHull(player),
   passivePowerups.kExtraHullD(player),
+];
+
+const allPowerUpChoices = (player) => [
+  ...primaryWeapons(player),
+  ...secondaryWeapons(player),
+  ...passives(player),
 ];
 
 const shieldPowerups = (player) => [
@@ -245,9 +257,6 @@ const shieldPowerups = (player) => [
       player.shield = "kEnergyShield";
     },
   },
-];
-
-const superPowerups = (player) => [
   {
     id: "kPhaseShield",
     name: "Phase shield",
@@ -268,6 +277,9 @@ const superPowerups = (player) => [
       player.shield = "kPhaseShield";
     },
   },
+];
+
+const activePowerups = (player) => [
   {
     id: "kEmp",
     name: "EMP pulse",
@@ -344,10 +356,7 @@ const activeAbilityDescs = {
 };
 
 const debugCommands = (player) => {
-  const choices = allPowerUpChoices(player)
-    .concat(shieldPowerups(player))
-    .concat(superPowerups(player));
-  return choices.map((c) => {
+  const menuit = (c) => {
     return {
       title: c.name,
       lambda: () => {
@@ -355,5 +364,36 @@ const debugCommands = (player) => {
         player.powerUps[c.id] = true;
       },
     };
-  });
+  };
+  const pwh = {
+    title: "Primary weapons:",
+    lambda: () => {},
+    disabled: true,
+  };
+  const swh = {
+    title: "Secondary weapons:",
+    lambda: () => {},
+    disabled: true,
+  };
+  const pph = {
+    title: "Passive powerups:",
+    lambda: () => {},
+    disabled: true,
+  };
+  const shh = {
+    title: "Shield powerups:",
+    lambda: () => {},
+    disabled: true,
+  };
+  const ah = {
+    title: "Active powerups:",
+    lambda: () => {},
+    disabled: true,
+  };
+  const pw = [pwh].concat(primaryWeapons(player).map(menuit));
+  const sw = [swh].concat(secondaryWeapons(player).map(menuit));
+  const pp = [pph].concat(passives(player).map(menuit));
+  const sh = [shh].concat(shieldPowerups(player).map(menuit));
+  const ap = [ah].concat(activePowerups(player).map(menuit));
+  return pw.concat(sw).concat(pp).concat(sh).concat(sh).concat(ap);
 };

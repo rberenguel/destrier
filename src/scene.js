@@ -538,11 +538,20 @@ class SpaceScene extends Scene {
             if (w.kind === "kPlasmaGun") {
               rh.tint = 0x00ffff;
             }
+            if (w.kind === "kPlasmaGun" && w.overheat > 1) {
+              rh.tint = 0xff5555;
+            }
             if (w.kind === "kLaserGun") {
               rh.tint = 0x0033ff;
             }
+            if (w.kind === "kLaserGun" && w.overheat > 1) {
+              rh.tint = 0xff00ff;
+            }
             if (w.kind === "kMassDriverGun") {
               rh.tint = 0xcccccc;
+            }
+            if (w.kind === "kMassDriverGun" && w.overheat > 1) {
+              rh.tint = 0xff5555;
             }
             rh.generate();
             rh.attach(this.viewframe); // TODO custom top

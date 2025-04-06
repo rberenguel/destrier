@@ -141,6 +141,16 @@ canvas {
   transform: none;
 }
 
+#metap-modal {
+  height: 60vh;
+  overflow: scroll;
+  z-index: 10000;
+}
+
+#metap-modal-glass {
+  z-index: 10000;
+}
+
 #msgs-main {
   font-family: "Sixtyfour";
 }
@@ -179,7 +189,7 @@ canvas {
 }
 
 #debug-menu {
-  font-size: 0.75rem;
+  font-size: 2rem;
   flex-shrink: 0;
   margin-right: auto;
   padding: 0.5rem;

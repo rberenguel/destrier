@@ -1,3 +1,7 @@
+# 0.9.7
+
+- Small usability improvements
+
 # 0.9.6
 
 - Collision sensor powerup. Powerup?

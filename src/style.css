@@ -549,8 +549,8 @@ canvas {
   color: #c06;
   opacity: 0; /* Starts hidden */
   transition:
-    opacity 300ms ease-out,
-    font-size 300ms ease-out;
+    opacity 500ms ease-out,
+    font-size 500ms ease-out;
   pointer-events: none;
   z-index: 1001;
 }

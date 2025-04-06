@@ -1040,7 +1040,7 @@ function triggerTextEffect(kind, x_, y_, scale) {
     text = options[0];
   }
   if (kind === "kLvl20") {
-    const options = [`You made it till<br/>the end!`, "Congratulations!"].sort(
+    const options = [`You won!`, "Congratulations!"].sort(
       () => Math.random() - 0.5,
     );
     text = options[0];
@@ -1079,7 +1079,7 @@ function triggerTextEffect(kind, x_, y_, scale) {
       setTimeout(() => {
         effectText.style.fontSize = "1em";
         effectText.style.color = "red";
-      }, 300); // Same as transition
+      }, 500); // Same as transition
     }
   }, 50);
 }

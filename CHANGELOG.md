@@ -1,6 +1,7 @@
 # 0.9.7
 
 - Small usability improvements
+- Small endgame improvements
 
 # 0.9.6
 

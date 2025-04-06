@@ -2,7 +2,9 @@ import { Graphics } from "../../libs/3rdparty/pixi.mjs";
 import { Base1 } from "./base.js";
 import { Mesh, Meshes } from "./mesh.js";
 
-export { Debris, kinds };
+export { Debris, kinds, shipDebrisFilter };
+
+const shipDebrisFilter = (d) => d.kind === "kShipDebris";
 
 const kinds = {
   kShipDebris: "kShipDebris",
@@ -90,7 +92,9 @@ class Debris extends Base1 {
         }
         presentation.destroy();
         presentation = null;
-        this.generated = false;
+        //this.generated = false;
+        this.destroyed = true;
+        console.log("destroyed debris");
       }
       return;
     }

@@ -275,13 +275,6 @@ const otherControl = (props = {}) => {
   }
 
   if (ship) {
-    // Ship targetting
-    const shootingAngle = Math.atan2(
-      // With no correction
-      other.pos.y - ship.pos.y,
-      other.pos.x - ship.pos.x,
-    );
-
     let sdx = ship.pos.x - other.pos.x;
     if (sdx > gameWidth / 2) {
       sdx -= gameWidth;
@@ -299,12 +292,27 @@ const otherControl = (props = {}) => {
 
     // --- First Order Correction for Leading Target ---
     const predictionTime = sdist / (other.weapons[0]?.stats?.ACCEL || 100); // Estimate based on distance and projectile speed (using ACCEL as a proxy)
-    const predictedShipX = ship.pos.x + ship.vel.x * predictionTime;
-    const predictedShipY = ship.pos.y + ship.vel.y * predictionTime;
+    let predictedShipX = ship.pos.x + ship.vel.x * predictionTime;
+    let predictedShipY = ship.pos.y + ship.vel.y * predictionTime;
+
+    // Apply wrap-around to the predicted ship position
+    let predictedSDX = predictedShipX - other.pos.x;
+    if (predictedSDX > gameWidth / 2) {
+      predictedSDX -= gameWidth;
+    } else if (predictedSDX < -gameWidth / 2) {
+      predictedSDX += gameWidth;
+    }
+
+    let predictedSDY = predictedShipY - other.pos.y;
+    if (predictedSDY > gameHeight / 2) {
+      predictedSDY -= gameHeight;
+    } else if (predictedSDY < -gameHeight / 2) {
+      predictedSDY += gameHeight;
+    }
 
     const correctedShootingAngle = Math.atan2(
-      other.pos.y - predictedShipY,
-      other.pos.x - predictedShipX,
+      -predictedSDY, // Note the negative sign here, aligning with your original calculation
+      -predictedSDX, // Note the negative sign here, aligning with your original calculation
     );
 
     if (

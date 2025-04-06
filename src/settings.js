@@ -57,6 +57,8 @@ const settings = {
   screenShakeEnabled: screenShakeEnabled,
   mobileControlsEnabled: mobileControlsEnabled,
   reverseYDisabled: reverseYDisabled,
+  debrisLength: 10,
+  endFireworks: 2,
   hull: {
     pctRecoveredPerAsteroid: 5,
   },

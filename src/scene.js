@@ -26,7 +26,7 @@ import {
 } from "./weapons/weapons.js";
 import { settings } from "./settings.js";
 import { Panther } from "./base/panther.js";
-import { triggerFireworks } from "./fireworks.js";
+import { shipDebrisFilter } from "./base/debris.js";
 const rnd = seededRnd(performance.now());
 
 class Scene {
@@ -490,6 +490,13 @@ class SpaceScene extends Scene {
         });
         d.update(delta);
       }
+      if (
+        this.debrisList.filter(shipDebrisFilter).length > settings.debrisLength
+      ) {
+        const d = this.debrisList.filter(shipDebrisFilter)[0];
+        d.e = -1;
+        d.update(delta);
+      }
 
       // Render and update flames
       for (let f of flammable.flameList) {
@@ -941,11 +948,18 @@ class SpaceScene extends Scene {
     // asteroids explode. Likely ordering issue
     for (let i = this.asteroids.length - 1; i >= 0; i--) {
       const dis = this.asteroids[i];
-      if (dis.presentation?.destroyed) {
+      if (dis.destroyed) {
         if (dis.flameList.length > 0) {
           this.flameList.push(...dis.flameList); // Save the flames
         }
         this.asteroids.splice(i, 1);
+      }
+    }
+    // Remove extra debris
+    for (let i = this.debrisList.length - 1; i >= 0; i--) {
+      const dis = this.debrisList[i];
+      if (dis.presentation?.destroyed) {
+        this.debrisList.splice(i, 1);
       }
     }
 

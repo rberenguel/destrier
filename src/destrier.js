@@ -1116,8 +1116,8 @@ app.ticker.add((delta) => {
         }
       }
       if (level === 20) {
-        if (performance.now() % 5 === 0) {
-          for (let i = 0; i < 8; i++) {
+        if (performance.now() % 13 === 0) {
+          for (let i = 0; i < settings.endFireworks; i++) {
             triggerFireworks(
               app.renderer.width * Math.random(),
               app.renderer.height * Math.random(),

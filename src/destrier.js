@@ -341,17 +341,25 @@ const isLandscape = () =>
   window.screen.orientation.angle === -90 ||
   window.screen.orientation.type.startsWith("landscape");
 
+const isDevel =
+  window.location.hostname.startsWith("192") ||
+  window.location.hostname.startsWith("127") ||
+  window.location.hostname === "localhost"; // Added localhost check for completeness
+
 const needsStandalone = () => {
   const standaloneiOS = window.navigator.standalone === true;
   const standaloneAndroid = window.matchMedia(
     "(display-mode: standalone)",
   ).matches;
-  const devel =
-    window.location.hostname.startsWith("192") ||
-    window.location.hostname.startsWith("127") ||
-    window.location.hostname === "localhost"; // Added localhost check for completeness
-  return isMobile() && !devel && !standaloneiOS && !standaloneAndroid && !DEBUG;
+
+  return (
+    isMobile() && !isDevel && !standaloneiOS && !standaloneAndroid && !DEBUG
+  );
 };
+
+if (isDevel) {
+  document.getElementById("debug-menu").style.display = "block";
+}
 
 const landscapeDimensions = getLandscapeDimensions(); // Renamed variable
 const resolution = window.devicePixelRatio || 1;

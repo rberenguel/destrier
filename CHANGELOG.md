@@ -1,3 +1,7 @@
+# 0.9.8
+
+- Inertial dampener powerup
+
 # 0.9.7
 
 - Small usability improvements

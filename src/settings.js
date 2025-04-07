@@ -203,6 +203,7 @@ const settings = {
     phaseShieldDuration: 2500,
     empDuration: 5000,
     boostDuration: 750,
+    inertialDampener: 0.005,
   },
   mobile: {
     iscaling: (base, factor) => {

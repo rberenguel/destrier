@@ -55,6 +55,7 @@ class Ship extends Base1 {
     this._magicalCounter = 0;
     this.disabled = 0;
     this.radius = props.radius;
+    this.inertialDampener = 0;
   }
 
   increaseEnergy(pct) {
@@ -322,6 +323,62 @@ class Ship extends Base1 {
       this.noLimits = false;
     }
     const velocityAngle = Math.atan2(this.vel.y, this.vel.x);
+    const angleDifference = shortestAngleDifference(this.r, velocityAngle);
+    if (nv > 10 && Math.abs(angleDifference) < 0.2 && this.emergencyBrakes) {
+      this.vel.x = 0;
+      this.vel.y = 0;
+      this.burst({
+        pos: { x: 90, y: 0 },
+        count: 15,
+        minenergy: 10,
+        fill: 0x00ccff,
+      });
+      if (this.human) {
+        window.sampler("e1", 0.8); // Snare ghost
+      }
+      return;
+    }
+
+    let _vx = this.vel.x + this.accel * Math.cos(this.r) * f;
+    let _vy = this.vel.y + this.accel * Math.sin(this.r) * f;
+
+    if (this.inertialDampener > 0) {
+      // Calculate the ship's right vector (perpendicular to forward)
+      const rightX = Math.cos(this.r + Math.PI / 2);
+      const rightY = Math.sin(this.r + Math.PI / 2);
+
+      // Calculate the component of the velocity along the right vector (lateral velocity)
+      const lateralVelocity = this.vel.x * rightX + this.vel.y * rightY;
+
+      // Apply a force opposite to the lateral velocity to dampen it
+      const dampeningFactor = this.inertialDampener;
+      _vx -= lateralVelocity * rightX * dampeningFactor;
+      _vy -= lateralVelocity * rightY * dampeningFactor;
+    }
+
+    const _nv = sqnorm(_vx, _vy);
+    if (_nv < limit || (this.noLimits && _nv < nv)) {
+      this.vel.x = _vx;
+      this.vel.y = _vy;
+      for (let i = 0; i < 3; i++) {
+        this._backThrust();
+      }
+      if (this.human && Math.random() < 0.05) {
+        window.sampler("e2", 0.3); // Wind
+      }
+    } else {
+      if (Math.random() < 0.2) {
+        this._backThrust({ fill: 0x0099ff });
+      }
+    } /*
+    if (this.disabled > performance.now()) {
+      return;
+    }
+    const nv = sqnorm(this.vel.x, this.vel.y);
+    if (nv < limit) {
+      this.noLimits = false;
+    }
+    const velocityAngle = Math.atan2(this.vel.y, this.vel.x);
 
     const oppositeVelocityAngle = normalizeAngle(velocityAngle + Math.PI);
 
@@ -344,9 +401,9 @@ class Ship extends Base1 {
       }
       return;
     }
-
-    const _vx = this.vel.x + this.accel * Math.cos(this.r) * f;
-    const _vy = this.vel.y + this.accel * Math.sin(this.r) * f;
+    const id = this.inertialDampener
+    const _vx = this.vel.x + id*this.accel * Math.cos(this.r) * f;
+    const _vy = this.vel.y + id*this.accel * Math.sin(this.r) * f;
     const _nv = sqnorm(_vx, _vy);
     if (_nv < limit || (this.noLimits && _nv < nv)) {
       if (this.human && Math.random() < 0.05) {
@@ -361,7 +418,7 @@ class Ship extends Base1 {
       if (Math.random() < 0.5) {
         this._backThrust({ fill: 0x0099ff });
       }
-    }
+    }*/
   }
 
   _backThrust(props = {}) {
@@ -416,8 +473,23 @@ class Ship extends Base1 {
       return;
     }
 
-    const _vx = this.vel.x - this.accel * Math.cos(this.r) * f;
-    const _vy = this.vel.y - this.accel * Math.sin(this.r) * f;
+    let _vx = this.vel.x - this.accel * Math.cos(this.r) * f;
+    let _vy = this.vel.y - this.accel * Math.sin(this.r) * f;
+
+    if (this.inertialDampener > 0) {
+      // Calculate the ship's right vector (perpendicular to forward)
+      const rightX = Math.cos(this.r + Math.PI / 2);
+      const rightY = Math.sin(this.r + Math.PI / 2);
+
+      // Calculate the component of the velocity along the right vector (lateral velocity)
+      const lateralVelocity = this.vel.x * rightX + this.vel.y * rightY;
+
+      // Apply a force opposite to the lateral velocity to dampen it
+      const dampeningFactor = this.inertialDampener;
+      _vx -= lateralVelocity * rightX * dampeningFactor;
+      _vy -= lateralVelocity * rightY * dampeningFactor;
+    }
+
     const _nv = sqnorm(_vx, _vy);
     if (_nv < limit || (this.noLimits && _nv < nv)) {
       this.vel.x = _vx;
@@ -434,7 +506,6 @@ class Ship extends Base1 {
       }
     }
   }
-
   _forwardThrust(props = {}) {
     const rf = rnd();
     const spread = 0.15 - 0.3 * rf;

@@ -208,6 +208,7 @@ const passives = (player) => [
   passivePowerups.kExtraAmmoD(player),
   passivePowerups.kExtraHull(player),
   passivePowerups.kExtraHullD(player),
+  passivePowerups.kInertialDampener(player),
 ];
 
 const allPowerUpChoices = (player) => [

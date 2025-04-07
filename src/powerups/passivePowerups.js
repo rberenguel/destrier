@@ -1,3 +1,5 @@
+import { settings } from "../settings.js";
+
 export { passivePowerups };
 
 const replaces = `<h3 class="powerup-replaces">replaces</h3>`;
@@ -184,6 +186,21 @@ const passivePowerups = {
       glyph: "extrahull.png",
       lambda: () => {
         player.maxE = 1350;
+      },
+    };
+  },
+  kInertialDampener: (player) => {
+    return {
+      id: "kInertialDampener",
+      name: "Inertial dampener",
+      kind: "passive",
+      description: () => {
+        const title = "<h2>Passive ability</h2>";
+        return `${title}<p class='powerup-title'>Inertial dampener</p>Sharper turning when moving at speed.`;
+      },
+      glyph: "inertialdampener.png",
+      lambda: () => {
+        player.inertialDampener = settings.player.inertialDampener;
       },
     };
   },

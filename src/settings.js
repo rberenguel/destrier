@@ -104,7 +104,7 @@ const settings = {
       },
     },
   },
-  hitSleepMs: 15,
+  hitSleepMs: 5,
   shake: {
     onHit: (app, angle) => {
       shake(app, -8, angle);

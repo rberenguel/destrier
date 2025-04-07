@@ -396,5 +396,5 @@ const debugCommands = (player) => {
   const pp = [pph].concat(passives(player).map(menuit));
   const sh = [shh].concat(shieldPowerups(player).map(menuit));
   const ap = [ah].concat(activePowerups(player).map(menuit));
-  return pw.concat(sw).concat(pp).concat(sh).concat(sh).concat(ap);
+  return pw.concat(sw).concat(pp).concat(sh).concat(ap);
 };

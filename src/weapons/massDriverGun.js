@@ -95,7 +95,7 @@ class MassDriverGun extends Gun {
     bulletList.push(b);
     shooter.ammo[MassDriverGun.kind].count--;
     if (shooter.human) {
-      window.sampler("g0", 0.5); // Snarestick, pretty good for a machine gun.
+      window.sampler("c1", 0.5); // Snarestick, pretty good for a machine gun.
     }
   }
 }

@@ -75,8 +75,8 @@ const powerupControls = (ev) => {
   }
   try {
     const isH2 = selection?.tagName === "H2";
-    const isChoice = selection.classList.contains("powerup-choice");
-    const isSkip = selection.id === "skip-powerup";
+    const isChoice = selection?.classList.contains("powerup-choice");
+    const isSkip = selection?.id === "skip-powerup";
     if (ev == "GoLeft" || ev == "GoRight") {
       if (isChoice) {
         const other = Array.from(

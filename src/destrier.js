@@ -262,6 +262,7 @@ const inMenuActions = {
       inMenuActions.debounce = performance.now() + 300;
       player.prevshot =
         performance.now() + window.settings.shipProps.disabledDelay - 100;
+      window.sampler("b1", 0.3, 2.5); // Accept
       return;
     }
     if (currentState === states.kShowingIntro) {
@@ -279,6 +280,7 @@ const inMenuActions = {
         "B",
       ].join("|");
       if (history === konami) {
+        window.sampler("b0", 1.5, 2.5); // Quack
         document.getElementById("debug-menu").style.display = "block";
         menuActionsHistory = [];
       }
@@ -303,6 +305,7 @@ const inMenuActions = {
       transition(states.kShowingMainMenu);
       intro.destroy();
       inMenuActions.debounce = performance.now() + 300;
+      window.sampler("b1", 0.3, 2.5); // Accept
       return;
     }
     if (currentState === states.kSettingsMenu) {
@@ -314,16 +317,20 @@ const inMenuActions = {
       msgs.hide();
       transition(states.kShowingMainMenu);
       inMenuActions.debounce = performance.now() + 300;
+      window.sampler("b1", 0.3, 2.5); // Accept
       return;
     }
     if (currentState === states.kWaitingPowerUpChoice) {
       powerupControls("Accept");
+      window.sampler("b1", 0.3, 2.5); // Accept
       player.secondaryPrevshot = performance.now(); // Prevent fire across menus
     }
     if (currentState === states.kShowingMainMenu) {
       menuP.accept();
+      window.sampler("b1", 0.3, 2.5); // Accept
     }
     if (currentState === states.kGameOver) {
+      window.sampler("b1", 0.3, 2.5); // Accept
       fullRestart(); // fullRestart already transitions
       player.secondaryPrevshot = performance.now(); // Prevent fire across menus
     }

@@ -334,7 +334,7 @@ class Ship extends Base1 {
         fill: 0x00ccff,
       });
       if (this.human) {
-        window.sampler("e1", 0.8); // Snare ghost
+        window.sampler("e2", 0.8); // Snare ghost
       }
       return;
     }
@@ -364,61 +364,13 @@ class Ship extends Base1 {
         this._backThrust();
       }
       if (this.human && Math.random() < 0.05) {
-        window.sampler("e2", 0.3); // Wind
+        window.sampler("e1", 0.3); // Wind
       }
     } else {
       if (Math.random() < 0.2) {
         this._backThrust({ fill: 0x0099ff });
       }
-    } /*
-    if (this.disabled > performance.now()) {
-      return;
     }
-    const nv = sqnorm(this.vel.x, this.vel.y);
-    if (nv < limit) {
-      this.noLimits = false;
-    }
-    const velocityAngle = Math.atan2(this.vel.y, this.vel.x);
-
-    const oppositeVelocityAngle = normalizeAngle(velocityAngle + Math.PI);
-
-    const angleDifference = shortestAngleDifference(
-      this.r,
-      oppositeVelocityAngle,
-    );
-
-    if (nv > 10 && Math.abs(angleDifference) < 0.5 && this.emergencyBrakes) {
-      this.vel.x = 0;
-      this.vel.y = 0;
-      this.burst({
-        pos: { x: -60, y: 0 },
-        count: 15,
-        minenergy: 10,
-        fill: 0x00ccff,
-      });
-      if (this.human) {
-        window.sampler("e1", 0.8); // Snare ghost
-      }
-      return;
-    }
-    const id = this.inertialDampener
-    const _vx = this.vel.x + id*this.accel * Math.cos(this.r) * f;
-    const _vy = this.vel.y + id*this.accel * Math.sin(this.r) * f;
-    const _nv = sqnorm(_vx, _vy);
-    if (_nv < limit || (this.noLimits && _nv < nv)) {
-      if (this.human && Math.random() < 0.05) {
-        window.sampler("e2", 0.3); // Wind
-      }
-      this.vel.x = _vx;
-      this.vel.y = _vy;
-      for (let i = 0; i < 3; i++) {
-        this._backThrust();
-      }
-    } else {
-      if (Math.random() < 0.5) {
-        this._backThrust({ fill: 0x0099ff });
-      }
-    }*/
   }
 
   _backThrust(props = {}) {
@@ -468,7 +420,7 @@ class Ship extends Base1 {
         fill: 0x00ccff,
       });
       if (this.human) {
-        window.sampler("e1", 0.8); // Snare ghost
+        window.sampler("e2", 0.8); // Snare ghost
       }
       return;
     }
@@ -498,7 +450,7 @@ class Ship extends Base1 {
         this._forwardThrust();
       }
       if (this.human && Math.random() < 0.05) {
-        window.sampler("e2", 0.3); // Wind
+        window.sampler("e1", 0.3); // Wind
       }
     } else {
       if (Math.random() < 0.2) {
@@ -598,7 +550,7 @@ class Ship extends Base1 {
         fill: 0x00ccff,
       });
       if (this.human) {
-        window.sampler("e1", 0.8); // Snare ghost
+        window.sampler("e2", 0.8); // Snare ghost
       }
     }
     super.update(delta);

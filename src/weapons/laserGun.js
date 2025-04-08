@@ -86,7 +86,7 @@ class LaserGun extends Gun {
     bulletList.push(b);
     shooter.ammo[LaserGun.kind].count--;
     if (shooter.human) {
-      window.sampler("a3", 0.5); // Choke
+      window.sampler("c2", 0.5); // Choke
     }
   }
 }

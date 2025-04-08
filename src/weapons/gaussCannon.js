@@ -78,7 +78,7 @@ class GaussCannon extends Gun {
     b.firedBy = "kGaussCannon";
     bulletList.push(b);
     if (shooter.human) {
-      window.sampler("f0", 0.5); // Crash
+      window.sampler("d1", 0.5); // Crash
     }
   }
 }

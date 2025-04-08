@@ -1,6 +1,7 @@
 # 0.9.8
 
 - Inertial dampener powerup
+- Some more sounds
 
 # 0.9.7
 

@@ -323,14 +323,21 @@ class Ship extends Base1 {
       this.noLimits = false;
     }
     const velocityAngle = Math.atan2(this.vel.y, this.vel.x);
-    const angleDifference = shortestAngleDifference(this.r, velocityAngle);
-    if (nv > 10 && Math.abs(angleDifference) < 0.2 && this.emergencyBrakes) {
+
+    const oppositeVelocityAngle = normalizeAngle(velocityAngle + Math.PI);
+
+    const angleDifference = shortestAngleDifference(
+      this.r,
+      oppositeVelocityAngle,
+    );
+
+    if (nv > 10 && Math.abs(angleDifference) < 0.5 && this.emergencyBrakes) {
       this.vel.x = 0;
       this.vel.y = 0;
       this.burst({
-        pos: { x: 90, y: 0 },
+        pos: { x: -60, y: 0 },
         count: 15,
-        minenergy: 10,
+        minenergy: 20,
         fill: 0x00ccff,
       });
       if (this.human) {
@@ -409,12 +416,18 @@ class Ship extends Base1 {
       this.noLimits = false;
     }
     const velocityAngle = Math.atan2(this.vel.y, this.vel.x);
-    const angleDifference = shortestAngleDifference(this.r, velocityAngle);
-    if (nv > 10 && Math.abs(angleDifference) < 0.2 && this.emergencyBrakes) {
+    const oppositeVelocityAngle = normalizeAngle(velocityAngle);
+
+    const angleDifference = shortestAngleDifference(
+      this.r,
+      oppositeVelocityAngle,
+    );
+
+    if (nv > 10 && Math.abs(angleDifference) < 0.5 && this.emergencyBrakes) {
       this.vel.x = 0;
       this.vel.y = 0;
       this.burst({
-        pos: { x: 90, y: 0 },
+        pos: { x: -60, y: 0 },
         count: 15,
         minenergy: 10,
         fill: 0x00ccff,

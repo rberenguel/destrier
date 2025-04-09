@@ -2,6 +2,7 @@
 
 - Inertial dampener powerup
 - Some more sounds
+- Fix regression on emergency brakes from the inertial dampener 😒
 
 # 0.9.7
 

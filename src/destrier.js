@@ -734,6 +734,7 @@ const controlsChanger = () => {
 const menuP = new MetaP({ id: "main-menu" });
 
 const playLambda = () => {
+  window.sampler("b1", 0.3, 2.5); // Accept
   fullRestart(/*tran=*/ false);
   level = 0;
   transition(states.kBetweenLevels);
@@ -773,6 +774,7 @@ function createCheckbox(id, name, labelText, onChangeHandler, checked = false) {
 }
 
 const customControlsLambda = async () => {
+  window.sampler("b1", 0.3, 2.5); // Accept
   menuP.ignoreKeys();
   const div = document.createElement("DIV");
   const controls = controlsChanger();
@@ -886,6 +888,7 @@ const mainMenuCommands = [
   {
     title: "About",
     lambda: () => {
+      window.sampler("b1", 0.3, 2.5); // Accept
       const about = document.getElementById("about");
       const clone = about.cloneNode(true);
       clone.querySelector(".changelog-button").addEventListener("click", () => {

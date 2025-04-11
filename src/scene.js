@@ -617,6 +617,7 @@ class SpaceScene extends Scene {
       }
 
       for (let b of flammable.bulletList) {
+        // TODO: better do the check in asteroids? It's kind of the same, but…
         // Handle bullet collisions with asteroids now
         if (b.e <= 0.01) {
           b.e = -1;

@@ -31,6 +31,27 @@ class Panther extends Ship {
       [60, 100],
     ];
     const color = 0xffffff;
+    const orange = 0xff8800;
+    const targettedV = new Mesh({
+      name: "targetted",
+      kind: Meshes.kLine,
+      vertices: [
+        [-130, 0],
+        [130, 0],
+      ],
+      color: orange,
+      width: width ?? 10,
+    });
+    const targettedH = new Mesh({
+      name: "targetted",
+      kind: Meshes.kLine,
+      vertices: [
+        [0, -130],
+        [0, 130],
+      ],
+      color: orange,
+      width: width ?? 10,
+    });
     const meshBelowBase = new Mesh({
       name: "hitMesh",
       kind: Meshes.kPoly,
@@ -165,6 +186,8 @@ class Panther extends Ship {
         meshBelowBase,
         meshBelowSide1,
         meshBelowSide2,
+        targettedH,
+        targettedV,
       ],
       weapons: weapons,
       vertices: verticesBase,

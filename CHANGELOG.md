@@ -1,3 +1,7 @@
+# 0.9.9
+
+- Tweak the distribution of powerups
+
 # 0.9.8
 
 - Inertial dampener powerup

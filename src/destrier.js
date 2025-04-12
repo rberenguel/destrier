@@ -30,6 +30,7 @@ import {
   activePowerups,
   powerupControls,
   currentPowerUpsHud,
+  powerUpChoices,
 } from "./powerups.js";
 import { SpaceScene, triggerTextEffect } from "./scene.js";
 
@@ -1022,35 +1023,7 @@ app.ticker.add((delta) => {
       player: player,
     };
     // Level is increased before being here
-    if (level === 3) {
-      console.info("Offering only base shields!");
-      offerChoices(shieldPowerups(player).slice(0, 2), globals);
-      return;
-    }
-    if (level < 3) {
-      offerChoices(choices, globals);
-      return;
-    } else if (level < 7) {
-      const choices = [
-        ...allPowerUpChoices(player).concat(shieldPowerups(player)),
-      ];
-      choices.sort(() => Math.random() - 0.5);
-      offerChoices(choices, globals);
-      return;
-    } else {
-      const choices = [
-        ...allPowerUpChoices(player).concat(
-          shieldPowerups(player).concat(activePowerups(player)),
-        ),
-      ];
-      choices.sort(() => Math.random() - 0.5);
-      // TODO: Improve the odds of getting shields, active, or non-bad powerups
-      // Currently this is complicated because the methods in powerups.js are just
-      // lambdas with player, they will need level
-      offerChoices(choices, globals);
-      return;
-    }
-    // Leaving the unused return while I sort out the options above better.
+    offerChoices(powerUpChoices(player, level), globals);
     return;
   }
 

@@ -1,4 +1,5 @@
 export {
+  powerUpChoices,
   offerChoices,
   allPowerUpChoices,
   currentPowerupsToDiv,
@@ -33,7 +34,7 @@ const currentPowerupsToDiv = (div, player, kind) => {
     if (!props) {
       continue;
     }
-    if (kind && props[0].kind != kind) {
+    if (kind && props[0] && props[0].kind != kind) {
       continue;
     }
     added++;
@@ -129,7 +130,9 @@ const offerChoices = (_options = [], globals = {}) => {
   const enabledPowerups = Object.keys(globals.player.powerUps).filter(
     (p) => globals.player.powerUps[p],
   );
-  const options = _options.filter((o) => !enabledPowerups.includes(o.id));
+  const availableOptions = _options.filter(
+    (o) => !enabledPowerups.includes(o.id),
+  );
 
   currentPowerupsToDiv(currentPowerups, globals.player);
 
@@ -143,8 +146,56 @@ const offerChoices = (_options = [], globals = {}) => {
   const glyphElements = document.querySelectorAll(".choice-glyph");
   const descriptionElements = document.querySelectorAll(".choice-description");
 
+  if (availableOptions.length < 2) {
+    console.warn(
+      "Warning: Less than two unique power-up options available after filtering.",
+    );
+    // Handle the case where there aren't enough options to guarantee two different ones
+    // For now, we'll just proceed with whatever is available.
+  }
+
+  let option1 = availableOptions[0];
+  let option2 = availableOptions[1];
+
+  if (
+    availableOptions.length >= 2 &&
+    option1 &&
+    option2 &&
+    option1.id === option2.id
+  ) {
+    // The first two options are the same, try to find a different second option
+    for (let i = 2; i < availableOptions.length; i++) {
+      if (availableOptions[i].id !== option1.id) {
+        option2 = availableOptions[i];
+        break;
+      }
+    }
+    // If after checking, option2 is still the same as option1 (or the initial second option),
+    // it means all available options are the same after filtering.
+    if (option1.id === option2?.id) {
+      console.warn(
+        "Warning: The two offered power-up choices are the same after attempting to find a different option.",
+      );
+      // In this scenario, we will proceed with the same option being offered twice as no other unique option is available.
+    }
+  } else if (availableOptions.length < 2) {
+    // Handle the case where there is only one or zero options
+    if (availableOptions.length === 1) {
+      option1 = availableOptions[0];
+      option2 = availableOptions[0]; // Offer the same option twice or handle differently
+      console.warn(
+        "Warning: Only one unique power-up option available, offering it twice.",
+      );
+    } else {
+      console.warn("Warning: No unique power-up options available.");
+      return; // Or handle this case as needed, perhaps don't show the power-up selection.
+    }
+  }
+
+  const optionsToDisplay = [option1, option2];
+
   for (let i = 0; i < 2; i++) {
-    const option = options[i];
+    const option = optionsToDisplay[i];
     const choiceElement = choiceElements[i];
     choiceElement.dataset.id = option.id;
     const glyphElement = glyphElements[i];
@@ -219,6 +270,50 @@ const allPowerUpChoices = (player) => [
   ...secondaryWeapons(player),
   ...passives(player),
 ];
+
+const powerUpChoices = (player, level) => {
+  if (level === 3) {
+    console.info("Offering only base shields!");
+    return shieldPowerups(player).slice(0, 2);
+  }
+  if (level < 3) {
+    return allPowerUpChoices(player);
+  }
+  if (level < 7) {
+    return allPowerUpChoices(player).concat(shieldPowerups(player));
+  }
+  let allAvailable = allPowerUpChoices(player)
+    .concat(shieldPowerups(player).concat(activePowerups(player)))
+    .sort(() => Math.random() - 0.5);
+  // Starting at level 8, remove 1 defective per level.
+  const removeDefectiveCount = Math.max(0, level - 7);
+  let removedDefective = 0;
+
+  // Iterate through the allAvailable array and remove the required number of defective items
+  for (
+    let i = allAvailable.length - 1;
+    i >= 0 && removedDefective < removeDefectiveCount;
+    i--
+  ) {
+    if (
+      allAvailable[i] &&
+      (allAvailable[i].defective || allAvailable[i].overheated)
+    ) {
+      console.info(`Removed "${allAvailable[i].name}" from consideration`);
+      allAvailable.splice(i, 1);
+      removedDefective++;
+    }
+  }
+  if (level >= 15) {
+    console.info("Overindexing on actives and phase shield");
+    allAvailable = allAvailable
+      .concat([shieldPowerups(player)[2]])
+      .concat(activePowerups(player))
+      .sort(() => Math.random() - 0.5);
+  }
+  console.info(allAvailable);
+  return allAvailable;
+};
 
 const shieldPowerups = (player) => [
   {
@@ -347,9 +442,21 @@ const activePowerups = (player) => [
 ];
 
 const shieldDescs = {
-  kDeflectorShield: `<p class='powerup-title'>Deflector shield</p><hr/>Deflects strongly kinetic weapons for ${(settings.shipProps.shieldDuration / 1000).toFixed(2)} seconds, affects mildly energy weapons.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
-  kEnergyShield: `<p class='powerup-title'>Energy shield</p><hr/>Stops completely energy weapons for ${(settings.shipProps.shieldDuration / 1000).toFixed(2)} seconds, no effect on kinetic weapons.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
-  kPhaseShield: `<p class='powerup-title'>Phase shield</p><hr/>Let's you pass through asteroids, projectiles and beams for ${(settings.shipProps.phaseShieldDuration / 1000).toFixed(2)} seconds.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
+  kDeflectorShield: `<p class='powerup-title'>Deflector shield</p><hr/>Deflects strongly kinetic weapons for ${(
+    settings.shipProps.shieldDuration / 1000
+  ).toFixed(
+    2,
+  )} seconds, affects mildly energy weapons.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
+  kEnergyShield: `<p class='powerup-title'>Energy shield</p><hr/>Stops completely energy weapons for ${(
+    settings.shipProps.shieldDuration / 1000
+  ).toFixed(
+    2,
+  )} seconds, no effect on kinetic weapons.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
+  kPhaseShield: `<p class='powerup-title'>Phase shield</p><hr/>Let's you pass through asteroids, projectiles and beams for ${(
+    settings.shipProps.phaseShieldDuration / 1000
+  ).toFixed(
+    2,
+  )} seconds.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
 };
 
 const activeAbilityDescs = {
@@ -396,7 +503,11 @@ const debugCommands = (player) => {
   };
   const pw = [pwh].concat(primaryWeapons(player).map(menuit));
   const sw = [swh].concat(secondaryWeapons(player).map(menuit));
-  const pp = [pph].concat(passives(player).map(menuit));
+  const pp = [pph].concat(
+    passives(player)
+      .concat([passivePowerups.kMissileTargettingSystem(player)])
+      .map(menuit),
+  );
   const sh = [shh].concat(shieldPowerups(player).map(menuit));
   const ap = [ah].concat(activePowerups(player).map(menuit));
   return pw.concat(sw).concat(pp).concat(sh).concat(ap);

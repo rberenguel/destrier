@@ -21,7 +21,8 @@ const setWeaponPowerup = (player, weapon) => {
 
 const setSecondaryWeaponPowerup = (player, weapon) => {
   player.powerUps["kGaussCannon"] = false;
-  player.powerUps["kTorpedoLauncher"] = false;
+  player.powerUps["kPhotonTorpedoLauncher"] = false;
+  player.powerUps["kMissileLauncher"] = false;
   player.powerUps[weapon] = true;
 };
 

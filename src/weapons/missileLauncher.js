@@ -1,4 +1,4 @@
-export { MissileLauncher };
+export { MissileLauncher, targetShip };
 
 import { Gun } from "./weaponBase.js";
 import { Mesh, Meshes } from "../base/mesh.js";

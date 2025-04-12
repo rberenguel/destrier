@@ -29,6 +29,27 @@ class Bobcat extends Ship {
       color: color,
       width: width,
     });
+    const orange = 0xff8800;
+    const targettedV = new Mesh({
+      name: "targetted",
+      kind: Meshes.kLine,
+      vertices: [
+        [-130, 0],
+        [130, 0],
+      ],
+      color: orange,
+      width: width ?? 10,
+    });
+    const targettedH = new Mesh({
+      name: "targetted",
+      kind: Meshes.kLine,
+      vertices: [
+        [0, -130],
+        [0, 130],
+      ],
+      color: orange,
+      width: width ?? 10,
+    });
 
     const secondaryWeaponMesh = new Mesh({
       name: "secondaryWeapon",
@@ -69,6 +90,8 @@ class Bobcat extends Ship {
         primaryWeaponMesh2,
         meshBelow,
         meshAround,
+        targettedH,
+        targettedV,
       ],
       weapons: weapons,
       vertices: vertices,

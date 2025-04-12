@@ -1044,6 +1044,9 @@ app.ticker.add((delta) => {
         ),
       ];
       choices.sort(() => Math.random() - 0.5);
+      // TODO: Improve the odds of getting shields, active, or non-bad powerups
+      // Currently this is complicated because the methods in powerups.js are just
+      // lambdas with player, they will need level
       offerChoices(choices, globals);
       return;
     }

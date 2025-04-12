@@ -27,6 +27,7 @@ import {
 import { settings } from "./settings.js";
 import { Panther } from "./base/panther.js";
 import { shipDebrisFilter } from "./base/debris.js";
+import { targetShip } from "./weapons/missileLauncher.js";
 const rnd = seededRnd(performance.now());
 
 class Scene {
@@ -440,6 +441,20 @@ class SpaceScene extends Scene {
       hmax: this.app.renderer.height / this.viewframe.scale,
     });
     this.player.update(delta);
+
+    // TODO AAA Aiming
+    for (let o of this.otherShips) {
+      o.targetted = false;
+    }
+    if (
+      this.player.powerUps?.kMissileTargettingSystem &&
+      this.player.powerUps?.kMissileLauncher
+    ) {
+      const closestShip = targetShip(this.player, this.otherShips);
+      if (closestShip) {
+        closestShip.targetted = true;
+      }
+    }
     // Remove destroyed asteroids (in-place)
     let newAsteroids = [];
     for (let flammable of [

@@ -3,6 +3,7 @@
 - Inertial dampener powerup
 - Some more sounds
 - Fix regression on emergency brakes from the inertial dampener 😒
+- Missile targetting system powerup
 
 # 0.9.7
 

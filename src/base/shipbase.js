@@ -663,6 +663,14 @@ class Ship extends Base1 {
             presentation.tint = this.weapons[0].color;
           }
         }
+        if (presentation.name == "targetted") {
+          if (this.targetted) {
+            presentation.alpha = 0.8;
+          } else {
+            presentation.alpha = 0;
+          }
+          presentation.rotation = 0;
+        }
         if (presentation.name == "secondaryWeapon") {
           if (
             this.secondaryWeapons[0] &&

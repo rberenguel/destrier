@@ -204,4 +204,17 @@ const passivePowerups = {
       },
     };
   },
+  kMissileTargettingSystem: (player) => {
+    return {
+      id: "kMissileTargettingSystem",
+      name: "Missile targetting system",
+      kind: "passive",
+      description: () => {
+        const title = "<h2>Passive ability</h2>";
+        return `${title}<p class='powerup-title'>Missile targetting system</p>Visual indicator for missile lock on enemy ships.`;
+      },
+      glyph: "missiletargetting.png",
+      lambda: () => {},
+    };
+  },
 };

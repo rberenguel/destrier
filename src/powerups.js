@@ -209,6 +209,9 @@ const passives = (player) => [
   passivePowerups.kExtraHull(player),
   passivePowerups.kExtraHullD(player),
   passivePowerups.kInertialDampener(player),
+  ...(player.powerUps.kMissileLauncher
+    ? [passivePowerups.kMissileTargettingSystem(player)]
+    : []),
 ];
 
 const allPowerUpChoices = (player) => [

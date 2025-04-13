@@ -277,10 +277,12 @@ const powerUpChoices = (player, level) => {
     return shieldPowerups(player).slice(0, 2);
   }
   if (level < 3) {
-    return allPowerUpChoices(player);
+    return allPowerUpChoices(player).sort(() => Math.random() - 0.5);
   }
   if (level < 7) {
-    return allPowerUpChoices(player).concat(shieldPowerups(player));
+    return allPowerUpChoices(player)
+      .concat(shieldPowerups(player))
+      .sort(() => Math.random() - 0.5);
   }
   let allAvailable = allPowerUpChoices(player)
     .concat(shieldPowerups(player).concat(activePowerups(player)))

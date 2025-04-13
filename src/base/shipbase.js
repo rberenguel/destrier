@@ -626,7 +626,12 @@ class Ship extends Base1 {
     const red = 255;
     const green = Math.floor(255 * ne);
     const blue = Math.floor(255 * ne);
-    const hexColor = (red << 16) | (green << 8) | blue;
+    let hexColor = (red << 16) | (green << 8) | blue;
+    if (isNaN(ne)) {
+      {
+        hexColor = 0xff9900;
+      }
+    }
     if (isNaN(this.vel.x) || isNaN(this.vel.y)) {
       this.destroy(false);
       return;

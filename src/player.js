@@ -3,6 +3,7 @@ export { initPlayer, resetPlayerAmmo, resetPlayerPVA, baseWeapons };
 import { Lynx } from "./base/ship.js";
 import { PlasmaGun, PhotonTorpedoLauncher } from "./weapons/weapons.js";
 import { resetStats } from "./stats.js";
+
 const initPlayer = (app, scale) => {
   const { weapons, secondaryWeapons } = baseWeapons();
 
@@ -51,6 +52,10 @@ const initPlayer = (app, scale) => {
   }
 
   resetStats(player);
+  if (window.playerPostInit) {
+    console.log("Player post init");
+    window.playerPostInit(player);
+  }
   return player;
 };
 
@@ -71,6 +76,9 @@ const resetPlayerPVA = (player, app, scale, spaceScene, regenerate = false) => {
   player.shieldBlinked = true;
   player.activeAbilityEnergy = 1;
   spaceScene.player = player;
+  player.phaseShield = 0;
+  player.energyShield = 0;
+  player.deflectorShield = 0;
   if (regenerate) {
     player.generate(true);
     spaceScene.bindPlayer(); // This might not be needed, but won't hurt

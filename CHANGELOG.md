@@ -4,6 +4,7 @@
 - Fix some bugs
 - Improve notification of shield recharged
 - Add mobile warning
+- Improve _certain menu_
 
 # 0.9.8
 

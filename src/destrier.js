@@ -31,6 +31,7 @@ import {
   powerupControls,
   currentPowerUpsHud,
   powerUpChoices,
+  maxPlayer,
 } from "./powerups.js";
 import { SpaceScene, triggerTextEffect } from "./scene.js";
 
@@ -79,6 +80,7 @@ const transition = (toState) => {
       `No transitions defined for current state: ${currentState}`,
     );
   }
+  window.state = currentState;
 };
 
 const gameActions = {
@@ -283,9 +285,22 @@ const inMenuActions = {
         "left",
         "B",
       ].join("|");
+      const alternate = ["up", "down", "right", "left", "B"].join("|");
       if (history === konami) {
+        console.info("Debug menu active");
         window.sampler("b0", 1.5, 2.5); // Quack
         document.getElementById("debug-menu").style.display = "block";
+        menuActionsHistory = [];
+      }
+      if (history.endsWith(alternate)) {
+        console.info("Debug menu active + pretty much everything");
+        window.sampler("b0", 1.5, 2.5); // Quack
+        document.getElementById("debug-menu").style.display = "block";
+        document.getElementById("debug-menu").innerHTML =
+          document.getElementById("debug-menu").innerHTML + "&#x263B;";
+        window.playerPostInit = (player) => maxPlayer(player);
+        maxPlayer(player);
+        console.log(player);
         menuActionsHistory = [];
       }
     }
@@ -516,7 +531,7 @@ window.settings.weaponProps.decay.laserGun =
     scalingFactor,
   );
 window.settings.weaponProps.maxRange.laserGun = scalingFactor * 0.25;
-window.settings.weaponProps.maxRange.massDriverGun = scalingFactor * 0.07;
+window.settings.weaponProps.maxRange.massDriverGun = scalingFactor * 0.1;
 window.settings.weaponProps.maxRange.missileLauncher = scalingFactor * 1.6;
 window.settings.weaponProps.maxRange.gaussCannon = scalingFactor * 1.5;
 
@@ -599,6 +614,10 @@ const fullRestart = (tran = true) => {
   player.powerUps = { kPlasmaGun: true, kPhotonTorpedoLauncher: true };
   player.weapons = weapons;
   player.secondaryWeapons = secondaryWeapons;
+  if (window.playerPostInit) {
+    console.log("Player post init");
+    window.playerPostInit(player);
+  }
   resetPlayerAmmo(player);
   for (let w of player.weapons) {
     w.source = player._id;

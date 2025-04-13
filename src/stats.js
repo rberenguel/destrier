@@ -150,6 +150,9 @@ const showHUDInfo = (player, spaceScene, level) => () => {
   const secondaryGlyph = wc.glyph;
 
   hull.innerHTML = `H:${((player.e / player.maxE) * 100).toFixed(0)}%`;
+  if (player.e === Infinity) {
+    hull.innerHTML = `H:&#x263B;`;
+  }
   if (player.shield === "kDeflectorShield") {
     containerShield.src = "src/media/glyphs/deflectorshield.png";
   }

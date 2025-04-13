@@ -20,8 +20,8 @@ class Gun {
 
   destroy() {
     if (this.rangeHint) {
-      console.info("Destroying rangehint");
       this.rangeHint.destroy();
+      this.rangeHint = null;
     }
   }
 

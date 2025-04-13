@@ -8,6 +8,7 @@ export {
   activePowerups,
   powerupControls,
   currentPowerUpsHud,
+  maxPlayer,
 };
 
 import { states } from "./states.js";
@@ -35,6 +36,9 @@ const currentPowerupsToDiv = (div, player, kind) => {
       continue;
     }
     if (kind && props[0] && props[0].kind != kind) {
+      continue;
+    }
+    if (props.length === 0) {
       continue;
     }
     added++;
@@ -130,9 +134,17 @@ const offerChoices = (_options = [], globals = {}) => {
   const enabledPowerups = Object.keys(globals.player.powerUps).filter(
     (p) => globals.player.powerUps[p],
   );
-  const availableOptions = _options.filter(
+  let availableOptions = _options.filter(
     (o) => !enabledPowerups.includes(o.id),
   );
+
+  if (globals.player.maxed) {
+    console.info("Player maxed");
+    availableOptions = activePowerups(globals.player).sort(
+      () => Math.random() - 0.5,
+    );
+    console.info(availableOptions);
+  }
 
   currentPowerupsToDiv(currentPowerups, globals.player);
 
@@ -471,6 +483,28 @@ const activeAbilityDescs = {
   kBoost: `<p class='powerup-title'>Displacement boost</p><hr/>Instantly accelerate forward at high speed for ${settings.shipProps.boostDuration} seconds and stop immediately. Your phase shield is active while boosted, so <em>you can pass through asteroids and enemy fire</em>`,
 };
 
+const maxPlayer = (player) => {
+  const ml = secondaryWeaponPowerups.kMissileLauncher(player);
+  const md = primaryWeaponPowerups.kMassDriverGun(player);
+  const mt = passivePowerups.kMissileTargettingSystem(player);
+  const ps = shieldPowerups(player)[2];
+  const b = activePowerups(player)[2];
+  passives(player)
+    .filter((p) => !p.defective)
+    .concat([ml, md, mt, ps, b])
+    .map((p) => {
+      p.lambda();
+      player.powerUps[p.id] = true;
+    });
+  player.maxed = true;
+  window.settings.player.shieldDuration = 15000;
+  window.settings.player.phaseShieldDuration = 15000;
+  window.settings.player.empDuration = 15000;
+  player.e = Infinity;
+  player.maxE = Infinity;
+  player.extraAmmo = 9999;
+};
+
 const debugCommands = (player) => {
   const menuit = (c) => {
     return {
@@ -480,6 +514,12 @@ const debugCommands = (player) => {
         player.powerUps[c.id] = true;
       },
     };
+  };
+  const pimp = {
+    title: "All good things",
+    lambda: () => {
+      maxPlayer;
+    },
   };
   const pwh = {
     title: "Primary weapons:",
@@ -515,5 +555,5 @@ const debugCommands = (player) => {
   );
   const sh = [shh].concat(shieldPowerups(player).map(menuit));
   const ap = [ah].concat(activePowerups(player).map(menuit));
-  return pw.concat(sw).concat(pp).concat(sh).concat(ap);
+  return [pimp].concat(pw.concat(sw).concat(pp).concat(sh).concat(ap));
 };

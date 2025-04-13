@@ -12,7 +12,7 @@ class MissileLauncher extends Gun {
   static kind = "kMissileLauncher"; // TODO make an object with these constants
   kind = MissileLauncher.kind;
   glyph = "missiles.png";
-  firerate = 1000; // It's not really a rate and it is annoying me
+  firerate = 400;
   html = "Mi"; // Asterisk alignment
   ammo = true;
   ammoMax = 1.4;

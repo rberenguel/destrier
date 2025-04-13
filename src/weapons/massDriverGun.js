@@ -47,7 +47,7 @@ class MassDriverGun extends Gun {
           x: 0,
           y: 0,
         },
-        radius: 0.9 * this.maxRange,
+        radius: 0.7 * this.maxRange,
       });
     }
   }

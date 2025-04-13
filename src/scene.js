@@ -449,6 +449,7 @@ class SpaceScene extends Scene {
       o.targetted = false;
     }
     if (
+      this.player.e > 0 &&
       this.player.powerUps?.kMissileTargettingSystem &&
       this.player.powerUps?.kMissileLauncher
     ) {

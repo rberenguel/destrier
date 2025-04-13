@@ -35,6 +35,7 @@ const initPlayer = (app, scale) => {
   player.lives = 1;
   player.shieldEnergy = 1;
   player.shieldEnergyRecoveryRate = 0.0007;
+  player.shieldBlinked = true;
   player.activeAbilityEnergyRecoveryRate = 0.0005;
   player.powerUps = { kPlasmaGun: true, kPhotonTorpedoLauncher: true };
   player.recoveryRate = 0.0;
@@ -67,6 +68,7 @@ const resetPlayerPVA = (player, app, scale, spaceScene, regenerate = false) => {
   player.lives = 1;
   resetPlayerAmmo(player);
   player.shieldEnergy = 1;
+  player.shieldBlinked = true;
   player.activeAbilityEnergy = 1;
   spaceScene.player = player;
   if (regenerate) {

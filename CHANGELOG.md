@@ -1,6 +1,9 @@
 # 0.9.9
 
 - Tweak the distribution of powerups
+- Fix some bugs
+- Improve notification of shield recharged
+- Add mobile warning
 
 # 0.9.8
 

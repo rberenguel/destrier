@@ -186,6 +186,7 @@ class SpaceScene extends Scene {
       });
       photonTorpedo.stats.ammoRefreshRate =
         PhotonTorpedoLauncher.baseStats.ammoRefreshRate;
+      photonTorpedo.stats.maxRange *= 0.5;
       other.secondaryWeapons = [photonTorpedo];
       other.ammo[PhotonTorpedoLauncher.kind] = {};
       other.ammo[PhotonTorpedoLauncher.kind].count = 2;
@@ -206,6 +207,7 @@ class SpaceScene extends Scene {
         source: this._id,
       });
       railGun.stats.ammoRefreshRate = GaussCannon.baseStats.ammoRefreshRate;
+      railGun.stats.maxRange *= 0.2;
       other.secondaryWeapons = [railGun];
       other.ammo[GaussCannon.kind] = {};
       other.ammo[GaussCannon.kind].count = 2;

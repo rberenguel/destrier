@@ -34,6 +34,7 @@ class PhotonTorpedoLauncher extends Gun {
     this.stats = { ...this.constructor.baseStats };
     this.color = props.color ?? 0xff0000;
     this.haloColor = props.haloColor ?? 0xffcc33;
+    this.stats.maxRange = window.settings.weaponProps.maxRange.photonTorpedo;
   }
 
   fire(shooter, bulletList) {
@@ -68,7 +69,7 @@ class PhotonTorpedoLauncher extends Gun {
       },
       r: shooter.r,
       e: this.stats.baseE,
-      maxRange: window.settings.weaponProps.maxRange.photonTorpedo,
+      maxRange: this.stats.maxRange,
       color: this.color,
       haloColor: this.haloColor,
       scale: window.settings.weaponProps.scale.photonTorpedo * shooter.scale,

@@ -151,13 +151,13 @@ class MassDriverBullet extends Base1 {
     this.moved +=
       Math.abs(this.vel.x * delta.deltaTime) +
       Math.abs(this.vel.y * delta.deltaTime);
-    if (this.moved > this.maxRange) {
-      this.e = -1;
-    }
     this.e = Math.min(
       1500,
       this.f * sqnorm(this.vel.x, this.vel.y) * this.mass,
     );
+    if (this.moved > this.maxRange) {
+      this.e = -1;
+    }
     this.f -= this.decay;
     if (this.e < 5) {
       this.e = -1;

@@ -57,6 +57,13 @@ canvas {
   font-size: 7rem;
 }
 
+#mobile-warning {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  text-align: center;
+  margin-left: -5rem;
+}
+
 .action-name {
   color: #cc0;
 }

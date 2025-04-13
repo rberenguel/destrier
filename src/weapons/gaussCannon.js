@@ -30,6 +30,7 @@ class GaussCannon extends Gun {
   constructor(props) {
     super({ ...props });
     this.stats = { ...this.constructor.baseStats };
+    this.stats.maxRange = window.settings.weaponProps.maxRange.gaussCannon;
     this.color = 0xffffff;
   }
 
@@ -67,6 +68,7 @@ class GaussCannon extends Gun {
       r: shooter.r,
       f: this.stats.f,
       decay: window.settings.weaponProps.decay.gaussCannon,
+      maxRange: this.stats.maxRange,
       e: 1,
       scale: window.settings.weaponProps.scale.gaussCannon * shooter.scale,
       source: this.source,

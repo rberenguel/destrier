@@ -19,6 +19,8 @@ const sampler = new Tone.Sampler({
     g2: "asteroid_explosion2.mp3",
     a0: "impact.mp3", // Was Cowbell, perfect
     a1: "other_impact.mp3", // Was Cowbell, tuned
+    a2: "energy_on_shield_impact.mp3",
+    a3: "mass_on_shield_impact.mp3",
     a2: "asteroid_impact.mp3",
     b0: "quack2.mp3", // quack2 from daktilo
     b1: "accept.mp3", // Was loTom_OH_FF_1

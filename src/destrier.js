@@ -156,14 +156,17 @@ const gameActions = {
       if (player.shield === "kDeflectorShield") {
         player.deflectorShield = now + window.settings.player.shieldDuration;
         player.shieldEnergy = 0;
+        player.shieldBlinked = false;
       }
       if (player.shield === "kEnergyShield") {
         player.energyShield = now + window.settings.player.shieldDuration;
         player.shieldEnergy = 0;
+        player.shieldBlinked = false;
       }
       if (player.shield === "kPhaseShield") {
         player.phaseShield = now + window.settings.player.phaseShieldDuration;
         player.shieldEnergy = 0;
+        player.shieldBlinked = false;
       }
     }
   },
@@ -452,6 +455,7 @@ if (!isMobile()) {
   focusTrap.focus(); // Set focus to the hidden input… unless on mobile
 } else {
   focusTrap.remove();
+  document.getElementById("mobile-warning").style.display = "block";
 }
 
 const controller = handleControls(gameActions, keyMap, buttonMap);
@@ -514,6 +518,7 @@ window.settings.weaponProps.decay.laserGun =
 window.settings.weaponProps.maxRange.laserGun = scalingFactor * 0.25;
 window.settings.weaponProps.maxRange.massDriverGun = scalingFactor * 0.07;
 window.settings.weaponProps.maxRange.missileLauncher = scalingFactor * 1.6;
+window.settings.weaponProps.maxRange.gaussCannon = scalingFactor * 1.5;
 
 // Too low of a ship speed is a bit shitty
 

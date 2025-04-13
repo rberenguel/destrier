@@ -324,7 +324,7 @@ const shieldPowerups = (player) => [
     kind: "shield",
     description: () => {
       const title = "<h2>Shield</h2>";
-      let html = `${title}${shieldDescs["kDeflectorShield"]}`;
+      let html = `${title}${shieldDescs["kDeflectorShield"]}${shieldHint}`;
       if (player.shield) {
         html += `${replaces} ${shieldDescs[player.shield]}`;
       }
@@ -344,7 +344,7 @@ const shieldPowerups = (player) => [
     kind: "shield",
     description: () => {
       const title = "<h2>Shield</h2>";
-      let html = `${title}${shieldDescs["kEnergyShield"]}`;
+      let html = `${title}${shieldDescs["kEnergyShield"]}${shieldHint}`;
       if (player.shield) {
         html += `${replaces} ${shieldDescs[player.shield]}`;
       }
@@ -364,7 +364,7 @@ const shieldPowerups = (player) => [
     kind: "shield",
     description: () => {
       const title = "<h2>Shield</h2>";
-      let html = `${title}${shieldDescs["kPhaseShield"]}`;
+      let html = `${title}${shieldDescs["kPhaseShield"]}${shieldHint}`;
       if (player.shield) {
         html += `${replaces} ${shieldDescs[player.shield]}`;
       }
@@ -442,6 +442,9 @@ const activePowerups = (player) => [
     },
   },
 ];
+
+const shieldHint =
+  "<p>The shield will shine briefly once it is ready to use after charging.</p>";
 
 const shieldDescs = {
   kDeflectorShield: `<p class='powerup-title'>Deflector shield</p><hr/>Deflects strongly kinetic weapons for ${(

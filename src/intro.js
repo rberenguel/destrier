@@ -27,6 +27,7 @@ class Intro {
       pos: { x: 0, y: 0 },
     };
     this.ship.generate();
+    this.ship.shieldBlinked = true;
   }
   init() {
     this.ship.attach(this.viewframe);

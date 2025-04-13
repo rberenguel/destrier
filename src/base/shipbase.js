@@ -169,7 +169,8 @@ class Ship extends Base1 {
       // Energy shields null all energy weapons
       if (distToOther <= 1.3 * shieldRadius + (other.radius || 0)) {
         if (this.energyShield && energyShots.includes(other.kind)) {
-          other.e = 0;
+          other.e = -1;
+          window.sampler("a2", 0.8, 1.5); // Energy on shield
           return false;
         }
       }
@@ -186,6 +187,7 @@ class Ship extends Base1 {
       );
 
       if (distToOther <= 1.3 * shieldRadius + (other.radius || 0)) {
+        window.sampler("a3", 0.8); // Mass on shield
         const collisionVector = {
           x: other.pos.x - this.pos.x,
           y: other.pos.y - this.pos.y,
@@ -578,6 +580,13 @@ class Ship extends Base1 {
     );
     this.shieldEnergy += this.shieldEnergyRecoveryRate * delta.deltaTime;
     this.shieldEnergy = Math.min(this.shieldEnergy, this.maxShieldEnergy);
+    if (
+      Math.abs(this.shieldEnergy - this.maxShieldEnergy) < 1e-5 &&
+      !this.shieldBlinked
+    ) {
+      this.blinkShield = performance.now() + 500;
+      this.shieldBlinked = true;
+    }
     let w = this.weapons[0];
     if (w && w.kind) {
       const rr = w.stats.ammoRefreshRate;
@@ -704,6 +713,10 @@ class Ship extends Base1 {
             presentation.tint = hexColor;
           } else {
             presentation.alpha = 0;
+            if (this.blinkShield > performance.now()) {
+              presentation.alpha = 0.3;
+              presentation.tint = 0xffff00; // Green blue suggesting charged? Yellow instead?
+            }
           }
         }
         if (presentation.name == "phaseShield") {

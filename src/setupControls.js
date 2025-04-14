@@ -95,8 +95,7 @@ const presentKeyMap = (d, gameActions, msgs, menu, transition) => {
     const e = (t) => document.createElement(t);
     const wrapper = e("DIV");
     const desc = e("P");
-    desc.innerHTML =
-      "Tap on the keys or buttons to customise them.<br/>Mobile controls map to keyboard keys for customisation.<br/>The settings will persist.";
+    desc.innerHTML = `Tap on the keys or buttons to customise them.<br/>Mobile controls map to keyboard keys for customisation.<br/><span style="color: #c60;">The settings <em>should</em> persist, but they sometimes get reset when closing and restarting.</span>`;
     wrapper.classList.add("control-list-wrapper");
     wrapper.appendChild(desc);
     const table = e("TABLE");

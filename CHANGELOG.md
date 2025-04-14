@@ -1,3 +1,8 @@
+# 1.0.0
+
+- Fix the bug with collision sensors lingering (maybe)
+- Add some disclaimer for saving controls
+
 # 0.9.9
 
 - Tweak the distribution of powerups

@@ -104,6 +104,7 @@ class Base1 {
 
   update() {
     if (this.e <= 0.1) {
+      // Note that this won't remove dependents
       this.e = -1;
       for (let presentation of this.presentations) {
         if (!presentation || presentation.destroyed) {

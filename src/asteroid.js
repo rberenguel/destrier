@@ -182,24 +182,35 @@ class Asteroid extends Base1 {
     return [a1, a2];
   }
 
+  destroy() {
+    super.destroy();
+    if (this.sensor) {
+      this.sensor.destroy();
+    }
+    this.presentation = { destroyed: true };
+  }
+
   update(delta) {
+    if (this.e < 0) {
+      this.destroy();
+    }
     if (isNaN(this.vel.x) || isNaN(this.vel.y)) {
-      this.presentation = { destroyed: true };
+      this.destroy();
       return;
     }
     if (isNaN(this.pos.x) || isNaN(this.pos.y)) {
-      this.presentation = { destroyed: true };
+      this.destroy();
       return;
     }
 
     this.r += this.spin;
     for (let presentation of this.presentations) {
       if (!presentation) {
-        this.presentation = { destroyed: true };
+        this.destroy();
         return;
       }
       if (presentation.destroyed) {
-        this.presentation = { destroyed: true };
+        this.destroy();
         return;
       }
       if (presentation.name === "whiteLayer") {

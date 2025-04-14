@@ -336,9 +336,9 @@ const shieldPowerups = (player) => [
     kind: "shield",
     description: () => {
       const title = "<h2>Shield</h2>";
-      let html = `${title}${shieldDescs["kDeflectorShield"]}${shieldHint}`;
+      let html = `${title}${shieldDescs()["kDeflectorShield"]}${shieldHint}`;
       if (player.shield) {
-        html += `${replaces} ${shieldDescs[player.shield]}`;
+        html += `${replaces} ${shieldDescs()[player.shield]}`;
       }
       return html;
     },
@@ -356,9 +356,9 @@ const shieldPowerups = (player) => [
     kind: "shield",
     description: () => {
       const title = "<h2>Shield</h2>";
-      let html = `${title}${shieldDescs["kEnergyShield"]}${shieldHint}`;
+      let html = `${title}${shieldDescs()["kEnergyShield"]}${shieldHint}`;
       if (player.shield) {
-        html += `${replaces} ${shieldDescs[player.shield]}`;
+        html += `${replaces} ${shieldDescs()[player.shield]}`;
       }
       return html;
     },
@@ -376,9 +376,9 @@ const shieldPowerups = (player) => [
     kind: "shield",
     description: () => {
       const title = "<h2>Shield</h2>";
-      let html = `${title}${shieldDescs["kPhaseShield"]}${shieldHint}`;
+      let html = `${title}${shieldDescs()["kPhaseShield"]}${shieldHint}`;
       if (player.shield) {
-        html += `${replaces} ${shieldDescs[player.shield]}`;
+        html += `${replaces} ${shieldDescs()[player.shield]}`;
       }
       return html;
     },
@@ -399,9 +399,9 @@ const activePowerups = (player) => [
     kind: "active",
     description: () => {
       const title = "<h2>Active ability</h2>";
-      let html = `${title}${activeAbilityDescs["kEmp"]}`;
+      let html = `${title}${activeAbilityDescs()["kEmp"]}`;
       if (player.activeAbility) {
-        html += `${replaces} ${activeAbilityDescs[player.activeAbility]}`;
+        html += `${replaces} ${activeAbilityDescs()[player.activeAbility]}`;
       }
       return html;
     },
@@ -419,9 +419,9 @@ const activePowerups = (player) => [
     kind: "active",
     description: () => {
       const title = "<h2>Active ability</h2>";
-      let html = `${title}${activeAbilityDescs["kBomb"]}`;
+      let html = `${title}${activeAbilityDescs()["kBomb"]}`;
       if (player.activeAbility) {
-        html += `${replaces} ${activeAbilityDescs[player.activeAbility]}`;
+        html += `${replaces} ${activeAbilityDescs()[player.activeAbility]}`;
       }
       return html;
     },
@@ -439,9 +439,9 @@ const activePowerups = (player) => [
     kind: "active",
     description: () => {
       const title = "<h2>Active ability</h2>";
-      let html = `${title}${activeAbilityDescs["kBoost"]}`;
+      let html = `${title}${activeAbilityDescs()["kBoost"]}`;
       if (player.activeAbility) {
-        html += `${replaces} ${activeAbilityDescs[player.activeAbility]}`;
+        html += `${replaces} ${activeAbilityDescs()[player.activeAbility]}`;
       }
       return html;
     },
@@ -458,29 +458,33 @@ const activePowerups = (player) => [
 const shieldHint =
   "<p>The shield will shine briefly once it is ready to use after charging.</p>";
 
-const shieldDescs = {
-  kDeflectorShield: `<p class='powerup-title'>Deflector shield</p><hr/>Deflects strongly kinetic weapons for ${(
-    settings.shipProps.shieldDuration / 1000
-  ).toFixed(
-    2,
-  )} seconds, affects mildly energy weapons.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
-  kEnergyShield: `<p class='powerup-title'>Energy shield</p><hr/>Stops completely energy weapons for ${(
-    settings.shipProps.shieldDuration / 1000
-  ).toFixed(
-    2,
-  )} seconds, no effect on kinetic weapons.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
-  kPhaseShield: `<p class='powerup-title'>Phase shield</p><hr/>Let's you pass through asteroids, projectiles and beams for ${(
-    settings.shipProps.phaseShieldDuration / 1000
-  ).toFixed(
-    2,
-  )} seconds.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
+const shieldDescs = () => {
+  return {
+    kDeflectorShield: `<p class='powerup-title'>Deflector shield</p><hr/>Deflects strongly kinetic weapons for ${(
+      window.settings.player.shieldDuration / 1000
+    ).toFixed(
+      2,
+    )} seconds, affects mildly energy weapons.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
+    kEnergyShield: `<p class='powerup-title'>Energy shield</p><hr/>Stops completely energy weapons for ${(
+      window.settings.player.shieldDuration / 1000
+    ).toFixed(
+      2,
+    )} seconds, no effect on kinetic weapons.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
+    kPhaseShield: `<p class='powerup-title'>Phase shield</p><hr/>Let's you pass through asteroids, projectiles and beams for ${(
+      window.settings.player.phaseShieldDuration / 1000
+    ).toFixed(
+      2,
+    )} seconds.<br/><em>You can't fire your secondary weapon while the shield is on</em>`,
+  };
 };
 
-const activeAbilityDescs = {
-  kEmp: `<p>EMP pulse</p><hr/>Generates an EMP pulse where you are, disabling enemy ships for ${settings.shipProps.empDuration} seconds.`,
-  kBomb:
-    "<p class='powerup-title'>Gravitic bomb</p><hr/>Drop it and it will explode in 1 second for massive damage. Won't affect your ship.",
-  kBoost: `<p class='powerup-title'>Displacement boost</p><hr/>Instantly accelerate forward at high speed for ${settings.shipProps.boostDuration} seconds and stop immediately. Your phase shield is active while boosted, so <em>you can pass through asteroids and enemy fire</em>`,
+const activeAbilityDescs = () => {
+  return {
+    kEmp: `<p>EMP pulse</p><hr/>Generates an EMP pulse where you are, disabling enemy ships for ${settings.shipProps.empDuration} seconds.`,
+    kBomb:
+      "<p class='powerup-title'>Gravitic bomb</p><hr/>Drop it and it will explode in 1 second for massive damage. Won't affect your ship.",
+    kBoost: `<p class='powerup-title'>Displacement boost</p><hr/>Instantly accelerate forward at high speed for ${settings.shipProps.boostDuration} seconds and stop immediately. Your phase shield is active while boosted, so <em>you can pass through asteroids and enemy fire</em>`,
+  };
 };
 
 const maxPlayer = (player) => {

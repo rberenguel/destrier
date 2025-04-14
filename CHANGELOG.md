@@ -2,6 +2,7 @@
 
 - Fix the bug with collision sensors lingering (maybe)
 - Add some disclaimer for saving controls
+- Fix counts in shields (thanks @dzpm)
 
 # 0.9.9
 

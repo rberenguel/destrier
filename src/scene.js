@@ -1090,11 +1090,11 @@ function triggerTextEffect(kind, x_, y_, scale) {
   let size = 1;
   let colorHue = 0;
 
-  let intervalDuration = 500
-  
-  if(kind==="kLvl20"){
-    intervalDuration = 5000
-    console.info("Interval is long")
+  let intervalDuration = 500;
+
+  if (kind === "kLvl20") {
+    intervalDuration = 5000;
+    console.info("Interval is long");
   }
 
   let interval = setInterval(() => {

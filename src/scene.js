@@ -1090,6 +1090,13 @@ function triggerTextEffect(kind, x_, y_, scale) {
   let size = 1;
   let colorHue = 0;
 
+  let intervalDuration = 500
+  
+  if(kind==="kLvl20"){
+    intervalDuration = 5000
+    console.info("Interval is long")
+  }
+
   let interval = setInterval(() => {
     size += 0.1;
     colorHue += 5;
@@ -1104,7 +1111,7 @@ function triggerTextEffect(kind, x_, y_, scale) {
       setTimeout(() => {
         effectText.style.fontSize = "1em";
         effectText.style.color = "red";
-      }, 500); // Same as transition
+      }, intervalDuration); // Same as transition in general
     }
   }, 50);
 }

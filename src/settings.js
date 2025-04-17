@@ -48,7 +48,7 @@ const isKinetic = (w) => {
   return (
     w.kind === "kMassDriverGun" ||
     w.kind === "kGaussCannon" ||
-    "kMissileLauncher"
+    w.kind === "kMissileLauncher"
   );
 };
 
@@ -126,17 +126,17 @@ const settings = {
         if (isKinetic(w)) {
           return 7;
         }
-        return 3;
+        return 5;
       },
       scale: (w) => {
         if (isSecondary(w)) {
-          return 0.8 + Math.random() * 0.5;
+          return 0.9 + Math.random() * 0.5;
         }
-        return 0.6 + Math.random() * 0.3;
+        return 0.8 + Math.random() * 0.4;
       },
       energy: (w) => {
         if (isSecondary(w)) {
-          return 6;
+          return 5;
         }
         if (isKinetic(w)) {
           return 4;

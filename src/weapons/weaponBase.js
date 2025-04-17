@@ -39,7 +39,7 @@ class Gun {
       shooter.r + this.angleShift,
     );
     for (let i = 0; i < settings.fire.muzzle.minCount(this); i++) {
-      const m = 0.1 * Math.random();
+      const m = 4 * Math.random();
       const a = Math.random() * 2 * Math.PI;
       const fl = new Flame({
         pos: {

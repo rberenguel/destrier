@@ -2,6 +2,7 @@
 
 - Remove symlinks for Pixi (itch didn't like that)
 - Improve photon torpedo fire trail
+- Fix muzzle fire color. What a silly mistake
 
 # 1.0.0
 

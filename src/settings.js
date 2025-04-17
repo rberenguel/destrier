@@ -185,7 +185,7 @@ const settings = {
       massDriver: 1.5,
       gaussCannon: 2.0,
       laserGun: 0.3,
-      photonTorpedo: 1.5,
+      photonTorpedo: 1.3,
     },
   },
   shipProps: {

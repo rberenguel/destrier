@@ -1,3 +1,8 @@
+# 1.0.1
+
+- Remove symlinks for Pixi (itch didn't like that)
+- Improve photon torpedo fire trail
+
 # 1.0.0
 
 - Fix the bug with collision sensors lingering (maybe)

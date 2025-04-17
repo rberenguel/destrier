@@ -7,6 +7,7 @@ import { rotate } from "../base/math.js";
 import { Base1 } from "../base/base.js";
 
 import { Flame } from "../base/flame.js";
+import { settings } from "../settings.js";
 
 class PhotonTorpedoLauncher extends Gun {
   static kind = "kPhotonTorpedoLauncher"; // TODO make an object with these constants
@@ -38,6 +39,7 @@ class PhotonTorpedoLauncher extends Gun {
   }
 
   fire(shooter, bulletList) {
+    console.log(this.haloColor);
     super.fire(shooter, bulletList);
     // Shooter is a reference to whoever is shooting, so we can take
     // direction and velocity vector.
@@ -109,6 +111,7 @@ class PhotonTorpedo extends Base1 {
     }
 
     super({ ...props, meshes: meshes });
+    this.haloColor = baseColor;
     this.color = props.color ?? 0xff0000;
     this.e = props.e ?? 10;
     this.mass = props.mass ?? 3;
@@ -142,26 +145,28 @@ class PhotonTorpedo extends Base1 {
   }
 
   update(delta) {
+    if (this.flameList && this.e > 0) {
+      for (let i = 0; i < 5; i++) {
+        const fl = new Flame({
+          pos: {
+            x: this.pos.x,
+            y: this.pos.y,
+          },
+          vel: {
+            x: 0.1 * this.vel.x + Math.random() * this.vel.x,
+            y: 0.1 * this.vel.y + Math.random() * this.vel.y,
+          },
+          fill: this.haloColor,
+          r: 0,
+          e: 2 + 4 * Math.random(),
+          scale: 0.8,
+          decay: 0.5,
+        });
+        this.flameList.push(fl);
+      }
+    }
     super.update(delta);
     super.move(delta.deltaTime);
-    if (this.flameList && this.e > 0) {
-      const fl = new Flame({
-        pos: {
-          x: this.pos.x,
-          y: this.pos.y,
-        },
-        vel: {
-          x: 0.2 * this.vel.x,
-          y: 0.2 * this.vel.y,
-        },
-        fill: this.haloColor,
-        r: 0,
-        e: 1,
-        scale: 0.8,
-        decay: 0.5,
-      });
-      this.flameList.push(fl);
-    }
     this.e -= Math.random() * 0.1;
     const ne = Math.max(0, Math.min(1, this.e / 1000));
     this.moved +=

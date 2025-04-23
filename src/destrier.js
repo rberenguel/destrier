@@ -268,7 +268,7 @@ const inMenuActions = {
       inMenuActions.debounce = performance.now() + 300;
       player.prevshot =
         performance.now() + window.settings.shipProps.disabledDelay - 100;
-      window.sampler("b1", 0.3, 2.5); // Accept
+      window.sampler("b1", 0.3, { velocity: 2.5 }); // Accept
       return;
     }
     if (currentState === states.kShowingIntro) {
@@ -288,13 +288,13 @@ const inMenuActions = {
       const alternate = ["up", "down", "right", "left", "B"].join("|");
       if (history === konami) {
         console.info("Debug menu active");
-        window.sampler("b0", 1.5, 2.5); // Quack
+        window.sampler("b0", 1.5, { velocity: 2.5 }); // Quack
         document.getElementById("debug-menu").style.display = "block";
         menuActionsHistory = [];
       }
       if (history.endsWith(alternate)) {
         console.info("Debug menu active + pretty much everything");
-        window.sampler("b0", 1.5, 2.5); // Quack
+        window.sampler("b0", 1.5, { velocity: 2.5 }); // Quack
         document.getElementById("debug-menu").style.display = "block";
         document.getElementById("debug-menu").innerHTML =
           document.getElementById("debug-menu").innerHTML + "&#x263B;";
@@ -324,7 +324,7 @@ const inMenuActions = {
       transition(states.kShowingMainMenu);
       intro.destroy();
       inMenuActions.debounce = performance.now() + 300;
-      window.sampler("b1", 0.3, 2.5); // Accept
+      window.sampler("b1", 0.3, { velocity: 2.5 }); // Accept
       return;
     }
     if (currentState === states.kSettingsMenu) {
@@ -336,20 +336,20 @@ const inMenuActions = {
       msgs.hide();
       transition(states.kShowingMainMenu);
       inMenuActions.debounce = performance.now() + 300;
-      window.sampler("b1", 0.3, 2.5); // Accept
+      window.sampler("b1", 0.3, { velocity: 2.5 }); // Accept
       return;
     }
     if (currentState === states.kWaitingPowerUpChoice) {
       powerupControls("Accept");
-      window.sampler("b1", 0.3, 2.5); // Accept
+      window.sampler("b1", 0.3, { velocity: 2.5 }); // Accept
       player.secondaryPrevshot = performance.now(); // Prevent fire across menus
     }
     if (currentState === states.kShowingMainMenu) {
       menuP.accept();
-      window.sampler("b1", 0.3, 2.5); // Accept
+      window.sampler("b1", 0.3, { velocity: 2.5 }); // Accept
     }
     if (currentState === states.kGameOver) {
-      window.sampler("b1", 0.3, 2.5); // Accept
+      window.sampler("b1", 0.3, { velocity: 2.5 }); // Accept
       fullRestart(); // fullRestart already transitions
       player.secondaryPrevshot = performance.now(); // Prevent fire across menus
     }
@@ -759,7 +759,7 @@ const controlsChanger = () => {
 const menuP = new MetaP({ id: "main-menu" });
 
 const playLambda = () => {
-  window.sampler("b1", 0.3, 2.5); // Accept
+  window.sampler("b1", 0.3, { velocity: 2.5 }); // Accept
   fullRestart(/*tran=*/ false);
   level = 0;
   transition(states.kBetweenLevels);
@@ -799,7 +799,7 @@ function createCheckbox(id, name, labelText, onChangeHandler, checked = false) {
 }
 
 const customControlsLambda = async () => {
-  window.sampler("b1", 0.3, 2.5); // Accept
+  window.sampler("b1", 0.3, { velocity: 2.5 }); // Accept
   menuP.ignoreKeys();
   const div = document.createElement("DIV");
   const controls = controlsChanger();
@@ -913,7 +913,7 @@ const mainMenuCommands = [
   {
     title: "About",
     lambda: () => {
-      window.sampler("b1", 0.3, 2.5); // Accept
+      window.sampler("b1", 0.3, { velocity: 2.5 }); // Accept
       const about = document.getElementById("about");
       const clone = about.cloneNode(true);
       clone.querySelector(".changelog-button").addEventListener("click", () => {

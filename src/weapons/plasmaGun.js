@@ -84,7 +84,7 @@ class PlasmaGun extends Gun {
     b.firedBy = "kPlasmaGun";
     bulletList.push(b);
     if (shooter.human) {
-      window.sampler("c0", 0.5); // Plasma, based on Ride1_OH_FF_1
+      window.sampler("c0", 0.5, { pan: shooter.getPan() }); // Plasma, based on Ride1_OH_FF_1
     }
   }
 }

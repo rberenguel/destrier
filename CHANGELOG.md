@@ -1,3 +1,7 @@
+# 1.0.2
+
+- "Positional" audio (pan only, I think distance would not work as well)
+
 # 1.0.1
 
 - Remove symlinks for Pixi (itch didn't like that)

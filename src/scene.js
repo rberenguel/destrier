@@ -647,7 +647,13 @@ class SpaceScene extends Scene {
           }
 
           if (a.collision(b)) {
-            window.sampler(`a2`, 0.3); // Asteroid impact
+            const pan = window.calculatePanFromPosition(b, {
+              wmin: 0,
+              wmax: this.app.renderer.width / this.viewframe.scale,
+              hmin: 0,
+              hmax: this.app.renderer.height / this.viewframe.scale,
+            });
+            window.sampler(`a4`, 0.3, { pan: pan }); // Asteroid impact
             const ae = a.e;
             a.e = b.e > 0 ? a.e - b.e : a.e; // Strange situations
             b.e -= ae;
@@ -672,7 +678,13 @@ class SpaceScene extends Scene {
               this.player.increaseEnergy(settings.hull.pctRecoveredPerAsteroid);
               newAsteroids.push(...a.split(b.vel, this.debrisList));
               const r = Math.floor(Math.random() * 4);
-              window.sampler(`g${r}`, 1.9); // Asteroid explosion
+              const pan = window.calculatePanFromPosition(a, {
+                wmin: 0,
+                wmax: this.app.renderer.width / this.viewframe.scale,
+                hmin: 0,
+                hmax: this.app.renderer.height / this.viewframe.scale,
+              });
+              window.sampler(`g${r}`, 1.9, { pan: pan }); // Asteroid explosion
             }
           }
         }
@@ -682,7 +694,13 @@ class SpaceScene extends Scene {
             continue;
           }
           settings.shake.onHit(this.app);
-          window.sampler("a0, 0.5");
+          const pan = window.calculatePanFromPosition(this.player, {
+            wmin: 0,
+            wmax: this.app.renderer.width / this.viewframe.scale,
+            hmin: 0,
+            hmax: this.app.renderer.height / this.viewframe.scale,
+          });
+          window.sampler("a0", 0.5, { pan: pan });
           const pe = this.player.e;
           this.player.e -= b.e;
           b.e -= pe;
@@ -716,7 +734,13 @@ class SpaceScene extends Scene {
               },
             });
             this.debrisList.push(debris);
-            window.sampler("f1", 1.9); // Self explosion
+            const pan = window.calculatePanFromPosition(this.player, {
+              wmin: 0,
+              wmax: this.app.renderer.width / this.viewframe.scale,
+              hmin: 0,
+              hmax: this.app.renderer.height / this.viewframe.scale,
+            });
+            window.sampler("f1", 1.9, { pan: pan }); // Self explosion
             if (
               b.kind === "kPhotonTorpedo" ||
               b.kind === "kGaussCannonBullet"
@@ -758,7 +782,13 @@ class SpaceScene extends Scene {
             b.minDistance[o._id] = -1; // Stop the loop
           }
           if (collisioning == 1) {
-            window.sampler(`a1`, 0.1); // Other impact
+            const pan = window.calculatePanFromPosition(b, {
+              wmin: 0,
+              wmax: this.app.renderer.width / this.viewframe.scale,
+              hmin: 0,
+              hmax: this.app.renderer.height / this.viewframe.scale,
+            });
+            window.sampler(`a1`, 0.1, { pan: pan }); // Other impact
             const oe = o.e;
             o.showHit = performance.now() + settings.showHitMs;
             if (b.shooter?.human && b.kind !== "kEmpBlast") {
@@ -824,7 +854,13 @@ class SpaceScene extends Scene {
                   y: (2 * b.vel.y) / bnv - (0.4 * o.vel.y) / onv,
                 },
               });
-              window.sampler("f0", 1.9); // Other explosion
+              const pan = window.calculatePanFromPosition(o, {
+                wmin: 0,
+                wmax: this.app.renderer.width / this.viewframe.scale,
+                hmin: 0,
+                hmax: this.app.renderer.height / this.viewframe.scale,
+              });
+              window.sampler("f0", 1.9, { pan: pan }); // Other explosion
               this.debrisList.push(debris);
               if (this.otherShips.length === 1) {
                 // This was the last ship
@@ -886,7 +922,13 @@ class SpaceScene extends Scene {
         a.e = -1;
         a.minDistance[this.player._id] = Infinity;
         this.player.killedBy = { id: "kAsteroid" };
-        window.sampler("f1", 1.9); // Self explosion
+        const pan = window.calculatePanFromPosition(this.player, {
+          wmin: 0,
+          wmax: this.app.renderer.width / this.viewframe.scale,
+          hmin: 0,
+          hmax: this.app.renderer.height / this.viewframe.scale,
+        });
+        window.sampler("f1", 1.9, { pan: pan }); // Self explosion
 
         this.player.lives -= 1;
         const pnv = sqnorm(this.player.vel.x, this.player.vel.y) + 0.01;
@@ -901,7 +943,7 @@ class SpaceScene extends Scene {
         this.player.e = -1;
         this.flameList.push(...this.player.flameList);
         const r = Math.floor(Math.random() * 4);
-        window.sampler(`g${r}`, 1.9); // Asteroid explosion
+        window.sampler(`g${r}`, 1.9, { pan: pan }); // Asteroid explosion
         newAsteroids.push(...a.split(this.player.vel, this.debrisList));
       }
       for (let o of this.otherShips) {
@@ -917,8 +959,14 @@ class SpaceScene extends Scene {
           o.e = -1;
           newAsteroids.push(...a.split(o.vel, this.debrisList));
           const r = Math.floor(Math.random() * 4);
-          window.sampler(`g${r}`, 1.9); // Asteroid explosion
-          window.sampler("f0", 1.9); // Other explosion
+          const pan = window.calculatePanFromPosition(b, {
+            wmin: 0,
+            wmax: this.app.renderer.width / this.viewframe.scale,
+            hmin: 0,
+            hmax: this.app.renderer.height / this.viewframe.scale,
+          });
+          window.sampler(`g${r}`, 1.9, { pan: pan }); // Asteroid explosion
+          window.sampler("f0", 1.9, { pan: pan }); // Other explosion
         }
       }
     }

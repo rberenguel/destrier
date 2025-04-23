@@ -149,6 +149,15 @@ class Ship extends Base1 {
     return debris;
   }
 
+  getPan() {
+    return window.calculatePanFromPosition(this, {
+      wmin: 0,
+      wmax: this.viewframe.app.renderer.width / this.viewframe.scale,
+      hmin: 0,
+      hmax: this.viewframe.app.renderer.height / this.viewframe.scale,
+    });
+  }
+
   collision(other) {
     // TODO: This could be in Base, somehow?
     // TODO For ship, this is totally made up
@@ -170,7 +179,7 @@ class Ship extends Base1 {
       if (distToOther <= 1.3 * shieldRadius + (other.radius || 0)) {
         if (this.energyShield && energyShots.includes(other.kind)) {
           other.e = -1;
-          window.sampler("a2", 0.8, 1.5); // Energy on shield
+          window.sampler("a2", 0.8, { velocity: 1.5, pan: this.getPan() }); // Energy on shield
           return false;
         }
       }
@@ -187,7 +196,7 @@ class Ship extends Base1 {
       );
 
       if (distToOther <= 1.3 * shieldRadius + (other.radius || 0)) {
-        window.sampler("a3", 0.8); // Mass on shield
+        window.sampler("a3", 0.8, { pan: this.getPan() }); // Mass on shield
         const collisionVector = {
           x: other.pos.x - this.pos.x,
           y: other.pos.y - this.pos.y,
@@ -343,7 +352,7 @@ class Ship extends Base1 {
         fill: 0x00ccff,
       });
       if (this.human) {
-        window.sampler("e2", 0.8); // Snare ghost
+        window.sampler("e2", 0.8, { pan: this.getPan() }); // Snare ghost
       }
       return;
     }
@@ -373,7 +382,7 @@ class Ship extends Base1 {
         this._backThrust();
       }
       if (this.human && Math.random() < 0.05) {
-        window.sampler("e1", 0.3); // Wind
+        window.sampler("e1", 0.3, { pan: this.getPan() }); // Wind
       }
     } else {
       if (Math.random() < 0.2) {
@@ -435,7 +444,7 @@ class Ship extends Base1 {
         fill: 0x00ccff,
       });
       if (this.human) {
-        window.sampler("e2", 0.8); // Snare ghost
+        window.sampler("e2", 0.8, { pan: this.getPan() }); // Snare ghost
       }
       return;
     }
@@ -465,7 +474,7 @@ class Ship extends Base1 {
         this._forwardThrust();
       }
       if (this.human && Math.random() < 0.05) {
-        window.sampler("e1", 0.3); // Wind
+        window.sampler("e1", 0.3, { pan: this.getPan() }); // Wind
       }
     } else {
       if (Math.random() < 0.2) {
@@ -565,7 +574,7 @@ class Ship extends Base1 {
         fill: 0x00ccff,
       });
       if (this.human) {
-        window.sampler("e2", 0.8); // Snare ghost
+        window.sampler("e2", 0.8, { pan: this.getPan() }); // Snare ghost
       }
     }
     super.update(delta);

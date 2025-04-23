@@ -959,7 +959,7 @@ class SpaceScene extends Scene {
           o.e = -1;
           newAsteroids.push(...a.split(o.vel, this.debrisList));
           const r = Math.floor(Math.random() * 4);
-          const pan = window.calculatePanFromPosition(b, {
+          const pan = window.calculatePanFromPosition(o, {
             wmin: 0,
             wmax: this.app.renderer.width / this.viewframe.scale,
             hmin: 0,
